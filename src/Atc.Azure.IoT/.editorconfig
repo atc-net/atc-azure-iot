@@ -1,0 +1,30 @@
+# ATC coding rules - https://github.com/atc-net/atc-coding-rules
+# Version: 1.0.9
+# Updated: 01-02-2022
+# Location: src/KL.Device.Communication.Domain.IoT
+# Distribution: DotNet7
+# Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+
+##########################################
+# Code Analyzers Rules
+##########################################
+[*.{cs,csx,cake}]
+
+##########################################
+# Custom - Code Analyzers Rules
+##########################################
+
+dotnet_diagnostic.CA1031.severity = none            # Do not catch general exception types
+dotnet_diagnostic.CA1034.severity = none            # Do not nest types
+dotnet_diagnostic.CA1054.severity = none            # URI parameters should not be strings
+dotnet_diagnostic.CA1055.severity = none            # Return type should be URI
+dotnet_diagnostic.CA1056.severity = none            # URI properties should not be strings
+dotnet_diagnostic.CA1062.severity = none            # Validate arguments of public methods
+dotnet_diagnostic.CA1721.severity = none            # The property name 'PartitionKey' is confusing given the existence of method 'GetPartitionKey'.
+dotnet_diagnostic.CA1724.severity = none            # The type name EventStore conflicts in whole or in part with the namespace name 'Atc.Cosmos.EventStore'
+
+dotnet_diagnostic.MA0048.severity = none            # File name must match type name
+
+dotnet_diagnostic.SA1649.severity = none            # File name must match type name
+
+dotnet_diagnostic.S2094.severity = none             # Remove empty record - Intended

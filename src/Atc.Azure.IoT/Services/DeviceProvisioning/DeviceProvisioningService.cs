@@ -189,10 +189,6 @@ public sealed partial class DeviceProvisioningService : IDeviceProvisioningServi
         Dictionary<string, string>? tags,
         Dictionary<string, string>? desiredProperties)
     {
-        ArgumentException.ThrowIfNullOrEmpty(endorsementKey);
-        ArgumentException.ThrowIfNullOrEmpty(registrationId);
-        ArgumentException.ThrowIfNullOrEmpty(serialNumber);
-
         var attestation = new TpmAttestation(endorsementKey);
         var individualEnrollment = new IndividualEnrollment(
             registrationId,
