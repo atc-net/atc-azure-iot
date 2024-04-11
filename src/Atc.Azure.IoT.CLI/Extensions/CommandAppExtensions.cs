@@ -41,25 +41,25 @@ public static class CommandAppExtensions
         {
             individual.SetDescription("Operations related to individual enrollments on Device Provisioning Service.");
 
-            individual.AddCommand<DpsEnrollmentGetAllCommand>("all")
+            individual.AddCommand<DpsEnrollmentÍndividualGetAllCommand>("all")
                 .WithDescription("Retrieves all individual enrollments.")
-                .WithExample("dps enrollment individual list"); // TODO: Fill out example (e.g. limit to types?!)
+                .WithExample("dps enrollment individual list"); // TODO: Fill out example
 
             individual.AddBranch("create", create =>
             {
                 create.SetDescription("Operations related to creating individual enrollments.");
-                create.AddCommand<DpsEnrollmentCreateTpmCommand>("tpm")
+                create.AddCommand<DpsEnrollmentÍndividualCreateTpmCommand>("tpm")
                     .WithDescription("Reads a single node variable.")
-                    .WithExample("dps enrollment individual create tpm --"); // TODO: Fill out example
+                    .WithExample("dps enrollment individual create tpm"); // TODO: Fill out example
             });
 
-            individual.AddCommand<DpsEnrollmentDeleteCommand>("delete")
+            individual.AddCommand<DpsEnrollmentÍndividualDeleteCommand>("delete")
                 .WithDescription("Retrieves an individual enrollment.")
-                .WithExample("dps enrollment individual get --"); // TODO: Fill out example
+                .WithExample("dps enrollment individual get"); // TODO: Fill out example
 
-            individual.AddCommand<DpsEnrollmentGetCommand>("get")
+            individual.AddCommand<DpsEnrollmentÍndividualGetCommand>("get")
                 .WithDescription("Retrieves an individual enrollment.")
-                .WithExample("dps enrollment individual get --"); // TODO: Fill out example
+                .WithExample("dps enrollment individual get"); // TODO: Fill out example
         });
     }
 
@@ -70,11 +70,11 @@ public static class CommandAppExtensions
         {
             device.SetDescription("Operations related to devices on the iot hub.");
 
-            device.AddCommand<IotHubGetCommand>("get")
+            device.AddCommand<IotHubDeviceGetCommand>("get")
                 .WithDescription("Retrieve a device from the device registry in the IoT Hub.")
                 .WithExample("iothub device get"); // TODO: Fill out example
 
-            device.AddCommand<IotHubDeleteCommand>("delete")
+            device.AddCommand<IotHubDeviceDeleteCommand>("delete")
                 .WithDescription("Delete a device from the device registry in the IoT Hub.")
                 .WithExample("iothub device delete"); // TODO: Fill out example
 

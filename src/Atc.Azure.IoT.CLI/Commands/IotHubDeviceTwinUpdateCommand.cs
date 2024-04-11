@@ -1,13 +1,13 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class IotHubStatisticsCommand : AsyncCommand<IotHubBaseCommandSettings>
+public sealed class IotHubDeviceTwinUpdateCommand : AsyncCommand<IotHubBaseCommandSettings>
 {
-    private readonly ILogger<IotHubStatisticsCommand> logger;
+    private readonly ILogger<IotHubDeviceTwinUpdateCommand> logger;
 
-    public IotHubStatisticsCommand(
-        ILogger<IotHubStatisticsCommand> logger)
+    public IotHubDeviceTwinUpdateCommand(
+        ILogger<IotHubDeviceTwinUpdateCommand> logger)
     {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.logger = logger;
     }
 
     public override Task<int> ExecuteAsync(
