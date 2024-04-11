@@ -2,12 +2,14 @@ namespace Atc.Azure.IoT.CLI.Commands;
 
 public sealed class IotHubStatisticsCommand : AsyncCommand<IotHubBaseCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubStatisticsCommand> logger;
 
     public IotHubStatisticsCommand(
-        ILogger<IotHubStatisticsCommand> logger)
+        ILoggerFactory loggerFactory)
     {
-        this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<IotHubStatisticsCommand>();
     }
 
     public override Task<int> ExecuteAsync(

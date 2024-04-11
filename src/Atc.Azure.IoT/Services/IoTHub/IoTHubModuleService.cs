@@ -9,11 +9,10 @@ public sealed partial class IoTHubModuleService : IotHubServiceBase, IIoTHubModu
     private ServiceClient? serviceClient;
 
     public IoTHubModuleService(
-        ILogger<IoTHubModuleService> logger,
+        ILoggerFactory loggerFactory,
         IotHubOptions options)
     {
-        this.logger = logger;
-
+        logger = loggerFactory.CreateLogger<IoTHubModuleService>();
         ValidateAndAssign(options.ConnectionString, Assign);
     }
 

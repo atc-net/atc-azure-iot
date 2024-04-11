@@ -14,13 +14,12 @@ public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, I
     private string? ioTHubHostName;
 
     public IoTHubService(
-        ILogger<IoTHubService> logger,
+        ILoggerFactory loggerFactory,
         IIoTHubModuleService iotHubModuleService,
         IotHubOptions options)
     {
-        this.logger = logger;
+        logger = loggerFactory.CreateLogger<IoTHubService>();
         this.iotHubModuleService = iotHubModuleService;
-
         ValidateAndAssign(options.ConnectionString, Assign);
     }
 

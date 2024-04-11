@@ -20,6 +20,7 @@ public static class Program
         var serviceCollection = ServiceCollectionFactory.Create(consoleLoggerConfiguration);
 
         // TODO: Wire-up services using e.g. ServiceCollectionExtensions
+        serviceCollection.TryAddSingleton<IDeviceTwinModuleExtractor, DeviceTwinModuleExtractor>();
 
         var app = CommandAppFactory.Create(serviceCollection);
         app.ConfigureCommands();

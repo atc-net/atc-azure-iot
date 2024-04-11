@@ -9,10 +9,10 @@ public sealed partial class DeviceProvisioningService : IDeviceProvisioningServi
     private readonly JsonSerializerOptions jsonSerializerOptions;
 
     public DeviceProvisioningService(
-        ILogger<DeviceProvisioningService> logger,
+        ILoggerFactory loggerFactory,
         ProvisioningServiceClient client)
     {
-        this.logger = logger;
+        logger = loggerFactory.CreateLogger<DeviceProvisioningService>();
         this.client = client;
         jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
     }

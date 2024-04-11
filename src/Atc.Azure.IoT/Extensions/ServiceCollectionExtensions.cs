@@ -27,12 +27,12 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IIoTHubModuleService, IoTHubModuleService>(s =>
             new IoTHubModuleService(
-                s.GetRequiredService<ILogger<IoTHubModuleService>>(),
+                s.GetRequiredService<ILoggerFactory>(),
                 iotHubOptions));
 
         services.AddSingleton<IIoTHubService, IoTHubService>(s =>
             new IoTHubService(
-                s.GetRequiredService<ILogger<IoTHubService>>(),
+                s.GetRequiredService<ILoggerFactory>(),
                 s.GetRequiredService<IIoTHubModuleService>(),
                 iotHubOptions));
 
