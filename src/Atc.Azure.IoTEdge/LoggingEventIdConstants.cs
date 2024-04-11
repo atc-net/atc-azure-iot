@@ -1,4 +1,4 @@
-namespace Atc.Azure.IotEdge.Client;
+namespace Atc.Azure.IoTEdge;
 
 public static class LoggingEventIdConstants
 {

@@ -1,4 +1,4 @@
-namespace Atc.Azure.IotEdge.Client.TestMocks;
+namespace Atc.Azure.IoTEdge.TestMocks;
 
 public static class MockTwinProperties
 {

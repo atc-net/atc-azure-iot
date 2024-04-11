@@ -2,7 +2,7 @@ global using System.Diagnostics.CodeAnalysis;
 global using System.Net;
 global using System.Text;
 global using System.Text.Json;
-global using Atc.Azure.IotEdge.Client.Wrappers;
+global using Atc.Azure.IoTEdge.Wrappers;
 global using Atc.Serialization;
 global using Microsoft.Azure.Devices.Client;
 global using Microsoft.Azure.Devices.Shared;

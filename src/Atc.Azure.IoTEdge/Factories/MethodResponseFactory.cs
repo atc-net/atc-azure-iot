@@ -1,6 +1,6 @@
-namespace Atc.Azure.IotEdge.Client.Factories;
+namespace Atc.Azure.IoTEdge.Factories;
 
-public class MethodResponseFactory : IMethodResponseFactory
+public sealed class MethodResponseFactory : IMethodResponseFactory
 {
     private readonly JsonSerializerOptions jsonSerializerOptions;
 

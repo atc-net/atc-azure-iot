@@ -1,4 +1,4 @@
-namespace Atc.Azure.IotEdge.Client.Extensions;
+namespace Atc.Azure.IoTEdge.Extensions;
 
 public static class ServiceCollectionExtensions
 {

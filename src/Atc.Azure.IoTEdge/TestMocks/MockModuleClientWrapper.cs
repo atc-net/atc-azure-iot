@@ -1,4 +1,4 @@
-namespace Atc.Azure.IotEdge.Client.TestMocks;
+namespace Atc.Azure.IoTEdge.TestMocks;
 
 [SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "OK - By Design")]
 [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "OK - By Design")]

@@ -1,4 +1,4 @@
-namespace Atc.Azure.IotEdge.Client.Wrappers;
+namespace Atc.Azure.IoTEdge.Wrappers;
 
 public interface IModuleClientWrapper : IDisposable
 {

@@ -1,4 +1,4 @@
-namespace Atc.Azure.IotEdge.Client.Factories;
+namespace Atc.Azure.IoTEdge.Factories;
 
 /// <summary>
 /// Represents a factory for creating method response objects that encapsulate
