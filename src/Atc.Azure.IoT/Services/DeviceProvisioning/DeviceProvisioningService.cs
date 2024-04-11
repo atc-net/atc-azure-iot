@@ -22,7 +22,7 @@ public sealed partial class DeviceProvisioningService : IDeviceProvisioningServi
     }
 
     /// <summary>
-    /// Retrieves a specific individual enrollment from Azure DPS using the provided registration ID. 
+    /// Retrieves a specific individual enrollment from Azure DPS using the provided registration ID.
     /// This method returns null if the enrollment does not exist.
     /// </summary>
     /// <param name="registrationId">The registration ID of the individual enrollment to retrieve.</param>
@@ -70,7 +70,7 @@ public sealed partial class DeviceProvisioningService : IDeviceProvisioningServi
     // TODO: Extend with optional parameter to e.g. limit to specific type of individual enrollment
 
     /// <summary>
-    /// Retrieves all individual enrollments registered in Azure DPS. 
+    /// Retrieves all individual enrollments registered in Azure DPS.
     /// This method enumerates enrollments in a non-deterministic order.
     /// </summary>
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
@@ -102,7 +102,7 @@ public sealed partial class DeviceProvisioningService : IDeviceProvisioningServi
     }
 
     /// <summary>
-    /// Creates or updates an individual TPM enrollment in Azure DPS with the provided parameters. 
+    /// Creates or updates an individual TPM enrollment in Azure DPS with the provided parameters.
     /// Returns the enrollment result along with any error messages if the operation fails.
     /// </summary>
     /// <param name="endorsementKey">The TPM endorsement key.</param>
