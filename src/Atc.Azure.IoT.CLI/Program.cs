@@ -19,7 +19,7 @@ public static class Program
 
         var serviceCollection = ServiceCollectionFactory.Create(consoleLoggerConfiguration);
 
-        serviceCollection.AddTransient<IOpcUaClient, OpcUaClient>();
+        // TODO: Wire-up services using e.g. ServiceCollectionExtensions
 
         var app = CommandAppFactory.Create(serviceCollection);
         app.ConfigureCommands();
