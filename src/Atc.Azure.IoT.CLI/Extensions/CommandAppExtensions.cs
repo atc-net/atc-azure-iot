@@ -71,7 +71,7 @@ public static class CommandAppExtensions
 
             device.AddCommand<IotHubDeviceGetCommand>("get")
                 .WithDescription("Retrieve a device from the device registry in the IoT Hub.")
-                .WithExample("iothub device get -c <connection-string>"); // TODO: Fill out example
+                .WithExample("iothub device get -c <connection-string> -d <device-id>");
 
             device.AddCommand<IotHubDeviceDeleteCommand>("delete")
                 .WithDescription("Delete a device from the device registry in the IoT Hub.")

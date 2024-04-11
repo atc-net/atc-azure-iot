@@ -26,17 +26,9 @@ public sealed class IotHubStatisticsCommand : AsyncCommand<IotHubBaseCommandSett
     {
         ConsoleHelper.WriteHeader();
 
-        var connectionString = settings.ConnectionString!;
-        var iothubOptions = new IotHubOptions { ConnectionString = connectionString };
-
-        var iotHubModuleService = new IoTHubModuleService(
+        var iotHubService = IotHubServiceFactory.Create(
             loggerFactory,
-            iothubOptions);
-
-        var iotHubService = new IoTHubService(
-            loggerFactory,
-            iotHubModuleService,
-            iothubOptions);
+            settings.ConnectionString!);
 
         var sw = Stopwatch.StartNew();
 
