@@ -2,7 +2,10 @@
 namespace Atc.Azure.IoT.Services.IoTHub;
 
 /// <summary>
-/// The main IoTHubService - Handles call execution.
+/// Represents a service for interacting with Azure IoT Hub, providing functionality to manage devices and modules,
+/// including creating, updating, and deleting devices or modules, retrieving device or module twins, applying configurations,
+/// and invoking direct methods. It encapsulates operations such as device registry statistics retrieval, device twin
+/// management, module twin updates, and edge device configurations, aiming to facilitate comprehensive IoT Hub management.
 /// </summary>
 public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, IDisposable
 {

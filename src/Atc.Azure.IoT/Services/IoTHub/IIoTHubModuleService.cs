@@ -1,9 +1,8 @@
 namespace Atc.Azure.IoT.Services.IoTHub;
 
 /// <summary>
-/// The IIoTHubModuleService interface provides a contract for services that
-/// execute calls to methods on IoT Hub Modules. These methods enable
-/// interaction and control of IoT devices in an Azure IoT Hub.
+/// Provides services for direct interaction with IoT devices and modules through Azure IoT Hub, enabling the invocation of direct methods on devices.
+/// This service facilitates communication between the cloud and IoT devices by sending direct method requests and processing the responses.
 /// </summary>
 public interface IIoTHubModuleService
 {

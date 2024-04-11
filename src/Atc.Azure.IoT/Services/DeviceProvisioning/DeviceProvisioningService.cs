@@ -1,7 +1,11 @@
 namespace Atc.Azure.IoT.Services.DeviceProvisioning;
 
 /// <summary>
-/// The main DeviceProvisioningService - Handles call execution.
+/// Provides services for managing device enrollments within the Azure Device Provisioning Service (DPS),
+/// including creating, retrieving, and deleting individual device enrollments, as well as bulk retrieval of enrollments.
+/// This service supports operations for both TPM and non-TPM devices, facilitating device provisioning and management
+/// through DPS with functions to handle individual enrollment processes, manage device enrollment records, and perform
+/// enrollment operations such as creating TPM-based enrollments with specific properties and tags.
 /// </summary>
 public sealed partial class DeviceProvisioningService : IDeviceProvisioningService
 {
@@ -17,6 +21,13 @@ public sealed partial class DeviceProvisioningService : IDeviceProvisioningServi
         jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
     }
 
+    /// <summary>
+    /// Retrieves a specific individual enrollment from Azure DPS using the provided registration ID. 
+    /// This method returns null if the enrollment does not exist.
+    /// </summary>
+    /// <param name="registrationId">The registration ID of the individual enrollment to retrieve.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>The IndividualEnrollment instance if found, or null if not found.</returns>
     public async Task<IndividualEnrollment?> GetIndividualEnrollment(
         string registrationId,
         CancellationToken cancellationToken)
@@ -56,6 +67,14 @@ public sealed partial class DeviceProvisioningService : IDeviceProvisioningServi
         }
     }
 
+    // TODO: Extend with optional parameter to e.g. limit to specific type of individual enrollment
+
+    /// <summary>
+    /// Retrieves all individual enrollments registered in Azure DPS. 
+    /// This method enumerates enrollments in a non-deterministic order.
+    /// </summary>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>A collection of all IndividualEnrollment instances.</returns>
     public async Task<IEnumerable<IndividualEnrollment>> GetAllIndividualEnrollments(
         CancellationToken cancellationToken)
     {
@@ -82,6 +101,17 @@ public sealed partial class DeviceProvisioningService : IDeviceProvisioningServi
         return enrollments;
     }
 
+    /// <summary>
+    /// Creates or updates an individual TPM enrollment in Azure DPS with the provided parameters. 
+    /// Returns the enrollment result along with any error messages if the operation fails.
+    /// </summary>
+    /// <param name="endorsementKey">The TPM endorsement key.</param>
+    /// <param name="registrationId">The registration ID for the enrollment.</param>
+    /// <param name="serialNumber">The serial number of the device.</param>
+    /// <param name="tags">Optional. The tags to be applied to the device twin.</param>
+    /// <param name="desiredProperties">Optional. The desired properties to be applied to the device twin.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>Tuple containing the IndividualEnrollment instance and an error message if applicable.</returns>
     public async Task<(IndividualEnrollment? Enrollment, string? ErrorMessage)> CreateIndividualTpmEnrollment(
         string endorsementKey,
         string registrationId,
@@ -146,6 +176,11 @@ public sealed partial class DeviceProvisioningService : IDeviceProvisioningServi
         }
     }
 
+    /// <summary>
+    /// Deletes an individual enrollment from Azure DPS using the provided registration ID.
+    /// </summary>
+    /// <param name="registrationId">The registration ID of the individual enrollment to delete.</param>
+    /// <returns>Indicates whether the operation succeeded.</returns>
     public async Task<bool> DeleteIndividualEnrollment(
         string registrationId)
     {
