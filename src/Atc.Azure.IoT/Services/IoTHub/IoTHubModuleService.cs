@@ -59,16 +59,12 @@ public sealed partial class IoTHubModuleService : IotHubServiceBase, IIoTHubModu
                 parameters.JsonPayload,
                 ex.GetLastInnerMessage());
 
-            var problemDetails = new ProblemDetails
-            {
-                Status = StatusCodes.Status500InternalServerError,
-                Title = nameof(HttpStatusCode.InternalServerError),
-                Detail = ex.GetLastInnerMessage(),
-            };
-
             return new MethodResultModel(
                 Status: StatusCodes.Status500InternalServerError,
-                JsonPayload: JsonSerializer.Serialize(problemDetails));
+                JsonPayload: JsonSerializer.Serialize(new MethodResultErrorModel(
+                    Status: StatusCodes.Status500InternalServerError,
+                    Title: nameof(HttpStatusCode.InternalServerError),
+                    Detail: ex.GetLastInnerMessage())));
         }
     }
 

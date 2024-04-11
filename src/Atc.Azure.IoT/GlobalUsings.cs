@@ -12,7 +12,6 @@ global using Atc.Azure.IoT.Serialization.JsonConverters;
 global using Atc.Azure.IoT.Services.IoTHub;
 global using Atc.Serialization;
 global using Microsoft.AspNetCore.Http;
-global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.Azure.Devices;
 global using Microsoft.Azure.Devices.Common.Exceptions;
 global using Microsoft.Azure.Devices.Provisioning.Service;

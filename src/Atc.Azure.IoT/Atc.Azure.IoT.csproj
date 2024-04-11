@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Atc" Version="2.0.465" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Azure.Devices" Version="1.39.1" />
     <PackageReference Include="Microsoft.Azure.Devices.Provisioning.Security.Tpm" Version="1.14.4" />
     <PackageReference Include="Microsoft.Azure.Devices.Provisioning.Service" Version="1.18.4" />
