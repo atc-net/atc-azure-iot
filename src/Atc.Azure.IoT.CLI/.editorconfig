@@ -1,18 +1,23 @@
 # ATC coding rules - https://github.com/atc-net/atc-coding-rules
-# Version: 1.0.9
-# Updated: 01-02-2022
-# Location: app-type=CLI
-# Distribution: DotNet6
-# Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+# Version: 1.0.0
+# Updated: 11-04-2024
+# Location: cli
+# Distribution: Frameworks
 
 ##########################################
 # Code Analyzers Rules
 ##########################################
-[*.cs]
+[*.{cs}]
 
-dotnet_diagnostic.CA1031.severity = none            # Not needed in CLI projects
-dotnet_diagnostic.CA1303.severity = none            # Not needed in CLI projects
-dotnet_diagnostic.CA1819.severity = none            # Not needed in CLI projects
-dotnet_diagnostic.CA1848.severity = none            # Not needed in CLI projects
-dotnet_diagnostic.CA2000.severity = none            # Not needed in CLI projects
-dotnet_diagnostic.CA2254.severity = none            # Not needed in CLI projects
+dotnet_diagnostic.CA1031.severity = none            #
+dotnet_diagnostic.CA1303.severity = none            #
+dotnet_diagnostic.CA1819.severity = none            #
+dotnet_diagnostic.CA1848.severity = none            #
+dotnet_diagnostic.CA2000.severity = none            #
+dotnet_diagnostic.CA2254.severity = none            #
+
+dotnet_diagnostic.S2629.severity = none             #
+
+##########################################
+# Custom - Code Analyzers Rules
+##########################################
