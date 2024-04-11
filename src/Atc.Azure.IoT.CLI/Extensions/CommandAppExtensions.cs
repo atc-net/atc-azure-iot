@@ -18,7 +18,7 @@ public static class CommandAppExtensions
         => node =>
         {
             node.SetDescription("Operations related to Device Provisioning Service.");
-            node.AddBranch("enrollment", ConfigureDpsEnrollmentCommands);
+            node.AddBranch("enrollment", ConfigureDpsEnrollmentIndividualCommands);
         };
 
     private static Action<IConfigurator<CommandSettings>> ConfigureIotHubCommands()
@@ -28,12 +28,12 @@ public static class CommandAppExtensions
 
             node.AddCommand<IotHubStatisticsCommand>("statistics")
                 .WithDescription("Retrieve the statistics of the device registry in the IoT Hub.")
-                .WithExample("iothub statistics");
+                .WithExample("iothub statistics -c <connection-string>");
 
             ConfigureIotHubDeviceCommands(node);
         };
 
-    private static void ConfigureDpsEnrollmentCommands(
+    private static void ConfigureDpsEnrollmentIndividualCommands(
         IConfigurator<CommandSettings> node)
     {
         node.AddBranch("individual", individual =>
@@ -42,7 +42,7 @@ public static class CommandAppExtensions
 
             individual.AddCommand<DpsEnrollmentÍndividualGetAllCommand>("all")
                 .WithDescription("Retrieves all individual enrollments.")
-                .WithExample("dps enrollment individual list"); // TODO: Fill out example
+                .WithExample("dps enrollment individual all"); // TODO: Fill out example
 
             individual.AddBranch("create", create =>
             {
@@ -71,7 +71,7 @@ public static class CommandAppExtensions
 
             device.AddCommand<IotHubDeviceGetCommand>("get")
                 .WithDescription("Retrieve a device from the device registry in the IoT Hub.")
-                .WithExample("iothub device get"); // TODO: Fill out example
+                .WithExample("iothub device get -c <connection-string>"); // TODO: Fill out example
 
             device.AddCommand<IotHubDeviceDeleteCommand>("delete")
                 .WithDescription("Delete a device from the device registry in the IoT Hub.")
