@@ -201,7 +201,7 @@ public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, I
         }
     }
 
-    public async Task<IEnumerable<Microsoft.Azure.Devices.Module>> GetModuleTwinsOnIotEdgeDevice(
+    public async Task<IEnumerable<Microsoft.Azure.Devices.Module>> GetModulesOnIotEdgeDevice(
         string deviceId,
         CancellationToken cancellationToken = default)
     {
@@ -209,7 +209,7 @@ public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, I
 
         try
         {
-            LogRetrievingIotEdgeDeviceTwinModules(
+            LogRetrievingIotEdgeDeviceModules(
                 ioTHubHostName!,
                 deviceId);
 
@@ -221,14 +221,14 @@ public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, I
                 (modulesOnDevice.TryGetNonEnumeratedCount(out var modulesOnDeviceCount) &&
                  modulesOnDeviceCount == 0))
             {
-                LogIotEdgeDeviceTwinModulesNotFound(
+                LogIotEdgeDeviceModulesNotFound(
                     ioTHubHostName!,
                     deviceId);
 
-                return Enumerable.Empty<Microsoft.Azure.Devices.Module>();
+                return [];
             }
 
-            LogRetrieveIotEdgeDeviceTwinModulesSucceeded(
+            LogRetrieveIotEdgeDeviceModulesSucceeded(
                 ioTHubHostName!,
                 deviceId);
 
@@ -241,7 +241,7 @@ public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, I
                 ex.GetType().ToString(),
                 ex.GetLastInnerMessage());
 
-            return Enumerable.Empty<Microsoft.Azure.Devices.Module>();
+            return [];
         }
     }
 

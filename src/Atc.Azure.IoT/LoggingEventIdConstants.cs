@@ -21,9 +21,9 @@ internal static class LoggingEventIdConstants
         public const int IotDeviceTwinNotUpdated = 10_401;
         public const int UpdateIotDeviceTwinSucceeded = 10_402;
 
-        public const int RetrievingIotEdgeDeviceTwinModules = 10_500;
-        public const int IotEdgeDeviceTwinModulesNotFound = 10_501;
-        public const int RetrieveIotEdgeDeviceTwinModulesSucceeded = 10_502;
+        public const int RetrievingIotEdgeDeviceModules = 10_500;
+        public const int IotEdgeDeviceModulesNotFound = 10_501;
+        public const int RetrieveIotEdgeDeviceModulesSucceeded = 10_502;
         public const int UpdatingModuleTwinDesiredProperties = 10_503;
         public const int UpdateModuleTwinDesiredPropertiesSucceeded = 10_504;
         public const int ModuleTwinDesiredPropertiesNotUpdated = 10_505;

@@ -162,30 +162,30 @@ public sealed partial class IoTHubService
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubService.RetrievingIotEdgeDeviceTwinModules,
+        EventId = LoggingEventIdConstants.IoTHubService.RetrievingIotEdgeDeviceModules,
         Level = LogLevel.Trace,
-        Message = "{callerMethodName}({callerLineNumber}) - Starting to retrieve iot edge device twin modules for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
-    private partial void LogRetrievingIotEdgeDeviceTwinModules(
+        Message = "{callerMethodName}({callerLineNumber}) - Starting to retrieve iot edge device modules for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
+    private partial void LogRetrievingIotEdgeDeviceModules(
         string iotHubHostName,
         string deviceId,
         [CallerMemberName] string callerMethodName = "",
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubService.IotEdgeDeviceTwinModulesNotFound,
+        EventId = LoggingEventIdConstants.IoTHubService.IotEdgeDeviceModulesNotFound,
         Level = LogLevel.Warning,
-        Message = "{callerMethodName}({callerLineNumber}) - Could not find iot edge device twin modules for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
-    private partial void LogIotEdgeDeviceTwinModulesNotFound(
+        Message = "{callerMethodName}({callerLineNumber}) - Could not find iot edge device modules for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
+    private partial void LogIotEdgeDeviceModulesNotFound(
         string iotHubHostName,
         string deviceId,
         [CallerMemberName] string callerMethodName = "",
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubService.RetrieveIotEdgeDeviceTwinModulesSucceeded,
+        EventId = LoggingEventIdConstants.IoTHubService.RetrieveIotEdgeDeviceModulesSucceeded,
         Level = LogLevel.Trace,
-        Message = "{callerMethodName}({callerLineNumber}) - Retrieved iot edge device twin modules for deviceId '{deviceId}' from iot hub '{iotHubHostName}'")]
-    private partial void LogRetrieveIotEdgeDeviceTwinModulesSucceeded(
+        Message = "{callerMethodName}({callerLineNumber}) - Retrieved iot edge device modules for deviceId '{deviceId}' from iot hub '{iotHubHostName}'")]
+    private partial void LogRetrieveIotEdgeDeviceModulesSucceeded(
         string iotHubHostName,
         string deviceId,
         [CallerMemberName] string callerMethodName = "",

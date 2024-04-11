@@ -10,7 +10,7 @@ public interface IIoTHubService
     /// Asynchronously retrieves the statistics of the device registry in the IoT Hub.
     /// </summary>
     /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
-    /// <returns>Total the registry statistics of the iot hub if the operation is successful; otherwise, null.</returns>
+    /// <returns>The registry statistics of the iot hub if the operation is successful; otherwise, null.</returns>
     Task<RegistryStatistics?> GetDeviceRegistryStatistics(
         CancellationToken cancellationToken = default);
 
@@ -58,7 +58,7 @@ public interface IIoTHubService
     /// <param name="deviceId">The identifier of the IoT Edge device to retrieve its module twins.</param>
     /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
     /// <returns>A collection of module twins if any; otherwise, an empty collection.</returns>
-    Task<IEnumerable<Microsoft.Azure.Devices.Module>> GetModuleTwinsOnIotEdgeDevice(
+    Task<IEnumerable<Microsoft.Azure.Devices.Module>> GetModulesOnIotEdgeDevice(
         string deviceId,
         CancellationToken cancellationToken = default);
 
