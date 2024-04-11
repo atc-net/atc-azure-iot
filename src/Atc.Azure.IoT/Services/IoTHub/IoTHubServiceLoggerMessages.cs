@@ -20,6 +20,15 @@ public sealed partial class IoTHubService
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
+        EventId = LoggingEventIdConstants.IoTHubService.RetrievingRegistryStatistics,
+        Level = LogLevel.Trace,
+        Message = "{callerMethodName}({callerLineNumber}) - Retrieving registry statistics on iot hub '{iotHubHostName}'")]
+    private partial void LogRetrievingRegistryStatistics(
+        string iotHubHostName,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
+
+    [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubService.RetrievingIotDevice,
         Level = LogLevel.Trace,
         Message = "{callerMethodName}({callerLineNumber}) - Starting to retrieve iot edge device for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]

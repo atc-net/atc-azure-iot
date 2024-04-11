@@ -28,6 +28,7 @@ public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, I
     {
         try
         {
+            LogRetrievingRegistryStatistics(ioTHubHostName!);
             return await registryManager!.GetRegistryStatisticsAsync(cancellationToken);
         }
         catch (Exception ex)

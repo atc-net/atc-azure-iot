@@ -6,6 +6,7 @@ internal static class LoggingEventIdConstants
     {
         public const int Failure = 10_000;
 
+        public const int RetrievingRegistryStatistics = 10_050;
         public const int RetrievingIotDevice = 10_100;
         public const int IotDeviceNotFound = 10_101;
         public const int RetrieveIotDeviceSucceeded = 10_102;
