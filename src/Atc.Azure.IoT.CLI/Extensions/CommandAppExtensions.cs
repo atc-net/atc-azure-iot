@@ -7,83 +7,110 @@ public static class CommandAppExtensions
     {
         ArgumentNullException.ThrowIfNull(app);
 
-        //   dps
-        //      enrollment
-        //        get
-        //        list
-        //        create
-        //          tpm
-        //        delete
-        //      enrollment-group
-        //   iothub
-        //     ??
-
         app.Configure(config =>
         {
-            //ConfigureTestConnectionCommand(config);
             config.AddBranch("dps", ConfigureDpsCommands());
-
             config.AddBranch("iothub", ConfigureIotHubCommands());
         });
     }
-
-    //private static void ConfigureTestConnectionCommand(
-    //    IConfigurator config)
-    //    => config.AddCommand<TestConnectionCommand>("testconnection")
-    //        .WithDescription("Tests if a connection can be made to a given server.")
-    //        .WithExample($"testconnection -s {SampleOpcUaServerUrl}");
 
     private static Action<IConfigurator<CommandSettings>> ConfigureDpsCommands()
         => node =>
         {
             node.SetDescription("Operations related to Device Provisioning Service.");
-            ConfigureNodeReadCommands(node);
-            ConfigureNodeWriteCommands(node);
+            ConfigureDpsEnrollmentCommands(node);
         };
 
     private static Action<IConfigurator<CommandSettings>> ConfigureIotHubCommands()
-        => method =>
+        => node =>
         {
-            method.SetDescription("Operations related to IoT Hub.");
+            node.SetDescription("Operations related to IoT Hub.");
 
-            method.AddCommand<ExecuteMethodCommand>("execute")
-                .WithDescription("Used to execute a given method.");
+            node.AddCommand<IotHubStatisticsCommand>("statistics")
+                .WithDescription("Retrieve the statistics of the device registry in the IoT Hub.")
+                .WithExample("iothub statistics");
+
+            ConfigureIotHubDeviceCommands(node);
         };
 
-    private static void ConfigureNodeReadCommands(
+    private static void ConfigureDpsEnrollmentCommands(
         IConfigurator<CommandSettings> node)
-        => node.AddBranch("read", read =>
+    {
+        node.SetDescription("Operations related to individual enrollments on Device Provisioning Service.");
+
+        node.AddBranch("create", create =>
         {
-            read.SetDescription("Operations related to reading nodes.");
-            read.AddCommand<NodeReadObjectCommand>("object")
-                .WithDescription("Reads a given node object.")
-                .WithExample($"node read object -s {SampleOpcUaServerUrl} -n \"ns=2;s=Demo.Dynamic.Scalar\"");
-
-            read.AddBranch("variable", variable =>
-            {
-                variable.SetDescription("Reads one or more node variable(s).");
-                variable.AddCommand<NodeReadVariableSingleCommand>("single")
-                    .WithDescription("Reads a single node variable.")
-                    .WithExample($"node read variable single -s {SampleOpcUaServerUrl} -n \"ns=2;s=Demo.Dynamic.Scalar.Float\"");
-
-                variable.AddCommand<NodeReadVariableMultiCommand>("multi")
-                    .WithDescription("Reads a list of node variables.")
-                    .WithExample($"node read variable multi -s {SampleOpcUaServerUrl} -n \"ns=2;s=Demo.Dynamic.Scalar.Float\" -n \"ns=2;s=Demo.Dynamic.Scalar.Int32\"");
-            });
+            create.SetDescription("Operations related to creating individual enrollments.");
+            create.AddCommand<DpsEnrollmentCreateTpmCommand>("tpm")
+                .WithDescription("Reads a single node variable.")
+                .WithExample("dps enrollment create tpm --"); // TODO: Fill out example
         });
 
-    private static void ConfigureNodeWriteCommands(
-        IConfigurator<CommandSettings> node)
-        => node.AddBranch("write", write =>
-        {
-            write.SetDescription("Operations related to writing nodes.");
+        node.AddCommand<DpsEnrollmentDeleteCommand>("delete")
+            .WithDescription("Retrieves an individual enrollment.")
+            .WithExample("dps enrollment get --"); // TODO: Fill out example
 
-            write.AddBranch("variable", variable =>
-            {
-                variable.SetDescription("Writes a value to one or more node variable(s).");
-                variable.AddCommand<NodeWriteVariableSingleCommand>("single")
-                    .WithDescription("Write a value to a single node variable.")
-                    .WithExample($"node write variable single -s {SampleOpcUaServerUrl} -n \"ns=2;s=Demo.Dynamic.Scalar.Float\" -d float --value \"100.5\"");
-            });
+        node.AddCommand<DpsEnrollmentGetCommand>("get")
+            .WithDescription("Retrieves an individual enrollment.")
+            .WithExample("dps enrollment get --"); // TODO: Fill out example
+
+        node.AddCommand<DpsEnrollmentListCommand>("list")
+            .WithDescription("Retrieves all individual enrollments.")
+            .WithExample("dps enrollment list"); // TODO: Fill out example (e.g. limit to types?!)
+    }
+
+    private static void ConfigureIotHubDeviceCommands(
+        IConfigurator<CommandSettings> node)
+    {
+        node.SetDescription("Operations related to devices on the iot hub.");
+
+        node.AddCommand<IotHubGetCommand>("get")
+            .WithDescription("Retrieve a device from the device registry in the IoT Hub.")
+            .WithExample("iothub device get"); // TODO: Fill out example
+
+        node.AddCommand<IotHubDeleteCommand>("delete")
+            .WithDescription("Delete a device from the device registry in the IoT Hub.")
+            .WithExample("iothub device delete"); // TODO: Fill out example
+
+        node.AddBranch("twin", twin =>
+        {
+            twin.SetDescription("Operations related to twins in the IoT Hub.");
+
+            twin.AddCommand<IotHubDeviceTwinGetAllCommand>("all")
+                .WithDescription("Retrieve all device twins in the IoT Hub.")
+                .WithExample("iothub device twin all");  // TODO: Fill out example
+
+            twin.AddCommand<IotHubDeviceTwinGetCommand>("get")
+                .WithDescription("Retrieve a device twin in the IoT Hub.")
+                .WithExample("iothub device twin get");  // TODO: Fill out example
+
+            twin.AddCommand<IotHubDeviceTwinUpdateCommand>("update")
+                .WithDescription("Uppdate a device twin in the IoT Hub.")
+                .WithExample("iothub device twin update");  // TODO: Fill out example
         });
+
+        node.AddBranch("module", module =>
+        {
+            module.SetDescription("Operations related to device modules in the IoT Hub.");
+
+            module.AddCommand<IotHubDeviceModuleGetAllCommand>("all")
+                .WithDescription("Retrieve all modules on a device.")
+                .WithExample("iothub device module all");  // TODO: Fill out example
+
+            module.AddBranch("twin", twin =>
+            {
+                twin.AddCommand<IotHubDeviceModuleGetTwinCommand>("get")
+                    .WithDescription("Retrieve a module twin on a device.")
+                    .WithExample("iothub device module twin get");  // TODO: Fill out example
+            });
+
+            module.AddCommand<IotHubDeviceModuleRemoveCommand>("remove")
+                .WithDescription("Remove a module on a device.")
+                .WithExample("iothub device module remove");  // TODO: Fill out example
+
+            module.AddCommand<IotHubDeviceModuleRestartCommand>("restart")
+                .WithDescription("Restart a module on a device.")
+                .WithExample("iothub device module restart");  // TODO: Fill out example
+        });
+    }
 }
