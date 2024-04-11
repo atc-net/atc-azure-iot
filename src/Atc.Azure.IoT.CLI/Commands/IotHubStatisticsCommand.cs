@@ -27,9 +27,29 @@ public sealed class IotHubStatisticsCommand : AsyncCommand<IotHubBaseCommandSett
         ConsoleHelper.WriteHeader();
 
         var connectionString = settings.ConnectionString!;
+        var iothubOptions = new IotHubOptions { ConnectionString = connectionString };
+
+        var iotHubModuleService = new IoTHubModuleService(
+            loggerFactory,
+            iothubOptions);
+
+        var iotHubService = new IoTHubService(
+            loggerFactory,
+            iotHubModuleService,
+            iothubOptions);
+
         var sw = Stopwatch.StartNew();
 
-        // TODO:
+        var deviceRegistryStatistics = await iotHubService.GetDeviceRegistryStatistics(CancellationToken.None);
+        if (deviceRegistryStatistics is null)
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation("RegistryStatistics:\n" +
+                              $"\t\tTotalDeviceCount: {deviceRegistryStatistics.TotalDeviceCount}\n" +
+                              $"\t\tEnabledDeviceCount: {deviceRegistryStatistics.EnabledDeviceCount}\n" +
+                              $"\t\tDisabledDeviceCount: {deviceRegistryStatistics.DisabledDeviceCount}");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");
