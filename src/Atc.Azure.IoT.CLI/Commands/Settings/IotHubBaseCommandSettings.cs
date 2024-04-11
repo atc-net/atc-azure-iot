@@ -3,7 +3,7 @@ namespace Atc.Azure.IoT.CLI.Commands.Settings;
 public class IotHubBaseCommandSettings : BaseCommandSettings
 {
     [CommandOption("-c|--connection-string <CONNECTION-STRING>")]
-    [Description("OPC UA Server Url")]
+    [Description("IotHub ConnectionString")]
     public string? ConnectionString { get; init; }
 
     public override ValidationResult Validate()
