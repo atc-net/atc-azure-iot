@@ -18,7 +18,6 @@ public static class CommandAppExtensions
         => node =>
         {
             node.SetDescription("Operations related to Device Provisioning Service.");
-
             node.AddBranch("enrollment", ConfigureDpsEnrollmentCommands);
         };
 
@@ -91,7 +90,7 @@ public static class CommandAppExtensions
                     .WithExample("iothub device twin get");  // TODO: Fill out example
 
                 twin.AddCommand<IotHubDeviceTwinUpdateCommand>("update")
-                    .WithDescription("Uppdate a device twin in the IoT Hub.")
+                    .WithDescription("Update a device twin in the IoT Hub.")
                     .WithExample("iothub device twin update");  // TODO: Fill out example
             });
 
