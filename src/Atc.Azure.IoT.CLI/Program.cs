@@ -1,5 +1,3 @@
-using Atc.Azure.IoT.CLI.Extensions;
-
 namespace Atc.Azure.IoT.CLI;
 
 public static class Program
@@ -33,7 +31,7 @@ public static class Program
     {
         if (args.Length == 0)
         {
-            return new[] { CommandConstants.ArgumentShortHelp };
+            return [CommandConstants.ArgumentShortHelp];
         }
 
         // TODO: Add multiple command help commands
