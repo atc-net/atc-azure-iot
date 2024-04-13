@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands.Settings;
 
-public class IotHubDeviceTwinGetAllCommandSettings : ConnectionBaseCommandSettings
+public sealed class IotHubDeviceTwinGetAllCommandSettings : ConnectionBaseCommandSettings
 {
     [CommandOption("-e|--edge-devices-only <EDGE-DEVICES-ONLY>")]
     [Description("Indicates if only edge devices should be queried.")]
