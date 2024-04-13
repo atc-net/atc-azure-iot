@@ -8,6 +8,12 @@ public class IotHubDeviceCommandSettings : IotHubBaseCommandSettings
 
     public override ValidationResult Validate()
     {
+        var validationResult = base.Validate();
+        if (!validationResult.Successful)
+        {
+            return validationResult;
+        }
+
         if (string.IsNullOrWhiteSpace(DeviceId))
         {
             return ValidationResult.Error("DeviceId must be present.");
