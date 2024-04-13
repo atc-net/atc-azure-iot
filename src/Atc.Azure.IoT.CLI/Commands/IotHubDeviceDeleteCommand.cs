@@ -1,18 +1,20 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class IotHubDeviceDeleteCommand : AsyncCommand<IotHubBaseCommandSettings>
+public sealed class IotHubDeviceDeleteCommand : AsyncCommand<IotHubDeviceCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceDeleteCommand> logger;
 
     public IotHubDeviceDeleteCommand(
-        ILogger<IotHubDeviceDeleteCommand> logger)
+        ILoggerFactory loggerFactory)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<IotHubDeviceDeleteCommand>();
     }
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubBaseCommandSettings settings)
+        IotHubDeviceCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -20,14 +22,27 @@ public sealed class IotHubDeviceDeleteCommand : AsyncCommand<IotHubBaseCommandSe
     }
 
     private async Task<int> ExecuteInternalAsync(
-        IotHubBaseCommandSettings settings)
+        IotHubDeviceCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var connectionString = settings.ConnectionString!;
+        var deviceId = settings.DeviceId!;
+        var iotHubService = IotHubServiceFactory.Create(
+            loggerFactory,
+            settings.ConnectionString!);
+
         var sw = Stopwatch.StartNew();
 
-        // TODO:
+        var succeeded = await iotHubService.DeleteDevice(
+            deviceId,
+            CancellationToken.None);
+
+        if (!succeeded)
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation($"Device with id '{deviceId}' was deleted successfully.");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");
