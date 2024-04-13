@@ -105,7 +105,7 @@ public sealed partial class DeviceProvisioningService : DeviceProvisioningServic
     /// </summary>
     /// <param name="endorsementKey">The TPM endorsement key.</param>
     /// <param name="registrationId">The registration ID for the enrollment.</param>
-    /// <param name="serialNumber">The serial number of the device.</param>
+    /// <param name="deviceId">The id of the device.</param>
     /// <param name="tags">Optional. The tags to be applied to the device twin.</param>
     /// <param name="desiredProperties">Optional. The desired properties to be applied to the device twin.</param>
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
@@ -113,21 +113,21 @@ public sealed partial class DeviceProvisioningService : DeviceProvisioningServic
     public async Task<(IndividualEnrollment? Enrollment, string? ErrorMessage)> CreateIndividualTpmEnrollment(
         string endorsementKey,
         string registrationId,
-        string serialNumber,
+        string deviceId,
         Dictionary<string, string>? tags,
         Dictionary<string, string>? desiredProperties,
         CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrEmpty(endorsementKey);
         ArgumentException.ThrowIfNullOrEmpty(registrationId);
-        ArgumentException.ThrowIfNullOrEmpty(serialNumber);
+        ArgumentException.ThrowIfNullOrEmpty(deviceId);
 
         try
         {
             var individualEnrollment = BuildIndividualEnrollment(
                 endorsementKey,
                 registrationId,
-                serialNumber,
+                deviceId,
                 tags,
                 desiredProperties);
 
@@ -220,7 +220,7 @@ public sealed partial class DeviceProvisioningService : DeviceProvisioningServic
     private static IndividualEnrollment BuildIndividualEnrollment(
         string endorsementKey,
         string registrationId,
-        string serialNumber,
+        string deviceId,
         Dictionary<string, string>? tags,
         Dictionary<string, string>? desiredProperties)
     {
@@ -229,7 +229,7 @@ public sealed partial class DeviceProvisioningService : DeviceProvisioningServic
             registrationId,
             attestation)
         {
-            DeviceId = serialNumber,
+            DeviceId = deviceId,
             ProvisioningStatus = ProvisioningStatus.Enabled,
             Capabilities = new DeviceCapabilities
             {

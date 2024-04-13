@@ -34,7 +34,7 @@ public interface IDeviceProvisioningService
     /// </summary>
     /// <param name="endorsementKey">The TPM endorsement key.</param>
     /// <param name="registrationId">The registration ID for the enrollment.</param>
-    /// <param name="serialNumber">The serial number of the device.</param>
+    /// <param name="deviceId">The id of the device.</param>
     /// <param name="tags">Optional. The tags to be applied to the device twin.</param>
     /// <param name="desiredProperties">Optional. The desired properties to be applied to the device twin.</param>
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
@@ -42,7 +42,7 @@ public interface IDeviceProvisioningService
     Task<(IndividualEnrollment? Enrollment, string? ErrorMessage)> CreateIndividualTpmEnrollment(
         string endorsementKey,
         string registrationId,
-        string serialNumber,
+        string deviceId,
         Dictionary<string, string>? tags,
         Dictionary<string, string>? desiredProperties,
         CancellationToken cancellationToken);
