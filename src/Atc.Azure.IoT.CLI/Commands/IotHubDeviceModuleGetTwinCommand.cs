@@ -26,9 +26,6 @@ public sealed class IotHubDeviceModuleGetTwinCommand : AsyncCommand<IotHubModule
     {
         ConsoleHelper.WriteHeader();
 
-        var deviceId = settings.DeviceId!;
-        var moduleId = settings.ModuleId!;
-
         var iotHubService = IotHubServiceFactory.Create(
             loggerFactory,
             settings.ConnectionString!);
@@ -36,8 +33,8 @@ public sealed class IotHubDeviceModuleGetTwinCommand : AsyncCommand<IotHubModule
         var sw = Stopwatch.StartNew();
 
         var moduleTwin = await iotHubService.GetModuleTwin(
-            deviceId,
-            moduleId,
+            settings.DeviceId!,
+            settings.ModuleId!,
             CancellationToken.None);
 
         if (moduleTwin is null)
