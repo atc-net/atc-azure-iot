@@ -40,19 +40,19 @@ public static class CommandAppExtensions
         {
             individual.SetDescription("Operations related to individual enrollments on Device Provisioning Service.");
 
-            individual.AddCommand<DpsEnrollmentÍndividualGetAllCommand>("all")
+            individual.AddCommand<DpsEnrollmentIndividualGetAllCommand>("all")
                 .WithDescription("Retrieves all individual enrollments.")
                 .WithExample("dps enrollment individual all"); // TODO: Fill out example
 
             individual.AddBranch("create", create =>
             {
                 create.SetDescription("Operations related to creating individual enrollments.");
-                create.AddCommand<DpsEnrollmentÍndividualCreateTpmCommand>("tpm")
+                create.AddCommand<DpsEnrollmentIndividualCreateTpmCommand>("tpm")
                     .WithDescription("Reads a single node variable.")
                     .WithExample("dps enrollment individual create tpm"); // TODO: Fill out example
             });
 
-            individual.AddCommand<DpsEnrollmentÍndividualDeleteCommand>("delete")
+            individual.AddCommand<DpsEnrollmentIndividualDeleteCommand>("delete")
                 .WithDescription("Retrieves an individual enrollment.")
                 .WithExample("dps enrollment individual get"); // TODO: Fill out example
 

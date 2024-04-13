@@ -1,13 +1,15 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class DpsEnrollmentÍndividualCreateTpmCommand : AsyncCommand<IotHubBaseCommandSettings>
+public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<IotHubBaseCommandSettings>
 {
-    private readonly ILogger<DpsEnrollmentÍndividualCreateTpmCommand> logger;
+    private readonly ILoggerFactory loggerFactory;
+    private readonly ILogger<DpsEnrollmentIndividualGetAllCommand> logger;
 
-    public DpsEnrollmentÍndividualCreateTpmCommand(
-        ILogger<DpsEnrollmentÍndividualCreateTpmCommand> logger)
+    public DpsEnrollmentIndividualGetAllCommand(
+        ILoggerFactory loggerFactory)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<DpsEnrollmentIndividualGetAllCommand>();
     }
 
     public override Task<int> ExecuteAsync(

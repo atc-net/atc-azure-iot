@@ -1,13 +1,15 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class DpsEnrollmentÍndividualDeleteCommand : AsyncCommand<IotHubBaseCommandSettings>
+public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<IotHubBaseCommandSettings>
 {
-    private readonly ILogger<DpsEnrollmentÍndividualDeleteCommand> logger;
+    private readonly ILoggerFactory loggerFactory;
+    private readonly ILogger<DpsEnrollmentIndividualDeleteCommand> logger;
 
-    public DpsEnrollmentÍndividualDeleteCommand(
-        ILogger<DpsEnrollmentÍndividualDeleteCommand> logger)
+    public DpsEnrollmentIndividualDeleteCommand(
+        ILoggerFactory loggerFactory)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<DpsEnrollmentIndividualDeleteCommand>();
     }
 
     public override Task<int> ExecuteAsync(
