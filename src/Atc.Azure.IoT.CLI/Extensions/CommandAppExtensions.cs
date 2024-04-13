@@ -56,7 +56,7 @@ public static class CommandAppExtensions
                 .WithDescription("Retrieves an individual enrollment.")
                 .WithExample("dps enrollment individual get"); // TODO: Fill out example
 
-            individual.AddCommand<DpsEnrollmentÍndividualGetCommand>("get")
+            individual.AddCommand<DpsEnrollmentIndividualGetCommand>("get")
                 .WithDescription("Retrieves an individual enrollment.")
                 .WithExample("dps enrollment individual get"); // TODO: Fill out example
         });
