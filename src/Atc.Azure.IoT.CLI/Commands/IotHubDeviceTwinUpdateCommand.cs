@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class IotHubDeviceTwinUpdateCommand : AsyncCommand<ConnectionBaseCommandSettings>
+public sealed class IotHubDeviceTwinUpdateCommand : AsyncCommand<IotHubDeviceTwinUpdateCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceTwinUpdateCommand> logger;
@@ -14,7 +14,7 @@ public sealed class IotHubDeviceTwinUpdateCommand : AsyncCommand<ConnectionBaseC
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        ConnectionBaseCommandSettings settings)
+        IotHubDeviceTwinUpdateCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,14 +22,43 @@ public sealed class IotHubDeviceTwinUpdateCommand : AsyncCommand<ConnectionBaseC
     }
 
     private async Task<int> ExecuteInternalAsync(
-        ConnectionBaseCommandSettings settings)
+        IotHubDeviceTwinUpdateCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var connectionString = settings.ConnectionString!;
+        var iotHubService = IotHubServiceFactory.Create(
+            loggerFactory,
+            settings.ConnectionString!);
+
         var sw = Stopwatch.StartNew();
 
-        // TODO:
+        var deviceTwin = await iotHubService.GetDeviceTwin(
+            settings.DeviceId!,
+            CancellationToken.None);
+
+        if (deviceTwin is null)
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        deviceTwin.Tags = settings.Tags.ParseToDictionary().ToTwinCollection();
+
+        var (succeeded, updatedTwin) = await iotHubService.UpdateDeviceTwin(
+            settings.DeviceId!,
+            deviceTwin,
+            CancellationToken.None);
+
+        if (!succeeded ||
+            updatedTwin is null)
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation("DeviceTwin updated:\n" +
+                              $"\t\tDeviceId: {updatedTwin.DeviceId}\n" +
+                              $"\t\tConnectionState: {updatedTwin.ConnectionState}\n" +
+                              $"\t\tStatus: {updatedTwin.Status}\n" +
+                              $"\t\tStatusReason: {updatedTwin.StatusReason}");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");

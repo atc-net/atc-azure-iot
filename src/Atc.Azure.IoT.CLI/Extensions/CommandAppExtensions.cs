@@ -91,7 +91,7 @@ public static class CommandAppExtensions
 
                 twin.AddCommand<IotHubDeviceTwinUpdateCommand>("update")
                     .WithDescription("Update a device twin in the IoT Hub.")
-                    .WithExample("iothub device twin update");  // TODO: Fill out example
+                    .WithExample("iothub device twin update -c <connection-string> -d <device-id> --tags tag1=value1,tag2=value2");
             });
 
             device.AddBranch("module", module =>

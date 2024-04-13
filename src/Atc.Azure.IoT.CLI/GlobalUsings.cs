@@ -4,6 +4,7 @@ global using Atc.Azure.IoT.CLI.Commands;
 global using Atc.Azure.IoT.CLI.Commands.Settings;
 global using Atc.Azure.IoT.CLI.Extensions;
 global using Atc.Azure.IoT.CLI.Factories;
+global using Atc.Azure.IoT.Extensions;
 global using Atc.Azure.IoT.Extractors;
 global using Atc.Azure.IoT.Options;
 global using Atc.Azure.IoT.Services.DeviceProvisioning;
