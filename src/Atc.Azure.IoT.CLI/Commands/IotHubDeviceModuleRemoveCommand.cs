@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class IotHubDeviceModuleRemoveCommand : AsyncCommand<IotHubBaseCommandSettings>
+public sealed class IotHubDeviceModuleRemoveCommand : AsyncCommand<IotHubModuleCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceModuleRemoveCommand> logger;
@@ -14,7 +14,7 @@ public sealed class IotHubDeviceModuleRemoveCommand : AsyncCommand<IotHubBaseCom
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubBaseCommandSettings settings)
+        IotHubModuleCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,14 +22,30 @@ public sealed class IotHubDeviceModuleRemoveCommand : AsyncCommand<IotHubBaseCom
     }
 
     private async Task<int> ExecuteInternalAsync(
-        IotHubBaseCommandSettings settings)
+        IotHubModuleCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var connectionString = settings.ConnectionString!;
+        var deviceId = settings.DeviceId!;
+        var moduleId = settings.ModuleId!;
+
+        var iotHubService = IotHubServiceFactory.Create(
+            loggerFactory,
+            settings.ConnectionString!);
+
         var sw = Stopwatch.StartNew();
 
-        // TODO:
+        var succeeded = await iotHubService.RemoveModuleFromDevice(
+            deviceId,
+            moduleId,
+            CancellationToken.None);
+
+        if (!succeeded)
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation($"Module '{moduleId}' removed from device '{deviceId}'.");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");
