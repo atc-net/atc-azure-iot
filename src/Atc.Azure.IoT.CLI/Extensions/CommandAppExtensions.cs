@@ -54,7 +54,7 @@ public static class CommandAppExtensions
 
             individual.AddCommand<DpsEnrollmentIndividualDeleteCommand>("delete")
                 .WithDescription("Deletes an individual enrollment.")
-                .WithExample("dps enrollment individual delete"); // TODO: Fill out example
+                .WithExample("dps enrollment individual delete -c <connection-string> -r <registration-id>");
 
             individual.AddCommand<DpsEnrollmentIndividualGetCommand>("get")
                 .WithDescription("Retrieves an individual enrollment.")

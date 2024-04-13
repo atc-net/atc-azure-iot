@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<ConnectionBaseCommandSettings>
+public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DeviceProvisioningServiceCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<DpsEnrollmentIndividualDeleteCommand> logger;
@@ -14,7 +14,7 @@ public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<Connecti
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        ConnectionBaseCommandSettings settings)
+        DeviceProvisioningServiceCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,14 +22,26 @@ public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<Connecti
     }
 
     private async Task<int> ExecuteInternalAsync(
-        ConnectionBaseCommandSettings settings)
+        DeviceProvisioningServiceCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var connectionString = settings.ConnectionString!;
+        var dpsService = DeviceProvisioningServiceFactory.Create(
+            loggerFactory,
+            settings.ConnectionString!);
+
         var sw = Stopwatch.StartNew();
 
-        // TODO:
+        var succeeded = await dpsService.DeleteIndividualEnrollment(
+            settings.RegistrationId!,
+            CancellationToken.None);
+
+        if (!succeeded)
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation($"Individual enrollment with registration id '{settings.RegistrationId}' was deleted successfully.");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");
