@@ -51,7 +51,7 @@ public interface IIoTHubService
     /// <param name="twin">The device twin with updated data.</param>
     /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
     /// <returns>A tuple indicating whether the update was successful and the updated device twin if it was; otherwise, null.</returns>
-    Task<(bool IsSuccessful, Twin? UpdatedTwin)> UpdateTwin(
+    Task<(bool Succeeded, Twin? UpdatedTwin)> UpdateDeviceTwin(
         string deviceId,
         Twin twin,
         CancellationToken cancellationToken = default);

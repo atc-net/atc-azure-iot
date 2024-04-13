@@ -164,12 +164,13 @@ public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, I
         }
     }
 
-    public async Task<(bool IsSuccessful, Twin? UpdatedTwin)> UpdateTwin(
+    public async Task<(bool Succeeded, Twin? UpdatedTwin)> UpdateDeviceTwin(
         string deviceId,
         Twin twin,
         CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
+        ArgumentNullException.ThrowIfNull(twin);
 
         try
         {
