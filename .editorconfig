@@ -527,6 +527,7 @@ dotnet_diagnostic.SA1010.severity = none            #
 dotnet_diagnostic.SA1402.severity = none            #
 dotnet_diagnostic.SA1615.severity = none            #
 
+dotnet_diagnostic.CA1002.severity = none            #
 dotnet_diagnostic.CA2007.severity = none            # Consider calling ConfigureAwait on the awaited task
 
 dotnet_diagnostic.MA0004.severity = none            # Use Task.ConfigureAwait(false) as the current SynchronizationContext is not needed
