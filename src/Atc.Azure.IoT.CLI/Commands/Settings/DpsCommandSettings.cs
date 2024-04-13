@@ -3,7 +3,7 @@ namespace Atc.Azure.IoT.CLI.Commands.Settings;
 public class DpsCommandSettings : ConnectionBaseCommandSettings
 {
     [CommandOption("-r|--registration-id <REGISTRATION-ID>")]
-    [Description("DPS Registration Id")]
+    [Description("Registration Id")]
     public string? RegistrationId { get; init; }
 
     public override ValidationResult Validate()
