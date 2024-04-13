@@ -49,7 +49,7 @@ public static class CommandAppExtensions
                 create.SetDescription("Operations related to creating individual enrollments.");
                 create.AddCommand<DpsEnrollmentIndividualCreateTpmCommand>("tpm")
                     .WithDescription("Reads a single node variable.")
-                    .WithExample("dps enrollment individual create tpm"); // TODO: Fill out example
+                    .WithExample("dps enrollment individual create tpm -c <connection-string> -r <registration-id> --endorsement-key <endorsement-key> --device-id <device-id> --tags tag1=value1,tag2=value2");
             });
 
             individual.AddCommand<DpsEnrollmentIndividualDeleteCommand>("delete")
