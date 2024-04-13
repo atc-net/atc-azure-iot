@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands.Settings;
 
-public class DeviceProvisioningServiceCommandSettings : ConnectionBaseCommandSettings
+public class DpsCommandSettings : ConnectionBaseCommandSettings
 {
     [CommandOption("-r|--registration-id <REGISTRATION-ID>")]
     [Description("DPS Registration Id")]

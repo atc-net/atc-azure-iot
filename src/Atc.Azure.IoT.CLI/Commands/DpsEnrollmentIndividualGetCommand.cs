@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class DpsEnrollmentIndividualGetCommand : AsyncCommand<DeviceProvisioningServiceCommandSettings>
+public sealed class DpsEnrollmentIndividualGetCommand : AsyncCommand<DpsCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<DpsEnrollmentIndividualGetCommand> logger;
@@ -14,7 +14,7 @@ public sealed class DpsEnrollmentIndividualGetCommand : AsyncCommand<DeviceProvi
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        DeviceProvisioningServiceCommandSettings settings)
+        DpsCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,7 +22,7 @@ public sealed class DpsEnrollmentIndividualGetCommand : AsyncCommand<DeviceProvi
     }
 
     private async Task<int> ExecuteInternalAsync(
-        DeviceProvisioningServiceCommandSettings settings)
+        DpsCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
