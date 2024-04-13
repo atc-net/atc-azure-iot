@@ -37,10 +37,9 @@ public sealed partial class DeviceProvisioningService : DeviceProvisioningServic
 
         try
         {
-            var enrollment = await client
-                .GetIndividualEnrollmentAsync(
-                    registrationId,
-                    cancellationToken);
+            var enrollment = await client!.GetIndividualEnrollmentAsync(
+                registrationId,
+                cancellationToken);
 
             return enrollment;
         }
@@ -72,20 +71,18 @@ public sealed partial class DeviceProvisioningService : DeviceProvisioningServic
 
     /// <summary>
     /// Retrieves all individual enrollments registered in Azure DPS.
-    /// This method enumerates enrollments in a non-deterministic order.
     /// </summary>
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
-    /// <returns>A collection of all IndividualEnrollment instances.</returns>
-    public async Task<IEnumerable<IndividualEnrollment>> GetAllIndividualEnrollments(
+    /// <returns>A collection of all IndividualEnrollments.</returns>
+    public async Task<IEnumerable<IndividualEnrollment>> GetIndividualEnrollments(
         CancellationToken cancellationToken)
     {
         var enrollments = new List<IndividualEnrollment>();
         var querySpecification = new QuerySpecification("SELECT * FROM enrollments");
 
-        using var query = client
-            .CreateIndividualEnrollmentQuery(
-                querySpecification,
-                cancellationToken);
+        using var query = client!.CreateIndividualEnrollmentQuery(
+            querySpecification,
+            cancellationToken);
 
         while (query.HasNext())
         {
@@ -134,10 +131,9 @@ public sealed partial class DeviceProvisioningService : DeviceProvisioningServic
                 tags,
                 desiredProperties);
 
-            var individualEnrollmentResponse = await client
-                .CreateOrUpdateIndividualEnrollmentAsync(
-                    individualEnrollment,
-                    cancellationToken);
+            var individualEnrollmentResponse = await client!.CreateOrUpdateIndividualEnrollmentAsync(
+                individualEnrollment,
+                cancellationToken);
 
             return (individualEnrollmentResponse, null);
         }
@@ -189,8 +185,7 @@ public sealed partial class DeviceProvisioningService : DeviceProvisioningServic
 
         try
         {
-            await client
-                .DeleteIndividualEnrollmentAsync(registrationId);
+            await client!.DeleteIndividualEnrollmentAsync(registrationId);
 
             return true;
         }

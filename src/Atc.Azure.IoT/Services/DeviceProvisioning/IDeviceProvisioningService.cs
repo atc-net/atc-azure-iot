@@ -22,11 +22,10 @@ public interface IDeviceProvisioningService
 
     /// <summary>
     /// Retrieves all individual enrollments registered in Azure DPS.
-    /// This method enumerates enrollments in a non-deterministic order.
     /// </summary>
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
-    /// <returns>A collection of all IndividualEnrollment instances.</returns>
-    Task<IEnumerable<IndividualEnrollment>> GetAllIndividualEnrollments(
+    /// <returns>A collection of all IndividualEnrollments.</returns>
+    Task<IEnumerable<IndividualEnrollment>> GetIndividualEnrollments(
         CancellationToken cancellationToken);
 
     /// <summary>
