@@ -75,7 +75,7 @@ public static class CommandAppExtensions
 
             device.AddCommand<IotHubDeviceDeleteCommand>("delete")
                 .WithDescription("Delete a device from the device registry in the IoT Hub.")
-                .WithExample("iothub device delete"); // TODO: Fill out example
+                .WithExample("iothub device delete -c <connection-string> -d <device-id>");
 
             device.AddBranch("twin", twin =>
             {
@@ -83,11 +83,11 @@ public static class CommandAppExtensions
 
                 twin.AddCommand<IotHubDeviceTwinGetAllCommand>("all")
                     .WithDescription("Retrieve all device twins in the IoT Hub.")
-                    .WithExample("iothub device twin all");  // TODO: Fill out example
+                    .WithExample("iothub device twin all -c <connection-string> -e");
 
                 twin.AddCommand<IotHubDeviceTwinGetCommand>("get")
                     .WithDescription("Retrieve a device twin in the IoT Hub.")
-                    .WithExample("iothub device twin get");  // TODO: Fill out example
+                    .WithExample("iothub device twin get -c <connection-string> -d <device-id>");
 
                 twin.AddCommand<IotHubDeviceTwinUpdateCommand>("update")
                     .WithDescription("Update a device twin in the IoT Hub.")
@@ -100,7 +100,7 @@ public static class CommandAppExtensions
 
                 module.AddCommand<IotHubDeviceModuleGetAllCommand>("all")
                     .WithDescription("Retrieve all modules on a device.")
-                    .WithExample("iothub device module all");  // TODO: Fill out example
+                    .WithExample("iothub device module all -c <connection-string> -d <device-id>");
 
                 module.AddBranch("twin", twin =>
                 {
