@@ -18,6 +18,7 @@ Write Introduction...
 - [Sample Project](#sample-project)
 - [Requirements](#requirements)
 - [How to contribute](#how-to-contribute)
+
 # Automatic endpoint discovery and registration
 
 In modern API development, maintaining consistency and automation in endpoint registration is paramount. Utilizing an interface like `IEndpointDefinition` can automate the process, seamlessly incorporating all endpoints within the API into the Dependency Container. By inheriting from this interface in your endpoints, you enable a systematic orchestration for automatic registration, as illustrated in the subsequent examples.
