@@ -21,7 +21,7 @@ public static class DictionaryExtensions
         this Dictionary<string, string>? dictionary)
     {
         if (dictionary is null ||
-            !dictionary.Any())
+            dictionary.Count == 0)
         {
             return null;
         }
