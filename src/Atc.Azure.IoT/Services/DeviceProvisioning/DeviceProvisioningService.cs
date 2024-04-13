@@ -7,18 +7,19 @@ namespace Atc.Azure.IoT.Services.DeviceProvisioning;
 /// through DPS with functions to handle individual enrollment processes, manage device enrollment records, and perform
 /// enrollment operations such as creating TPM-based enrollments with specific properties and tags.
 /// </summary>
-public sealed partial class DeviceProvisioningService : IDeviceProvisioningService
+public sealed partial class DeviceProvisioningService : DeviceProvisioningServiceBase, IDeviceProvisioningService, IDisposable
 {
-    private readonly ProvisioningServiceClient client;
     private readonly JsonSerializerOptions jsonSerializerOptions;
+
+    private ProvisioningServiceClient? client;
 
     public DeviceProvisioningService(
         ILoggerFactory loggerFactory,
-        ProvisioningServiceClient client)
+        DeviceProvisioningServiceOptions options)
     {
         logger = loggerFactory.CreateLogger<DeviceProvisioningService>();
-        this.client = client;
         jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
+        ValidateAndAssign(options.ConnectionString, Assign);
     }
 
     /// <summary>
@@ -247,5 +248,34 @@ public sealed partial class DeviceProvisioningService : IDeviceProvisioningServi
 
         individualEnrollment.InitialTwinState = twinState;
         return individualEnrollment;
+    }
+
+    protected override void Assign(
+        string connectionString)
+    {
+        client = ProvisioningServiceClient.CreateFromConnectionString(connectionString);
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(
+        bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
+        }
+
+        if (client is null)
+        {
+            return;
+        }
+
+        client.Dispose();
+        client = null;
     }
 }
