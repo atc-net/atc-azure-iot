@@ -2,12 +2,14 @@ namespace Atc.Azure.IoT.CLI.Commands;
 
 public sealed class IotHubDeviceModuleGetAllCommand : AsyncCommand<IotHubBaseCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceModuleGetAllCommand> logger;
 
     public IotHubDeviceModuleGetAllCommand(
-        ILogger<IotHubDeviceModuleGetAllCommand> logger)
+        ILoggerFactory loggerFactory)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<IotHubDeviceModuleGetAllCommand>();
     }
 
     public override Task<int> ExecuteAsync(

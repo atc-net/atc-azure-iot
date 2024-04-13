@@ -2,12 +2,14 @@ namespace Atc.Azure.IoT.CLI.Commands;
 
 public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubBaseCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceModuleRestartCommand> logger;
 
     public IotHubDeviceModuleRestartCommand(
-        ILogger<IotHubDeviceModuleRestartCommand> logger)
+        ILoggerFactory loggerFactory)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<IotHubDeviceModuleRestartCommand>();
     }
 
     public override Task<int> ExecuteAsync(

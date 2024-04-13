@@ -2,12 +2,14 @@ namespace Atc.Azure.IoT.CLI.Commands;
 
 public sealed class IotHubDeviceTwinGetAllCommand : AsyncCommand<IotHubBaseCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceTwinGetAllCommand> logger;
 
     public IotHubDeviceTwinGetAllCommand(
-        ILogger<IotHubDeviceTwinGetAllCommand> logger)
+        ILoggerFactory loggerFactory)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<IotHubDeviceTwinGetAllCommand>();
     }
 
     public override Task<int> ExecuteAsync(

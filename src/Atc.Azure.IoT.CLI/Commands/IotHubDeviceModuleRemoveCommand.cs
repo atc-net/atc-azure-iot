@@ -2,12 +2,14 @@ namespace Atc.Azure.IoT.CLI.Commands;
 
 public sealed class IotHubDeviceModuleRemoveCommand : AsyncCommand<IotHubBaseCommandSettings>
 {
+    private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceModuleRemoveCommand> logger;
 
     public IotHubDeviceModuleRemoveCommand(
-        ILogger<IotHubDeviceModuleRemoveCommand> logger)
+        ILoggerFactory loggerFactory)
     {
-        this.logger = logger;
+        this.loggerFactory = loggerFactory;
+        logger = loggerFactory.CreateLogger<IotHubDeviceModuleRemoveCommand>();
     }
 
     public override Task<int> ExecuteAsync(
