@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class IotHubDeviceModuleGetTwinCommand : AsyncCommand<IotHubBaseCommandSettings>
+public sealed class IotHubDeviceModuleGetTwinCommand : AsyncCommand<IotHubModuleCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceModuleGetTwinCommand> logger;
@@ -14,7 +14,7 @@ public sealed class IotHubDeviceModuleGetTwinCommand : AsyncCommand<IotHubBaseCo
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubBaseCommandSettings settings)
+        IotHubModuleCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,14 +22,35 @@ public sealed class IotHubDeviceModuleGetTwinCommand : AsyncCommand<IotHubBaseCo
     }
 
     private async Task<int> ExecuteInternalAsync(
-        IotHubBaseCommandSettings settings)
+        IotHubModuleCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var connectionString = settings.ConnectionString!;
+        var deviceId = settings.DeviceId!;
+        var moduleId = settings.ModuleId!;
+
+        var iotHubService = IotHubServiceFactory.Create(
+            loggerFactory,
+            settings.ConnectionString!);
+
         var sw = Stopwatch.StartNew();
 
-        // TODO:
+        var moduleTwin = await iotHubService.GetModuleTwin(
+            deviceId,
+            moduleId,
+            CancellationToken.None);
+
+        if (moduleTwin is null)
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation("ModuleTwin:\n" +
+                              $"\t\tDeviceId: {moduleTwin.DeviceId}\n" +
+                              $"\t\tModuleId: {moduleTwin.ModuleId}\n" +
+                              $"\t\tConnectionState: {moduleTwin.ConnectionState}\n" +
+                              $"\t\tStatus: {moduleTwin.Status}\n" +
+                              $"\t\tStatusReason: {moduleTwin.StatusReason}");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");

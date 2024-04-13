@@ -106,7 +106,7 @@ public static class CommandAppExtensions
                 {
                     twin.AddCommand<IotHubDeviceModuleGetTwinCommand>("get")
                         .WithDescription("Retrieve a module twin on a device.")
-                        .WithExample("iothub device module twin get");  // TODO: Fill out example
+                        .WithExample("iothub device module twin get  -c <connection-string> -d <device-id> -m <module-id>");
                 });
 
                 module.AddCommand<IotHubDeviceModuleRemoveCommand>("remove")
