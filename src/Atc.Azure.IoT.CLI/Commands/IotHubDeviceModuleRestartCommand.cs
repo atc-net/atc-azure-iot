@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubBaseCommandSettings>
+public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubModuleCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceModuleRestartCommand> logger;
@@ -14,7 +14,7 @@ public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubBaseCo
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubBaseCommandSettings settings)
+        IotHubModuleCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,14 +22,28 @@ public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubBaseCo
     }
 
     private async Task<int> ExecuteInternalAsync(
-        IotHubBaseCommandSettings settings)
+        IotHubModuleCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var connectionString = settings.ConnectionString!;
+        var iotHubService = IotHubServiceFactory.Create(
+            loggerFactory,
+            settings.ConnectionString!);
+
         var sw = Stopwatch.StartNew();
 
-        // TODO:
+        var (succeeded, statusCode, jsonPayload) = await iotHubService.RestartModuleOnDevice(
+            settings.DeviceId!,
+            settings.ModuleId!,
+            CancellationToken.None);
+
+        if (!succeeded)
+        {
+            logger.LogError($"Failed to restart module on device - StatusCode: {statusCode} - Response: {jsonPayload}");
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation("Module restarted successfully.");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");

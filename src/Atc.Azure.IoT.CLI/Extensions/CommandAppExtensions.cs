@@ -115,7 +115,7 @@ public static class CommandAppExtensions
 
                 module.AddCommand<IotHubDeviceModuleRestartCommand>("restart")
                     .WithDescription("Restart a module on a device.")
-                    .WithExample("iothub device module restart");  // TODO: Fill out example
+                    .WithExample("iothub device module restart -c <connection-string> -d <device-id> -m <module-id>");
             });
         });
     }
