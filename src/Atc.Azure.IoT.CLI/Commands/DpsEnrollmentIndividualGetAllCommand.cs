@@ -26,10 +26,27 @@ public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<Connecti
     {
         ConsoleHelper.WriteHeader();
 
-        var connectionString = settings.ConnectionString!;
+        var dpsService = DeviceProvisioningServiceFactory.Create(
+            loggerFactory,
+            settings.ConnectionString!);
+
         var sw = Stopwatch.StartNew();
 
-        // TODO:
+        var individualEnrollments = await dpsService.GetIndividualEnrollments(CancellationToken.None);
+
+        foreach (var individualEnrollment in individualEnrollments)
+        {
+            logger.LogInformation("IndividualEnrollment:\n" +
+                                  $"\t\tRegistrationId: {individualEnrollment.RegistrationId}\n" +
+                                  $"\t\tDeviceId: {individualEnrollment.DeviceId}\n" +
+                                  $"\t\tIotHubHostName: {individualEnrollment.IotHubHostName}\n" +
+                                  $"\t\tProvisioningStatus: {individualEnrollment.ProvisioningStatus}\n" +
+                                  $"\t\tCreatedDateTimeUtc: {individualEnrollment.CreatedDateTimeUtc}\n" +
+                                  $"\t\tLastUpdatedDateTimeUtc: {individualEnrollment.LastUpdatedDateTimeUtc}\n" +
+                                  $"\t\tLastUpdatedDateTimeUtc: {individualEnrollment.LastUpdatedDateTimeUtc}\n" +
+                                  $"\t\tAssignedHub: {individualEnrollment.RegistrationState.AssignedHub}\n" +
+                                  $"\t\tEnrollmentStatus: {individualEnrollment.RegistrationState.Status}");
+        }
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");

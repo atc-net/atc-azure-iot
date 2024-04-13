@@ -42,7 +42,7 @@ public static class CommandAppExtensions
 
             individual.AddCommand<DpsEnrollmentIndividualGetAllCommand>("all")
                 .WithDescription("Retrieves all individual enrollments.")
-                .WithExample("dps enrollment individual all"); // TODO: Fill out example
+                .WithExample("dps enrollment individual all -c <connection-string>");
 
             individual.AddBranch("create", create =>
             {
