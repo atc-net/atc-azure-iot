@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands.Settings;
 
-public class IotHubDeviceCommandSettings : IotHubBaseCommandSettings
+public class IotHubDeviceCommandSettings : ConnectionBaseCommandSettings
 {
     [CommandOption("-d|--device-id <DEVICE-ID>")]
     [Description("IotHub Device Id")]

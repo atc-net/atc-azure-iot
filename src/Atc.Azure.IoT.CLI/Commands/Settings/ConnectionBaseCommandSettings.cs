@@ -1,9 +1,9 @@
 namespace Atc.Azure.IoT.CLI.Commands.Settings;
 
-public class IotHubBaseCommandSettings : BaseCommandSettings
+public class ConnectionBaseCommandSettings : BaseCommandSettings
 {
     [CommandOption("-c|--connection-string <CONNECTION-STRING>")]
-    [Description("IotHub ConnectionString")]
+    [Description("ConnectionString")]
     public string? ConnectionString { get; init; }
 
     public override ValidationResult Validate()

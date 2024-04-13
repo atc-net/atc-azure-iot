@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<IotHubBaseCommandSettings>
+public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<ConnectionBaseCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<DpsEnrollmentIndividualGetAllCommand> logger;
@@ -14,7 +14,7 @@ public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<IotHubBa
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubBaseCommandSettings settings)
+        ConnectionBaseCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,7 +22,7 @@ public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<IotHubBa
     }
 
     private async Task<int> ExecuteInternalAsync(
-        IotHubBaseCommandSettings settings)
+        ConnectionBaseCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
