@@ -26,14 +26,16 @@ public sealed class IotHubDeviceTwinGetCommand : AsyncCommand<IotHubDeviceComman
     {
         ConsoleHelper.WriteHeader();
 
-        var deviceId = settings.DeviceId!;
         var iotHubService = IotHubServiceFactory.Create(
             loggerFactory,
             settings.ConnectionString!);
 
         var sw = Stopwatch.StartNew();
 
-        var deviceTwin = await iotHubService.GetDeviceTwin(deviceId, CancellationToken.None);
+        var deviceTwin = await iotHubService.GetDeviceTwin(
+            settings.DeviceId!,
+            CancellationToken.None);
+
         if (deviceTwin is null)
         {
             return ConsoleExitStatusCodes.Failure;

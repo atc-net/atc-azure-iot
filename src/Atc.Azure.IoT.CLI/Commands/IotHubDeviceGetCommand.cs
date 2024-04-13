@@ -26,14 +26,16 @@ public sealed class IotHubDeviceGetCommand : AsyncCommand<IotHubDeviceCommandSet
     {
         ConsoleHelper.WriteHeader();
 
-        var deviceId = settings.DeviceId!;
         var iotHubService = IotHubServiceFactory.Create(
             loggerFactory,
             settings.ConnectionString!);
 
         var sw = Stopwatch.StartNew();
 
-        var device = await iotHubService.GetDevice(deviceId, CancellationToken.None);
+        var device = await iotHubService.GetDevice(
+            settings.DeviceId!,
+            CancellationToken.None);
+
         if (device is null)
         {
             return ConsoleExitStatusCodes.Failure;

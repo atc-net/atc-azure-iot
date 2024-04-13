@@ -26,7 +26,6 @@ public sealed class IotHubDeviceModuleGetAllCommand : AsyncCommand<IotHubDeviceC
     {
         ConsoleHelper.WriteHeader();
 
-        var deviceId = settings.DeviceId!;
         var iotHubService = IotHubServiceFactory.Create(
             loggerFactory,
             settings.ConnectionString!);
@@ -34,7 +33,7 @@ public sealed class IotHubDeviceModuleGetAllCommand : AsyncCommand<IotHubDeviceC
         var sw = Stopwatch.StartNew();
 
         var modulesOnIotEdgeDevice = await iotHubService.GetModulesOnIotEdgeDevice(
-            deviceId,
+            settings.DeviceId!,
             CancellationToken.None);
 
         foreach (var module in modulesOnIotEdgeDevice)
