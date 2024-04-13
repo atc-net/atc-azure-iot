@@ -10,7 +10,7 @@ public class ConnectionBaseCommandSettings : BaseCommandSettings
     {
         if (string.IsNullOrWhiteSpace(ConnectionString))
         {
-            return ValidationResult.Error("ConnectionString must be present.");
+            return ValidationResult.Error($"{nameof(ConnectionString)} must be present.");
         }
 
         return ValidationResult.Success();

@@ -16,7 +16,7 @@ public class IotHubDeviceCommandSettings : ConnectionBaseCommandSettings
 
         if (string.IsNullOrWhiteSpace(DeviceId))
         {
-            return ValidationResult.Error("DeviceId must be present.");
+            return ValidationResult.Error($"{nameof(DeviceId)} must be present.");
         }
 
         return ValidationResult.Success();

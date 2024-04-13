@@ -16,7 +16,7 @@ public class IotHubModuleCommandSettings : IotHubDeviceCommandSettings
 
         if (string.IsNullOrWhiteSpace(ModuleId))
         {
-            return ValidationResult.Error("ModuleId must be present.");
+            return ValidationResult.Error($"{nameof(ModuleId)} must be present.");
         }
 
         return ValidationResult.Success();
