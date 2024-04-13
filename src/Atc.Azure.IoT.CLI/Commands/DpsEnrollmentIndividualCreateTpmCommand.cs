@@ -36,8 +36,8 @@ public sealed class DpsEnrollmentIndividualCreateTpmCommand : AsyncCommand<DpsEn
             settings.EndorsementKey!,
             settings.RegistrationId!,
             settings.DeviceId!,
-            ParseToDictionary(settings.Tags?.Value ?? null),
-            ParseToDictionary(settings.DesiredProperties?.Value ?? null),
+            settings.Tags?.Value.ParseToDictionary() ?? null,
+            settings.DesiredProperties?.Value.ParseToDictionary() ?? null,
             CancellationToken.None);
 
         if (enrollment is null)
@@ -51,28 +51,5 @@ public sealed class DpsEnrollmentIndividualCreateTpmCommand : AsyncCommand<DpsEn
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");
 
         return ConsoleExitStatusCodes.Success;
-    }
-
-    private static Dictionary<string, string> ParseToDictionary(
-        string? input)
-    {
-        var dictionary = new Dictionary<string, string>();
-
-        if (string.IsNullOrEmpty(input))
-        {
-            return dictionary;
-        }
-
-        var pairs = input.Split(',');
-        foreach (var pair in pairs)
-        {
-            var keyValue = pair.Split('=');
-            if (keyValue.Length == 2)
-            {
-                dictionary[keyValue[0]] = keyValue[1];
-            }
-        }
-
-        return dictionary;
     }
 }
