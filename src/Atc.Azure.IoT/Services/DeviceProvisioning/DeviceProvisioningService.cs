@@ -177,15 +177,19 @@ public sealed partial class DeviceProvisioningService : DeviceProvisioningServic
     /// Deletes an individual enrollment from Azure DPS using the provided registration ID.
     /// </summary>
     /// <param name="registrationId">The registration ID of the individual enrollment to delete.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
     /// <returns>Indicates whether the operation succeeded.</returns>
     public async Task<bool> DeleteIndividualEnrollment(
-        string registrationId)
+        string registrationId,
+        CancellationToken cancellationToken)
     {
         ArgumentException.ThrowIfNullOrEmpty(registrationId);
 
         try
         {
-            await client!.DeleteIndividualEnrollmentAsync(registrationId);
+            await client!.DeleteIndividualEnrollmentAsync(
+                registrationId,
+                cancellationToken);
 
             return true;
         }
