@@ -53,12 +53,12 @@ public static class CommandAppExtensions
             });
 
             individual.AddCommand<DpsEnrollmentIndividualDeleteCommand>("delete")
-                .WithDescription("Retrieves an individual enrollment.")
-                .WithExample("dps enrollment individual get"); // TODO: Fill out example
+                .WithDescription("Deletes an individual enrollment.")
+                .WithExample("dps enrollment individual delete"); // TODO: Fill out example
 
             individual.AddCommand<DpsEnrollmentIndividualGetCommand>("get")
                 .WithDescription("Retrieves an individual enrollment.")
-                .WithExample("dps enrollment individual get"); // TODO: Fill out example
+                .WithExample("dps enrollment individual get -c <connection-string> -r <registration-id>");
         });
     }
 

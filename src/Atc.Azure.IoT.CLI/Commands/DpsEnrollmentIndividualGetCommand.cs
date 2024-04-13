@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class DpsEnrollmentIndividualGetCommand : AsyncCommand<ConnectionBaseCommandSettings>
+public sealed class DpsEnrollmentIndividualGetCommand : AsyncCommand<DeviceProvisioningServiceCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<DpsEnrollmentIndividualGetCommand> logger;
@@ -14,7 +14,7 @@ public sealed class DpsEnrollmentIndividualGetCommand : AsyncCommand<ConnectionB
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        ConnectionBaseCommandSettings settings)
+        DeviceProvisioningServiceCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,14 +22,35 @@ public sealed class DpsEnrollmentIndividualGetCommand : AsyncCommand<ConnectionB
     }
 
     private async Task<int> ExecuteInternalAsync(
-        ConnectionBaseCommandSettings settings)
+        DeviceProvisioningServiceCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var connectionString = settings.ConnectionString!;
+        var dpsService = DeviceProvisioningServiceFactory.Create(
+            loggerFactory,
+            settings.ConnectionString!);
+
         var sw = Stopwatch.StartNew();
 
-        // TODO:
+        var individualEnrollment = await dpsService.GetIndividualEnrollment(
+            settings.RegistrationId!,
+            CancellationToken.None);
+
+        if (individualEnrollment is null)
+        {
+            return ConsoleExitStatusCodes.Failure;
+        }
+
+        logger.LogInformation("IndividualEnrollment:\n" +
+                              $"\t\tRegistrationId: {individualEnrollment.RegistrationId}\n" +
+                              $"\t\tDeviceId: {individualEnrollment.DeviceId}\n" +
+                              $"\t\tIotHubHostName: {individualEnrollment.IotHubHostName}\n" +
+                              $"\t\tProvisioningStatus: {individualEnrollment.ProvisioningStatus}\n" +
+                              $"\t\tCreatedDateTimeUtc: {individualEnrollment.CreatedDateTimeUtc}\n" +
+                              $"\t\tLastUpdatedDateTimeUtc: {individualEnrollment.LastUpdatedDateTimeUtc}\n" +
+                              $"\t\tLastUpdatedDateTimeUtc: {individualEnrollment.LastUpdatedDateTimeUtc}\n" +
+                              $"\t\tAssignedHub: {individualEnrollment.RegistrationState.AssignedHub}\n" +
+                              $"\t\tEnrollmentStatus: {individualEnrollment.RegistrationState.Status}");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");
