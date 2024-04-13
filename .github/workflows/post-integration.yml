@@ -62,7 +62,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: pwsh
         run: |
-          dotnet sonarscanner begin /k:"atc-net_atc-opc-ua" /o:"atc-net" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          dotnet sonarscanner begin /k:"atc-net_atc-azure-iot" /o:"atc-net" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build -c Release /p:UseSourceLink=true --no-restore
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
@@ -79,5 +79,5 @@ jobs:
 
       - name: 📦 Push packages to GitHub Package Registry
         run: |
-          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'Atc.Opc.Ua.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
-          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'atc-opc-ua.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'Atc.Azure.IoT.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'atc-azure-iot.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.GITHUB_TOKEN }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate
