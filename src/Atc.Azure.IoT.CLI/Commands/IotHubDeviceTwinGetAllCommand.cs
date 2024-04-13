@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.CLI.Commands;
 
-public sealed class IotHubDeviceTwinGetAllCommand : AsyncCommand<IotHubBaseCommandSettings>
+public sealed class IotHubDeviceTwinGetAllCommand : AsyncCommand<IotHubDeviceTwinGetAllCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceTwinGetAllCommand> logger;
@@ -14,7 +14,7 @@ public sealed class IotHubDeviceTwinGetAllCommand : AsyncCommand<IotHubBaseComma
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubBaseCommandSettings settings)
+        IotHubDeviceTwinGetAllCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,14 +22,25 @@ public sealed class IotHubDeviceTwinGetAllCommand : AsyncCommand<IotHubBaseComma
     }
 
     private async Task<int> ExecuteInternalAsync(
-        IotHubBaseCommandSettings settings)
+        IotHubDeviceTwinGetAllCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var connectionString = settings.ConnectionString!;
+        var iotHubService = IotHubServiceFactory.Create(
+            loggerFactory,
+            settings.ConnectionString!);
+
         var sw = Stopwatch.StartNew();
 
-        // TODO:
+        var deviceTwins = await iotHubService.GetDeviceTwins(settings.OnlyIncludeEdgeDevices);
+        foreach (var deviceTwin in deviceTwins)
+        {
+            logger.LogInformation("DeviceTwin:\n" +
+                                  $"\t\tDeviceId: {deviceTwin.DeviceId}\n" +
+                                  $"\t\tConnectionState: {deviceTwin.ConnectionState}\n" +
+                                  $"\t\tStatus: {deviceTwin.Status}\n" +
+                                  $"\t\tStatusReason: {deviceTwin.StatusReason}");
+        }
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");
