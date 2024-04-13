@@ -6,6 +6,7 @@ global using Atc.Azure.IoT.CLI.Extensions;
 global using Atc.Azure.IoT.CLI.Factories;
 global using Atc.Azure.IoT.Extractors;
 global using Atc.Azure.IoT.Options;
+global using Atc.Azure.IoT.Services.DeviceProvisioning;
 global using Atc.Azure.IoT.Services.IoTHub;
 global using Atc.Console.Spectre;
 global using Atc.Console.Spectre.CommandSettings;
