@@ -87,16 +87,21 @@ public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, I
         }
     }
 
-    public async Task<IReadOnlyCollection<Twin>> GetIoTEdgeDeviceTwins()
+    public async Task<IReadOnlyCollection<Twin>> GetDeviceTwins(
+        bool onlyIncludeEdgeDevices)
     {
         var result = new List<Twin>();
 
         try
         {
-            LogRetrievingIotEdgeDeviceTwins(ioTHubHostName!);
+            LogRetrievingIotDeviceTwins(ioTHubHostName!);
+
+            var queryString = onlyIncludeEdgeDevices
+                ? $"{QueryPrefix} WHERE capabilities.iotEdge = true"
+                : QueryPrefix;
 
             var query = registryManager!.CreateQuery(
-                $"{QueryPrefix} WHERE capabilities.iotEdge = true",
+                queryString,
                 MaxPageSize);
 
             while (query.HasMoreResults)
@@ -105,7 +110,7 @@ public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, I
                 result.AddRange(page);
             }
 
-            LogRetrieveIotEdgeDeviceTwinsSucceeded(
+            LogRetrieveIotDeviceTwinsSucceeded(
                 ioTHubHostName!,
                 result.Count);
         }

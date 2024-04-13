@@ -59,19 +59,19 @@ public sealed partial class IoTHubService
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubService.RetrievingIotEdgeDeviceTwins,
+        EventId = LoggingEventIdConstants.IoTHubService.RetrievingIotDeviceTwins,
         Level = LogLevel.Trace,
-        Message = "{callerMethodName}({callerLineNumber}) - Starting to retrieve iot edge device twins on iot hub '{iotHubHostName}'")]
-    private partial void LogRetrievingIotEdgeDeviceTwins(
+        Message = "{callerMethodName}({callerLineNumber}) - Starting to retrieve iot device twins on iot hub '{iotHubHostName}'")]
+    private partial void LogRetrievingIotDeviceTwins(
         string iotHubHostName,
         [CallerMemberName] string callerMethodName = "",
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubService.RetrieveIotEdgeDeviceTwinsSucceeded,
+        EventId = LoggingEventIdConstants.IoTHubService.RetrieveIotDeviceTwinsSucceeded,
         Level = LogLevel.Trace,
-        Message = "{callerMethodName}({callerLineNumber}) - Retrieved '{deviceCount}' iot edge device twins from iot hub '{iotHubHostName}'")]
-    private partial void LogRetrieveIotEdgeDeviceTwinsSucceeded(
+        Message = "{callerMethodName}({callerLineNumber}) - Retrieved '{deviceCount}' iot device twins from iot hub '{iotHubHostName}'")]
+    private partial void LogRetrieveIotDeviceTwinsSucceeded(
         string iotHubHostName,
         int deviceCount,
         [CallerMemberName] string callerMethodName = "",
