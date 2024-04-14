@@ -5,7 +5,7 @@ namespace Atc.Azure.IoT.Services.IoTHub;
 /// Provides services for direct interaction with IoT devices and modules through Azure IoT Hub, enabling the invocation of direct methods on devices.
 /// This service facilitates communication between the cloud and IoT devices by sending direct method requests and processing the responses.
 /// </summary>
-public sealed partial class IoTHubModuleService : IotHubServiceBase, IIoTHubModuleService, IDisposable
+public sealed partial class IoTHubModuleService : ServiceBase, IIoTHubModuleService, IDisposable
 {
     private ServiceClient? serviceClient;
 
@@ -69,9 +69,9 @@ public sealed partial class IoTHubModuleService : IotHubServiceBase, IIoTHubModu
     }
 
     protected override void Assign(
-        string iotHubConnectionString)
+        string connectionString)
     {
-        serviceClient = ServiceClient.CreateFromConnectionString(iotHubConnectionString);
+        serviceClient = ServiceClient.CreateFromConnectionString(connectionString);
     }
 
     public void Dispose()

@@ -7,7 +7,7 @@ namespace Atc.Azure.IoT.Services.IoTHub;
 /// and invoking direct methods. It encapsulates operations such as device registry statistics retrieval, device twin
 /// management, module twin updates, and edge device configurations, aiming to facilitate comprehensive IoT Hub management.
 /// </summary>
-public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, IDisposable
+public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDisposable
 {
     private const int MaxPageSize = 100;
     private const string QueryPrefix = "SELECT * FROM devices";
@@ -524,10 +524,10 @@ public sealed partial class IoTHubService : IotHubServiceBase, IIoTHubService, I
     }
 
     protected override void Assign(
-        string iotHubConnectionString)
+        string connectionString)
     {
-        registryManager = RegistryManager.CreateFromConnectionString(iotHubConnectionString);
-        ioTHubHostName = IotHubConnectionStringBuilder.Create(iotHubConnectionString).HostName;
+        registryManager = RegistryManager.CreateFromConnectionString(connectionString);
+        ioTHubHostName = IotHubConnectionStringBuilder.Create(connectionString).HostName;
     }
 
     private static RestartModuleRequest BuildRestartModuleRequest(

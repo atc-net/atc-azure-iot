@@ -7,7 +7,7 @@ namespace Atc.Azure.IoT.Services.DeviceProvisioning;
 /// through DPS with functions to handle individual enrollment processes, manage device enrollment records, and perform
 /// enrollment operations such as creating TPM-based enrollments with specific properties and tags.
 /// </summary>
-public sealed partial class DeviceProvisioningService : DeviceProvisioningServiceBase, IDeviceProvisioningService, IDisposable
+public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProvisioningService, IDisposable
 {
     private readonly JsonSerializerOptions jsonSerializerOptions;
 

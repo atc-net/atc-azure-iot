@@ -1,31 +1,31 @@
-namespace Atc.Azure.IoT.Services.IoTHub;
+namespace Atc.Azure.IoT.Services;
 
-public abstract class IotHubServiceBase
+public abstract class ServiceBase
 {
     protected static void ValidateAndAssign(
-        string iotHubConnectionString,
+        string connectionString,
         Action<string> action)
     {
-        ArgumentException.ThrowIfNullOrEmpty(iotHubConnectionString);
+        ArgumentException.ThrowIfNullOrEmpty(connectionString);
 
         try
         {
-            action(iotHubConnectionString);
+            action(connectionString);
         }
         catch (ArgumentException argumentException)
         {
             throw new InvalidConfigurationException(
-                "Invalid service configuration for IoTHubConnectionString.",
+                "Invalid service configuration for ConnectionString.",
                 argumentException);
         }
         catch (FormatException formatException)
         {
             throw new InvalidConfigurationException(
-                $"Invalid service configuration for IoTHubConnectionString: {iotHubConnectionString}",
+                $"Invalid service configuration for ConnectionString: {connectionString}",
                 formatException);
         }
     }
 
     protected abstract void Assign(
-        string iotHubConnectionString);
+        string connectionString);
 }
