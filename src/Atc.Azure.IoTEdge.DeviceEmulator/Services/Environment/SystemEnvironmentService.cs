@@ -6,9 +6,9 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Services.Environment;
 public partial class SystemEnvironmentService : ISystemEnvironmentService
 {
     public SystemEnvironmentService(
-        ILogger logger)
+        ILoggerFactory loggerFactory)
     {
-        this.logger = logger;
+        logger = loggerFactory.CreateLogger<SystemEnvironmentService>();
     }
 
     public FileInfo GetCommandFilePath()

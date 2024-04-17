@@ -6,7 +6,7 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Services.Environment;
 [SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - By Design")]
 public partial class SystemEnvironmentService
 {
-    private readonly ILogger logger;
+    private readonly ILogger<SystemEnvironmentService> logger;
 
     [LoggerMessage(
         EventId = LoggingEventIdConstants.EnvironmentInjectedVariable,

@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Atc.Azure.IoT\Atc.Azure.IoT.csproj" />
+  </ItemGroup>
+
 </Project>

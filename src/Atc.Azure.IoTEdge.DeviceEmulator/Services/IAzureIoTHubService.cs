@@ -10,8 +10,4 @@ public interface IAzureIoTHubService
         string iotHubConnectionString,
         string deviceId,
         CancellationToken cancellationToken);
-
-    Task<bool> RemoveIotEdgeDevice(
-        string deviceId,
-        CancellationToken cancellationToken);
 }

@@ -6,7 +6,7 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Services.Docker;
 [SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - By Design")]
 public partial class DockerService
 {
-    private readonly ILogger logger;
+    private readonly ILogger<DockerService> logger;
 
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerClientCreated,

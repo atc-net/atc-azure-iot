@@ -1,17 +1,19 @@
-using AzureIoTHubService = Atc.Azure.IoTEdge.DeviceEmulator.Services.AzureIoTHubService;
-using IoTEdgeEmulationService = Atc.Azure.IoTEdge.DeviceEmulator.Services.IoTEdgeEmulationService;
-
 namespace Atc.Azure.IoTEdge.DeviceEmulator.Factories;
 
 public static class IoTEdgeEmulationServiceFactory
 {
     public static IoTEdgeEmulationService BuildIoTEdgeEmulationService(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         IDockerService dockerService,
-        IRegistryManagerWrapper registryManagerWrapper)
+        IRegistryManagerWrapper registryManagerWrapper,
+        IIoTHubService iotHubService)
         => new(
-            logger,
+            loggerFactory,
             new FileService(),
             dockerService,
-            new AzureIoTHubService(logger, registryManagerWrapper));
+            iotHubService,
+            new AzureIoTHubService(
+                loggerFactory,
+                registryManagerWrapper,
+                iotHubService));
 }

@@ -15,10 +15,10 @@ public partial class DockerService : IDockerService
     private readonly DockerClient dockerClient;
 
     public DockerService(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         ISystemEnvironmentService systemEnvironmentService)
     {
-        this.logger = logger;
+        logger = loggerFactory.CreateLogger<DockerService>();
         this.systemEnvironmentService = systemEnvironmentService;
         this.dockerClient = CreateDockerClient();
     }

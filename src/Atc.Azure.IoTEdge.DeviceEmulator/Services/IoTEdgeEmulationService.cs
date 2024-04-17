@@ -10,17 +10,20 @@ public partial class IoTEdgeEmulationService : IIoTEdgeEmulationService
 
     private readonly IFileService fileService;
     private readonly IDockerService dockerService;
+    private readonly IIoTHubService iotHubService;
     private readonly IAzureIoTHubService azureIoTHubService;
 
     public IoTEdgeEmulationService(
-        ILogger logger,
+        ILoggerFactory loggerFactory,
         IFileService fileService,
         IDockerService dockerService,
+        IIoTHubService iotHubService,
         IAzureIoTHubService azureIoTHubService)
     {
-        this.logger = logger;
+        this.logger = loggerFactory.CreateLogger<IoTEdgeEmulationService>();
         this.fileService = fileService;
         this.dockerService = dockerService;
+        this.iotHubService = iotHubService;
         this.azureIoTHubService = azureIoTHubService;
     }
 
@@ -100,14 +103,14 @@ public partial class IoTEdgeEmulationService : IIoTEdgeEmulationService
             return false;
         }
 
-        var removeIotEdgeDeviceSucceeded = await azureIoTHubService.RemoveIotEdgeDevice(
+        var succeeded = await iotHubService.DeleteDevice(
             DeviceId,
             cancellationToken);
 
         IotHubConnectionString = string.Empty;
         DeviceId = string.Empty;
 
-        return removeIotEdgeDeviceSucceeded;
+        return succeeded;
     }
 
     public void EnsureProperIotEdgeEnvironmentVariables(

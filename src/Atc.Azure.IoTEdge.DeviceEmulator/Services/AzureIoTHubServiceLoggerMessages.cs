@@ -6,7 +6,7 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Services;
 [SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - By Design")]
 public partial class AzureIoTHubService
 {
-    private readonly ILogger logger;
+    private readonly ILogger<AzureIoTHubService> logger;
 
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IotHubProvisionIotEdgeDeviceSucceeded,
@@ -114,25 +114,6 @@ public partial class AzureIoTHubService
         Level = LogLevel.Error,
         Message = "{callerMethodName}({callerLineNumber}) - Failed to remove old modules from IoT Edge Device '{deviceId}': '{errorMessage}'.")]
     private partial void LogIotHubRemoveModulesFromIotEdgeDeviceFailed(
-        string deviceId,
-        string errorMessage,
-        [CallerMemberName] string callerMethodName = "",
-        [CallerLineNumber] int callerLineNumber = 0);
-
-    [LoggerMessage(
-        EventId = LoggingEventIdConstants.IotHubRemoveIotEdgeDeviceSucceeded,
-        Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Successfully removed IoT Edge Device '{deviceId}'.")]
-    private partial void LogIotHubRemoveIotEdgeDeviceSucceeded(
-        string deviceId,
-        [CallerMemberName] string callerMethodName = "",
-        [CallerLineNumber] int callerLineNumber = 0);
-
-    [LoggerMessage(
-        EventId = LoggingEventIdConstants.IotHubRemoveIotEdgeDeviceFailed,
-        Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to remove IoT Edge Device '{deviceId}': '{errorMessage}'.")]
-    private partial void LogIotHubRemoveIotEdgeDeviceFailed(
         string deviceId,
         string errorMessage,
         [CallerMemberName] string callerMethodName = "",

@@ -9,14 +9,17 @@ public partial class AzureIoTHubService : IAzureIoTHubService
 {
     private readonly JsonSerializerOptions jsonSerializerOptions;
     private readonly IRegistryManagerWrapper registryManagerWrapper;
+    private readonly IIoTHubService iotHubService;
 
     public AzureIoTHubService(
-        ILogger logger,
-        IRegistryManagerWrapper registryManagerWrapper)
+        ILoggerFactory loggerFactory,
+        IRegistryManagerWrapper registryManagerWrapper,
+        IIoTHubService iotHubService)
     {
-        this.logger = logger;
+        logger = loggerFactory.CreateLogger<AzureIoTHubService>();
         this.registryManagerWrapper = registryManagerWrapper;
         jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
+        this.iotHubService = iotHubService;
     }
 
     public (bool Succeeded, string EmulationManifest) TransformTemplateToEmulationManifest(
@@ -96,16 +99,7 @@ public partial class AzureIoTHubService : IAzureIoTHubService
     /// </remarks>
     public static ConfigurationContent GetConfigurationContentFromManifest(
         string emulationManifest)
-        => Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigurationContent>(emulationManifest);
-
-    public Task<bool> RemoveIotEdgeDevice(
-        string deviceId,
-        CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(deviceId);
-
-        return InvokeRemoveIotEdgeDevice(deviceId, cancellationToken);
-    }
+        => Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigurationContent>(emulationManifest)!;
 
     private async Task<(bool Succeeded, string DeviceConnectionString)> InvokeProvisionIotEdgeDevice(
         ConfigurationContent manifestContent,
@@ -125,7 +119,7 @@ public partial class AzureIoTHubService : IAzureIoTHubService
             return (false, string.Empty);
         }
 
-        var addNewModulesSucceeded = await AddNewModules(deviceId, manifestContent, cancellationToken);
+        var (addNewModulesSucceeded, _) = await iotHubService.AddNewModules(deviceId, manifestContent, cancellationToken);
         if (!addNewModulesSucceeded)
         {
             return (false, string.Empty);
@@ -140,24 +134,6 @@ public partial class AzureIoTHubService : IAzureIoTHubService
         return (true, $"HostName={GetIotHubHostName(iotHubConnectionString)};DeviceId={deviceId};SharedAccessKey={sasKey}");
     }
 
-    private async Task<bool> InvokeRemoveIotEdgeDevice(
-        string deviceId,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            await registryManagerWrapper.RemoveDeviceAsync(deviceId, cancellationToken);
-            LogIotHubRemoveIotEdgeDeviceSucceeded(deviceId);
-        }
-        catch (Exception ex)
-        {
-            LogIotHubRemoveIotEdgeDeviceFailed(deviceId, ex.Message);
-            return false;
-        }
-
-        return true;
-    }
-
     private static string GetIotHubHostName(
         string iotHubConnectionString)
         => iotHubConnectionString
@@ -165,19 +141,27 @@ public partial class AzureIoTHubService : IAzureIoTHubService
             .Single(e => e.Contains("HostName=", StringComparison.Ordinal))
             .Replace("HostName=", string.Empty, StringComparison.Ordinal);
 
-    private async Task<string> EnsureDeviceRegistrationAndGetDeviceSasKey(
+    private async Task<string?> EnsureDeviceRegistrationAndGetDeviceSasKey(
         string deviceId,
         CancellationToken cancellationToken)
     {
         try
         {
-            var device = await registryManagerWrapper.GetDeviceAsync(deviceId, cancellationToken) ??
-                         await registryManagerWrapper.AddDeviceAsync(
-                             new Device(deviceId)
-                             {
-                                 Capabilities = new DeviceCapabilities { IotEdge = true },
-                             },
-                             cancellationToken);
+            var device = await iotHubService.GetDevice(deviceId, cancellationToken);
+            if (device is null)
+            {
+                var (succeeded, createdDevice) = await iotHubService.CreateDevice(deviceId, edgeDevice: true, cancellationToken);
+                if (succeeded)
+                {
+                    device = createdDevice;
+                }
+            }
+
+            if (device is null)
+            {
+                LogIotHubProvisionIotEdgeDeviceFailed(deviceId, "Failed to create device");
+                return null;
+            }
 
             LogIotHubProvisionIotEdgeDeviceSucceeded(deviceId);
             return device.Authentication.SymmetricKey.PrimaryKey;
@@ -208,32 +192,6 @@ public partial class AzureIoTHubService : IAzureIoTHubService
         catch (Exception ex)
         {
             LogIotHubRemoveModulesFromIotEdgeDeviceFailed(deviceId, ex.Message);
-            return false;
-        }
-
-        return true;
-    }
-
-    private async Task<bool> AddNewModules(
-        string deviceId,
-        ConfigurationContent manifestContent,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            foreach (var module in manifestContent.ModulesContent.Keys)
-            {
-                if (!module.StartsWith("$", StringComparison.Ordinal))
-                {
-                    await registryManagerWrapper.AddModuleAsync(new Module(deviceId, module), cancellationToken);
-                }
-            }
-
-            LogIotHubAddModulesToIotEdgeDeviceSucceeded(deviceId);
-        }
-        catch (Exception ex)
-        {
-            LogIotHubAddModulesToIotEdgeDeviceFailed(deviceId, ex.Message);
             return false;
         }
 
