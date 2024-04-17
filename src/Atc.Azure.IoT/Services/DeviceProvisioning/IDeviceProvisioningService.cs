@@ -18,7 +18,7 @@ public interface IDeviceProvisioningService
     /// <returns>The IndividualEnrollment instance if found, or null if not found.</returns>
     Task<IndividualEnrollment?> GetIndividualEnrollment(
         string registrationId,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves all individual enrollments registered in Azure DPS.
@@ -26,7 +26,7 @@ public interface IDeviceProvisioningService
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
     /// <returns>A collection of all IndividualEnrollments.</returns>
     Task<IEnumerable<IndividualEnrollment>> GetIndividualEnrollments(
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Creates or updates an individual TPM enrollment in Azure DPS with the provided parameters.
@@ -45,7 +45,7 @@ public interface IDeviceProvisioningService
         string deviceId,
         Dictionary<string, string>? tags,
         Dictionary<string, string>? desiredProperties,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes an individual enrollment from Azure DPS using the provided registration ID.
@@ -55,5 +55,5 @@ public interface IDeviceProvisioningService
     /// <returns>Indicates whether the operation succeeded.</returns>
     Task<bool> DeleteIndividualEnrollment(
         string registrationId,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 }

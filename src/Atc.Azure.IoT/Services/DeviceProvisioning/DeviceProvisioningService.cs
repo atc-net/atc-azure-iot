@@ -31,7 +31,7 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
     /// <returns>The IndividualEnrollment instance if found, or null if not found.</returns>
     public async Task<IndividualEnrollment?> GetIndividualEnrollment(
         string registrationId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(registrationId);
 
@@ -75,7 +75,7 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
     /// <returns>A collection of all IndividualEnrollments.</returns>
     public async Task<IEnumerable<IndividualEnrollment>> GetIndividualEnrollments(
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var enrollments = new List<IndividualEnrollment>();
         var querySpecification = new QuerySpecification("SELECT * FROM enrollments");
@@ -116,7 +116,7 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
         string deviceId,
         Dictionary<string, string>? tags,
         Dictionary<string, string>? desiredProperties,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(endorsementKey);
         ArgumentException.ThrowIfNullOrEmpty(registrationId);
@@ -181,7 +181,7 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
     /// <returns>Indicates whether the operation succeeded.</returns>
     public async Task<bool> DeleteIndividualEnrollment(
         string registrationId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(registrationId);
 

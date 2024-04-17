@@ -411,7 +411,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     public async Task<(bool Succeeded, int StatusCode, string JsonPayload)> RestartModuleOnDevice(
         string deviceId,
         string moduleId,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
         ArgumentException.ThrowIfNullOrEmpty(moduleId);
@@ -432,7 +432,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     public async Task<(bool Succeeded, string? ErrorMessage)> ApplyConfigurationContentOnDevice(
         string deviceId,
         ConfigurationContent manifestContent,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
 
@@ -463,7 +463,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     public async Task<(bool Succeeded, string? ErrorMessage)> AddNewModules(
         string deviceId,
         ConfigurationContent manifestContent,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         try
         {

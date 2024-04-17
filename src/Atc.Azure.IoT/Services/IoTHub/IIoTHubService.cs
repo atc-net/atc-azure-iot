@@ -114,7 +114,7 @@ public interface IIoTHubService
     Task<(bool Succeeded, int StatusCode, string JsonPayload)> RestartModuleOnDevice(
         string deviceId,
         string moduleId,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously applies a given configuration content to a specified IoT device.
@@ -126,7 +126,7 @@ public interface IIoTHubService
     Task<(bool Succeeded, string? ErrorMessage)> ApplyConfigurationContentOnDevice(
         string deviceId,
         ConfigurationContent manifestContent,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously adds new modules to a specified IoT device.
@@ -138,7 +138,7 @@ public interface IIoTHubService
     Task<(bool Succeeded, string? ErrorMessage)> AddNewModules(
         string deviceId,
         ConfigurationContent manifestContent,
-        CancellationToken cancellationToken);
+        CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Asynchronously deletes a device from the IoT Hub.
