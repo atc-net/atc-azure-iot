@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Azure.IoT.CLI", "src\At
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Azure.IoTEdge", "src\Atc.Azure.IoTEdge\Atc.Azure.IoTEdge.csproj", "{04852479-8932-4AE0-8D87-AABAED0EA971}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Azure.IoTEdge.DeviceEmulator", "src\Atc.Azure.IoTEdge.DeviceEmulator\Atc.Azure.IoTEdge.DeviceEmulator.csproj", "{23EA1D43-328D-4EC1-830E-C1797E1666A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{04852479-8932-4AE0-8D87-AABAED0EA971}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04852479-8932-4AE0-8D87-AABAED0EA971}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04852479-8932-4AE0-8D87-AABAED0EA971}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23EA1D43-328D-4EC1-830E-C1797E1666A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23EA1D43-328D-4EC1-830E-C1797E1666A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23EA1D43-328D-4EC1-830E-C1797E1666A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23EA1D43-328D-4EC1-830E-C1797E1666A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +64,7 @@ Global
 		{CB8A2B57-146C-4D3F-B02C-F6DE21C5DE42} = {58BC6728-197C-484C-A8EC-38BC2F0B58C4}
 		{2326FBB5-CB4B-4153-AF13-22152C265D5F} = {69C84246-AA75-43E8-94B2-66FD555B18B0}
 		{04852479-8932-4AE0-8D87-AABAED0EA971} = {69C84246-AA75-43E8-94B2-66FD555B18B0}
+		{23EA1D43-328D-4EC1-830E-C1797E1666A6} = {69C84246-AA75-43E8-94B2-66FD555B18B0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04120463-05C5-417B-8D7A-2D7D35B71A07}
