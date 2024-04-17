@@ -29,7 +29,7 @@ public partial class DockerService : IDockerService
         CancellationToken cancellationToken)
     {
         this.ContainerName = containerName;
-        var exposedPorts = new[] { 15580, 15581, 443, 8883, 5671 };
+        var exposedPorts = new[] { 15580, 15581, 443, 8883, 5671 }; // TODO: Constants
 
         var pullAndCreateDockerImageSucceeded = await PullAndCreateDockerImage(cancellationToken);
         if (!pullAndCreateDockerImageSucceeded)

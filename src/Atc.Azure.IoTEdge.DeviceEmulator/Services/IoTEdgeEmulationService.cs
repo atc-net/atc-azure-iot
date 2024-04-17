@@ -117,6 +117,7 @@ public partial class IoTEdgeEmulationService : IIoTEdgeEmulationService
 
         LogIotEdgeEmulatorEnsuringProperVariables();
 
+        // TODO: ?????
         if (environmentVariables.ContainsKey(IotEdgeWorkLoadUri))
         {
             environmentVariables[IotEdgeWorkLoadUri] = "http://127.0.0.1:15581/";
