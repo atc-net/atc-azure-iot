@@ -10,7 +10,7 @@
 ##########################################
 [*.{cs,csx,cake}]
 
-
+dotnet_diagnostic.CA1054.severity = none            # URI parameters should not be strings
 dotnet_diagnostic.CA5359.severity = none            # Do Not Disable Certificate Validation
 
 dotnet_diagnostic.S4830.severity = none             # Server certificates should be verified during SSL/TLS connections
