@@ -45,6 +45,38 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         }
     }
 
+    public async Task<(bool Succeeded, Device? Device)> CreateDevice(
+        string deviceId,
+        bool edgeDevice,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(deviceId);
+
+        try
+        {
+            var device = await registryManager!.AddDeviceAsync(
+                new Device(deviceId)
+                {
+                    Capabilities = new DeviceCapabilities
+                    {
+                        IotEdge = true,
+                    },
+                },
+                cancellationToken);
+
+            return (true, device);
+        }
+        catch (Exception ex)
+        {
+            LogFailure(
+                ioTHubHostName!,
+                ex.GetType().ToString(),
+                ex.GetLastInnerMessage());
+
+            return (false, null);
+        }
+    }
+
     public async Task<Device?> GetDevice(
         string deviceId,
         CancellationToken cancellationToken = default)

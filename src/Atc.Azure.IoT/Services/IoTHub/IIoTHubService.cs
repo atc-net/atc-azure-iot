@@ -17,6 +17,18 @@ public interface IIoTHubService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Asynchronously creates a new device in the IoT Hub.
+    /// </summary>
+    /// <param name="deviceId">The identifier for the new device to create.</param>
+    /// <param name="edgeDevice">Specifies whether the device is an edge device.</param>
+    /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
+    /// <returns><see langword="true" /> if the device was successfully created with the newly created device; otherwise, <see langword="false" /> and null.</returns>
+    Task<(bool Succeeded, Device? Device)> CreateDevice(
+        string deviceId,
+        bool edgeDevice,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Asynchronously retrieves a specific device from the IoT Hub using its deviceId.
     /// </summary>
     /// <param name="deviceId">The identifier of the device to retrieve.</param>
