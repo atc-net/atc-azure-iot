@@ -13,19 +13,19 @@ public partial class SystemEnvironmentService : ISystemEnvironmentService
 
     public FileInfo GetCommandFilePath()
     {
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        if (OperatingSystem.IsWindows())
         {
             return new FileInfo(Path.Combine(System.Environment.SystemDirectory, "cmd.exe"));
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        if (OperatingSystem.IsLinux())
         {
             return new FileInfo("/bin/sh");
         }
 
-        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        if (OperatingSystem.IsMacOS())
         {
-            const string message = "OSX Platform is not implemented!";
+            const string message = "MacOS Platform is not implemented!";
             LogEnvironmentPlatformNotImplemented(message);
             throw new NotImplementedException(message);
         }

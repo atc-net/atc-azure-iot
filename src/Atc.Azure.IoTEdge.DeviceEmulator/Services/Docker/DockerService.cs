@@ -84,7 +84,7 @@ public partial class DockerService : IDockerService
         LogIotEdgeEmulatorCheck(moduleName, ContainerName, ContainerId);
         for (var i = 1; i <= numberOfRetries; i++)
         {
-            var commandPrefix = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "/C" : "-c";
+            var commandPrefix = OperatingSystem.IsWindows() ? "/C" : "-c";
             var (isSuccessful, output) = await ProcessHelper.Execute(cmdPath, $"{commandPrefix} {dockerCommand}");
             if (!isSuccessful)
             {
@@ -282,7 +282,7 @@ public partial class DockerService : IDockerService
 
     private static Uri GetLocalDockerSocketUri()
     {
-        var localDockerSocket = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+        var localDockerSocket = OperatingSystem.IsWindows()
             ? @"npipe://./pipe/docker_engine"
             : @"unix:/var/run/docker.sock";
 
