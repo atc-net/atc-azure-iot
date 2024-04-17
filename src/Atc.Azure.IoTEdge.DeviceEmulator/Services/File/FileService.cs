@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoTEdge.DeviceEmulator.Services.File;
 
-public class FileService : IFileService
+public sealed class FileService : IFileService
 {
     public async Task<string> ReadTemplateContent(
         string filePath,
