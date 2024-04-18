@@ -119,6 +119,49 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         }
     }
 
+    public async Task<string?> GetDeviceConnectionString(
+        string deviceId,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(deviceId);
+
+        try
+        {
+            LogRetrievingDeviceConnectionString(
+                ioTHubHostName!,
+                deviceId);
+
+            var device = await registryManager!.GetDeviceAsync(
+                deviceId,
+                cancellationToken);
+
+            if (device is null)
+            {
+                LogIotEdgeDeviceNotFound(
+                    ioTHubHostName!,
+                    deviceId);
+
+                return null;
+            }
+
+            LogRetrieveIotEdgeDeviceConnectionStringSucceeded(
+                ioTHubHostName!,
+                deviceId);
+
+            return $"HostName={ioTHubHostName!};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}";
+
+        }
+        catch (Exception ex)
+        {
+            LogFailure(
+                ioTHubHostName!,
+                ex.GetType().ToString(),
+                ex.GetLastInnerMessage());
+
+            return null;
+        }
+    }
+
     public async Task<IReadOnlyCollection<Twin>> GetDeviceTwins(
         bool onlyIncludeEdgeDevices)
     {

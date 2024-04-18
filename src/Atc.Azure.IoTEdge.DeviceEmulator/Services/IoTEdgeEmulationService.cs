@@ -71,7 +71,6 @@ public partial class IoTEdgeEmulationService : IIoTEdgeEmulationService
         var (deviceProvisioningSucceeded, deviceConnectionString) = await azureIoTHubService
             .ProvisionIotEdgeDevice(
                 emulationManifest,
-                IotHubConnectionString,
                 DeviceId,
                 cancellationToken);
 

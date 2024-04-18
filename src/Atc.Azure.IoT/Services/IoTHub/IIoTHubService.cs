@@ -39,6 +39,16 @@ public interface IIoTHubService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Asynchronously retrieves a specific device connection-string from the IoT Hub using its deviceId.
+    /// </summary>
+    /// <param name="deviceId">The identifier of the device to retrieve.</param>
+    /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
+    /// <returns>The device connection-string if found; otherwise, null.</returns>
+    Task<string?> GetDeviceConnectionString(
+        string deviceId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Asynchronously retrieves all device twins in the IoT Hub.
     /// </summary>
     /// <param name="onlyIncludeEdgeDevices">Indicates if only edge device twins should be returned.</param>

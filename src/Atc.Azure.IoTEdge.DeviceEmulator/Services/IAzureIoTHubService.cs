@@ -7,7 +7,6 @@ public interface IAzureIoTHubService
 
     Task<(bool Succeeded, string DeviceConnectionString)> ProvisionIotEdgeDevice(
         string emulationManifest,
-        string iotHubConnectionString,
         string deviceId,
         CancellationToken cancellationToken);
 }

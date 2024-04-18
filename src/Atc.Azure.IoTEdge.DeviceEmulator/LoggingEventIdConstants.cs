@@ -41,7 +41,6 @@ internal static class LoggingEventIdConstants
     public const int IotHubProvisionIotEdgeDeviceSucceeded = 190;
     public const int IotHubProvisionIotEdgeDeviceFailed = 191;
 
-    public const int IotHubProvisionIotEdgeDeviceMissingHostName = 192;
     public const int IotHubProvisionIotEdgeDeviceInvalidManifest = 193;
     public const int IotHubTransformTemplateToManifestSucceeded = 194;
     public const int IotHubTransformTemplateToManifestFailed = 195;

@@ -28,15 +28,6 @@ public partial class AzureIoTHubService
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IotHubProvisionIotEdgeDeviceMissingHostName,
-        Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - {message}.")] // TODO: Improve
-    private partial void LogIotHubProvisionIotEdgeDeviceMissingHostName(
-        string message,
-        [CallerMemberName] string callerMethodName = "",
-        [CallerLineNumber] int callerLineNumber = 0);
-
-    [LoggerMessage(
         EventId = LoggingEventIdConstants.IotHubProvisionIotEdgeDeviceInvalidManifest,
         Level = LogLevel.Error,
         Message = "{callerMethodName}({callerLineNumber}) - {message}.")] // TODO: Improve

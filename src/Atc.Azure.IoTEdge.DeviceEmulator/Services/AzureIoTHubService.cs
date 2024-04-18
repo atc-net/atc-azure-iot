@@ -57,20 +57,11 @@ public partial class AzureIoTHubService : IAzureIoTHubService
 
     public Task<(bool Succeeded, string DeviceConnectionString)> ProvisionIotEdgeDevice(
         string emulationManifest,
-        string iotHubConnectionString,
         string deviceId,
         CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(emulationManifest);
-        ArgumentNullException.ThrowIfNull(iotHubConnectionString);
         ArgumentNullException.ThrowIfNull(deviceId);
-
-        if (!iotHubConnectionString.Contains("HostName=", StringComparison.Ordinal))
-        {
-            const string message = "Could not find HostName in IoTHubConnectionString";
-            LogIotHubProvisionIotEdgeDeviceMissingHostName(message);
-            throw new ArgumentException(message, nameof(iotHubConnectionString));
-        }
 
         var manifestContent = GetConfigurationContentFromManifest(emulationManifest);
         if (manifestContent is null)
@@ -80,7 +71,7 @@ public partial class AzureIoTHubService : IAzureIoTHubService
             throw new SerializationException(message);
         }
 
-        return InvokeProvisionIotEdgeDevice(manifestContent, iotHubConnectionString, deviceId, cancellationToken);
+        return InvokeProvisionIotEdgeDevice(manifestContent, deviceId, cancellationToken);
     }
 
     /// <summary>
@@ -100,7 +91,6 @@ public partial class AzureIoTHubService : IAzureIoTHubService
 
     private async Task<(bool Succeeded, string DeviceConnectionString)> InvokeProvisionIotEdgeDevice(
         ConfigurationContent manifestContent,
-        string iotHubConnectionString,
         string deviceId,
         CancellationToken cancellationToken)
     {
@@ -128,15 +118,14 @@ public partial class AzureIoTHubService : IAzureIoTHubService
             return (false, string.Empty);
         }
 
-        return (true, $"HostName={GetIotHubHostName(iotHubConnectionString)};DeviceId={deviceId};SharedAccessKey={sasKey}");
-    }
+        var deviceConnectionString = await iotHubService.GetDeviceConnectionString(deviceId, cancellationToken);
+        if (string.IsNullOrEmpty(deviceConnectionString))
+        {
+            return (false, string.Empty);
+        }
 
-    private static string GetIotHubHostName(
-        string iotHubConnectionString)
-        => iotHubConnectionString
-            .Split(";")
-            .Single(e => e.Contains("HostName=", StringComparison.Ordinal))
-            .Replace("HostName=", string.Empty, StringComparison.Ordinal);
+        return (true, deviceConnectionString);
+    }
 
     private async Task<string?> EnsureDeviceRegistrationAndGetDeviceSasKey(
         string deviceId,
