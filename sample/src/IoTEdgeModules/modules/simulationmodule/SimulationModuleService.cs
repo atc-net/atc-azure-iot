@@ -28,7 +28,7 @@ public sealed partial class SimulationModuleService : IHostedService
         hostApplication.ApplicationStopping.Register(OnStopping);
         hostApplication.ApplicationStopped.Register(OnStopped);
 
-        moduleClientWrapper.SetConnectionStatusChangesHandler(LogConnectionStatusChange);
+        moduleClientWrapper.SetConnectionStatusChangesHandler((status, reason) => LogConnectionStatusChange(status, reason));
 
         await moduleClientWrapper.OpenAsync(cancellationToken);
         LogModuleClientStarted(SimulationModuleConstants.ModuleId);
