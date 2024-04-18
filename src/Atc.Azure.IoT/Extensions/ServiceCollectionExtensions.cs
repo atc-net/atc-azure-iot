@@ -38,4 +38,28 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    /// <summary>
+    /// Configures DPS related services and registers them to the provided IServiceCollection.
+    /// </summary>
+    /// <param name="services">The IServiceCollection to add the services to.</param>
+    /// <param name="deviceProvisioningServiceOptions">The deviceProvisioningServiceOptions.</param>
+    /// <returns>The same service collection so that multiple calls can be chained.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when <see cref="DeviceProvisioningServiceOptions"/> service is not registered or the connection string is missing.</exception>
+    public static IServiceCollection ConfigureDeviceProvisioningServices(
+        this IServiceCollection services,
+        DeviceProvisioningServiceOptions deviceProvisioningServiceOptions)
+    {
+        if (deviceProvisioningServiceOptions is null ||
+            string.IsNullOrEmpty(deviceProvisioningServiceOptions.ConnectionString))
+        {
+            throw new InvalidOperationException("Required service 'DeviceProvisioningServiceOptions' is not registered");
+        }
+
+        services.AddSingleton<IDeviceProvisioningService, DeviceProvisioningService>(s => new DeviceProvisioningService(
+            s.GetRequiredService<ILoggerFactory>(),
+            deviceProvisioningServiceOptions));
+
+        return services;
+    }
 }
