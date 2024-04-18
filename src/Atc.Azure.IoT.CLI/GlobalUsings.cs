@@ -1,6 +1,7 @@
 global using System.ComponentModel;
 global using System.Diagnostics;
-global using Atc.Azure.IoT.CLI.Commands;
+global using Atc.Azure.IoT.CLI.Commands.DPS;
+global using Atc.Azure.IoT.CLI.Commands.IotHub;
 global using Atc.Azure.IoT.CLI.Commands.Settings;
 global using Atc.Azure.IoT.CLI.Extensions;
 global using Atc.Azure.IoT.CLI.Factories;
