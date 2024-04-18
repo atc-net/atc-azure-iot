@@ -1,0 +1,21 @@
+# ATC coding rules - https://github.com/atc-net/atc-coding-rules
+# Version: 1.0.9
+# Updated: 18-04-2024
+# Location: IotEdgeModuleContracts
+# Distribution: DotNet8
+# Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+
+##########################################
+# Custom - Code Analyzers Rules
+##########################################
+[*.{cs,csx,cake}]
+
+dotnet_diagnostic.CA1002.severity = none		   # Do not expose generic lists
+dotnet_diagnostic.CA1054.severity = none           # string to System.Uri
+dotnet_diagnostic.CA1056.severity = none           # string to System.Uri
+dotnet_diagnostic.CA2227.severity = none		   # Collection properties should be read only
+
+dotnet_diagnostic.MA0016.severity = none           # Prefer returning collection abstractions
+dotnet_diagnostic.MA0048.severity = none           # File name must match type name
+
+dotnet_diagnostic.SA1649.severity = none           # File name should match first type name

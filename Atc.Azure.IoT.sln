@@ -24,6 +24,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Azure.IoTEdge", "src\At
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Azure.IoTEdge.DeviceEmulator", "src\Atc.Azure.IoTEdge.DeviceEmulator\Atc.Azure.IoTEdge.DeviceEmulator.csproj", "{23EA1D43-328D-4EC1-830E-C1797E1666A6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{E84E1AF8-ACAF-4D1A-A59D-999E873C0A71}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{711F4C2D-06C4-4A34-BDF3-5FA737DB1133}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IoTEdgeModules", "IoTEdgeModules", "{E122CEC1-82DD-43C7-952A-CBF61C0273B5}"
+	ProjectSection(SolutionItems) = preProject
+		sample\src\IoTEdgeModules\deployment.debug.template.json = sample\src\IoTEdgeModules\deployment.debug.template.json
+		sample\src\IoTEdgeModules\deployment.template.emulation.manifest.json = sample\src\IoTEdgeModules\deployment.template.emulation.manifest.json
+		sample\src\IoTEdgeModules\deployment.template.json = sample\src\IoTEdgeModules\deployment.template.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{17137DCD-1D96-4640-9977-4CC9EED18057}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Atc.Azure.Iot.Sample.Modules.Contracts", "sample\src\Atc.Azure.Iot.Sample.Modules.Contracts\Atc.Azure.Iot.Sample.Modules.Contracts.csproj", "{D996F215-48C7-4489-9B26-7AE3221A394A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimulationModule", "sample\src\IoTEdgeModules\modules\simulationmodule\SimulationModule.csproj", "{B5E634E9-9CF8-469B-9312-B439E797A96D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpcPublisherNodeManagerModule", "sample\src\IoTEdgeModules\modules\opcpublishernodemanagermodule\OpcPublisherNodeManagerModule.csproj", "{1A393DB3-C6F8-4736-9A5A-462394D320A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +73,18 @@ Global
 		{23EA1D43-328D-4EC1-830E-C1797E1666A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23EA1D43-328D-4EC1-830E-C1797E1666A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23EA1D43-328D-4EC1-830E-C1797E1666A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D996F215-48C7-4489-9B26-7AE3221A394A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D996F215-48C7-4489-9B26-7AE3221A394A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D996F215-48C7-4489-9B26-7AE3221A394A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D996F215-48C7-4489-9B26-7AE3221A394A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5E634E9-9CF8-469B-9312-B439E797A96D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5E634E9-9CF8-469B-9312-B439E797A96D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5E634E9-9CF8-469B-9312-B439E797A96D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5E634E9-9CF8-469B-9312-B439E797A96D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A393DB3-C6F8-4736-9A5A-462394D320A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A393DB3-C6F8-4736-9A5A-462394D320A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A393DB3-C6F8-4736-9A5A-462394D320A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A393DB3-C6F8-4736-9A5A-462394D320A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +96,12 @@ Global
 		{2326FBB5-CB4B-4153-AF13-22152C265D5F} = {69C84246-AA75-43E8-94B2-66FD555B18B0}
 		{04852479-8932-4AE0-8D87-AABAED0EA971} = {69C84246-AA75-43E8-94B2-66FD555B18B0}
 		{23EA1D43-328D-4EC1-830E-C1797E1666A6} = {69C84246-AA75-43E8-94B2-66FD555B18B0}
+		{711F4C2D-06C4-4A34-BDF3-5FA737DB1133} = {E84E1AF8-ACAF-4D1A-A59D-999E873C0A71}
+		{E122CEC1-82DD-43C7-952A-CBF61C0273B5} = {711F4C2D-06C4-4A34-BDF3-5FA737DB1133}
+		{17137DCD-1D96-4640-9977-4CC9EED18057} = {E122CEC1-82DD-43C7-952A-CBF61C0273B5}
+		{D996F215-48C7-4489-9B26-7AE3221A394A} = {711F4C2D-06C4-4A34-BDF3-5FA737DB1133}
+		{B5E634E9-9CF8-469B-9312-B439E797A96D} = {17137DCD-1D96-4640-9977-4CC9EED18057}
+		{1A393DB3-C6F8-4736-9A5A-462394D320A5} = {17137DCD-1D96-4640-9977-4CC9EED18057}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {04120463-05C5-417B-8D7A-2D7D35B71A07}
