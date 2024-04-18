@@ -8,16 +8,13 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Services;
 public partial class AzureIoTHubService : IAzureIoTHubService
 {
     private readonly JsonSerializerOptions jsonSerializerOptions;
-    private readonly IRegistryManagerWrapper registryManagerWrapper;
     private readonly IIoTHubService iotHubService;
 
     public AzureIoTHubService(
         ILoggerFactory loggerFactory,
-        IRegistryManagerWrapper registryManagerWrapper,
         IIoTHubService iotHubService)
     {
         logger = loggerFactory.CreateLogger<AzureIoTHubService>();
-        this.registryManagerWrapper = registryManagerWrapper;
         jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
         this.iotHubService = iotHubService;
     }
@@ -179,11 +176,11 @@ public partial class AzureIoTHubService : IAzureIoTHubService
     {
         try
         {
-            foreach (var module in await registryManagerWrapper.GetModulesOnDeviceAsync(deviceId, cancellationToken))
+            foreach (var module in await iotHubService.GetModulesOnIotEdgeDevice(deviceId, cancellationToken))
             {
                 if (!module.Id.StartsWith('$'))
                 {
-                    await registryManagerWrapper.RemoveModuleAsync(module, cancellationToken);
+                    await iotHubService.RemoveModuleFromDevice(deviceId, module.Id, cancellationToken);
                 }
             }
 
@@ -205,7 +202,7 @@ public partial class AzureIoTHubService : IAzureIoTHubService
     {
         try
         {
-            await registryManagerWrapper.ApplyConfigurationContentOnDeviceAsync(deviceId, manifestContent, cancellationToken);
+            await iotHubService.ApplyConfigurationContentOnDevice(deviceId, manifestContent, cancellationToken);
             LogIotHubApplyConfigurationContentToIotEdgeDeviceSucceeded(deviceId);
         }
         catch (Exception ex)

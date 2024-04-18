@@ -5,7 +5,6 @@ public static class IoTEdgeEmulationServiceFactory
     public static IoTEdgeEmulationService BuildIoTEdgeEmulationService(
         ILoggerFactory loggerFactory,
         IDockerService dockerService,
-        IRegistryManagerWrapper registryManagerWrapper,
         IIoTHubService iotHubService)
         => new(
             loggerFactory,
@@ -14,6 +13,5 @@ public static class IoTEdgeEmulationServiceFactory
             iotHubService,
             new AzureIoTHubService(
                 loggerFactory,
-                registryManagerWrapper,
                 iotHubService));
 }
