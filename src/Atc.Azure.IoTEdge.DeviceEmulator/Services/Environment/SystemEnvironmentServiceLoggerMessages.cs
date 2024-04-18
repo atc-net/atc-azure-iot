@@ -11,18 +11,19 @@ public partial class SystemEnvironmentService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.EnvironmentInjectedVariable,
         Level = LogLevel.Trace,
-        Message = "Injected variable: {key}={value}.")]
-    private partial void LogEnvironmentInjectedVariable(string key, string value);
-
-    [LoggerMessage(
-        EventId = LoggingEventIdConstants.EnvironmentPlatformNotImplemented,
-        Level = LogLevel.Error,
-        Message = "{message}")]
-    private partial void LogEnvironmentPlatformNotImplemented(string message);
+        Message = "{callerMethodName}({callerLineNumber}) - Injected variable: {key}={value}.")]
+    private partial void LogEnvironmentInjectedVariable(
+        string key,
+        string value,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
         EventId = LoggingEventIdConstants.EnvironmentPlatformNotSupported,
         Level = LogLevel.Error,
-        Message = "{message}")]
-    private partial void LogEnvironmentPlatformNotSupported(string message);
+        Message = "{callerMethodName}({callerLineNumber}) - {message}")]
+    private partial void LogEnvironmentPlatformNotSupported(
+        string message,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
 }
