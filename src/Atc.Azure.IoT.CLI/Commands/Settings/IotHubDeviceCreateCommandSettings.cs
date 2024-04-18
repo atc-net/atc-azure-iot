@@ -2,10 +2,10 @@ namespace Atc.Azure.IoT.CLI.Commands.Settings;
 
 public sealed class IotHubDeviceCreateCommandSettings : IotHubDeviceCommandSettings
 {
-    [CommandOption("--edge-device <EDGE-DEVICE>")]
-    [Description("Indicates if only edge devices should be queried.")]
+    [CommandOption("--edge-enabled <EDGE-ENABLED>")]
+    [Description("Indicates if the device should be edge enabled.")]
     [DefaultValue(false)]
-    public bool EdgeDevice { get; init; }
+    public bool EdgeEnabled { get; init; }
 
     public override ValidationResult Validate()
     {

@@ -147,7 +147,7 @@ public partial class AzureIoTHubService : IAzureIoTHubService
             var device = await iotHubService.GetDevice(deviceId, cancellationToken);
             if (device is null)
             {
-                var (succeeded, createdDevice) = await iotHubService.CreateDevice(deviceId, edgeDevice: true, cancellationToken);
+                var (succeeded, createdDevice) = await iotHubService.CreateDevice(deviceId, edgeEnabled: true, cancellationToken);
                 if (succeeded)
                 {
                     device = createdDevice;

@@ -35,7 +35,7 @@ public sealed class IotHubDeviceCreateCommand : AsyncCommand<IotHubDeviceCreateC
 
         var (succeeded, device) = await iotHubService.CreateDevice(
             deviceId,
-            settings.EdgeDevice,
+            settings.EdgeEnabled,
             CancellationToken.None);
 
         if (!succeeded ||

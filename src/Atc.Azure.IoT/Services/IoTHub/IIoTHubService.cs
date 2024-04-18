@@ -20,12 +20,12 @@ public interface IIoTHubService
     /// Asynchronously creates a new device in the IoT Hub.
     /// </summary>
     /// <param name="deviceId">The identifier for the new device to create.</param>
-    /// <param name="edgeDevice">Specifies whether the device is an edge device.</param>
+    /// <param name="edgeEnabled">Specifies whether the device is edge enabled.</param>
     /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
     /// <returns><see langword="true" /> if the device was successfully created with the newly created device; otherwise, <see langword="false" /> and null.</returns>
     Task<(bool Succeeded, Device? Device)> CreateDevice(
         string deviceId,
-        bool edgeDevice,
+        bool edgeEnabled,
         CancellationToken cancellationToken = default);
 
     /// <summary>

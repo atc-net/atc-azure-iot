@@ -47,7 +47,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
 
     public async Task<(bool Succeeded, Device? Device)> CreateDevice(
         string deviceId,
-        bool edgeDevice,
+        bool edgeEnabled,
         CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
@@ -59,7 +59,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 {
                     Capabilities = new DeviceCapabilities
                     {
-                        IotEdge = true,
+                        IotEdge = edgeEnabled,
                     },
                 },
                 cancellationToken);

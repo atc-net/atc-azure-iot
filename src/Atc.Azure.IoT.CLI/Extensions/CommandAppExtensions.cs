@@ -71,7 +71,7 @@ public static class CommandAppExtensions
 
             device.AddCommand<IotHubDeviceCreateCommand>("create")
                 .WithDescription("Create a device in the device registry in the IoT Hub.")
-                .WithExample("iothub device create -c <connection-string> -d <device-id> --edge-device");
+                .WithExample("iothub device create -c <connection-string> -d <device-id> --edge-enabled");
 
             device.AddCommand<IotHubDeviceGetCommand>("get")
                 .WithDescription("Retrieve a device from the device registry in the IoT Hub.")
