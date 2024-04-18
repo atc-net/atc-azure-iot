@@ -1,15 +1,15 @@
-namespace Atc.Azure.IoT.CLI.Commands;
+namespace Atc.Azure.IoT.CLI.Commands.IotHub;
 
-public sealed class IotHubDeviceTwinGetCommand : AsyncCommand<IotHubDeviceCommandSettings>
+public sealed class IotHubDeviceGetCommand : AsyncCommand<IotHubDeviceCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
-    private readonly ILogger<IotHubDeviceTwinGetCommand> logger;
+    private readonly ILogger<IotHubDeviceGetCommand> logger;
 
-    public IotHubDeviceTwinGetCommand(
+    public IotHubDeviceGetCommand(
         ILoggerFactory loggerFactory)
     {
         this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<IotHubDeviceTwinGetCommand>();
+        logger = loggerFactory.CreateLogger<IotHubDeviceGetCommand>();
     }
 
     public override Task<int> ExecuteAsync(
@@ -32,20 +32,20 @@ public sealed class IotHubDeviceTwinGetCommand : AsyncCommand<IotHubDeviceComman
 
         var sw = Stopwatch.StartNew();
 
-        var deviceTwin = await iotHubService.GetDeviceTwin(
+        var device = await iotHubService.GetDevice(
             settings.DeviceId!,
             CancellationToken.None);
 
-        if (deviceTwin is null)
+        if (device is null)
         {
             return ConsoleExitStatusCodes.Failure;
         }
 
-        logger.LogInformation("DeviceTwin:\n" +
-                              $"\t\tDeviceId: {deviceTwin.DeviceId}\n" +
-                              $"\t\tConnectionState: {deviceTwin.ConnectionState}\n" +
-                              $"\t\tStatus: {deviceTwin.Status}\n" +
-                              $"\t\tStatusReason: {deviceTwin.StatusReason}");
+        logger.LogInformation("Device:\n" +
+                              $"\t\tId: {device.Id}\n" +
+                              $"\t\tConnectionState: {device.ConnectionState}\n" +
+                              $"\t\tStatus: {device.Status}\n" +
+                              $"\t\tStatusReason: {device.StatusReason}");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");

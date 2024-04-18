@@ -1,20 +1,20 @@
-namespace Atc.Azure.IoT.CLI.Commands;
+namespace Atc.Azure.IoT.CLI.Commands.IotHub;
 
-public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DpsCommandSettings>
+public sealed class IotHubDeviceModuleRemoveCommand : AsyncCommand<IotHubModuleCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
-    private readonly ILogger<DpsEnrollmentIndividualDeleteCommand> logger;
+    private readonly ILogger<IotHubDeviceModuleRemoveCommand> logger;
 
-    public DpsEnrollmentIndividualDeleteCommand(
+    public IotHubDeviceModuleRemoveCommand(
         ILoggerFactory loggerFactory)
     {
         this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<DpsEnrollmentIndividualDeleteCommand>();
+        logger = loggerFactory.CreateLogger<IotHubDeviceModuleRemoveCommand>();
     }
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        DpsCommandSettings settings)
+        IotHubModuleCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,18 +22,22 @@ public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DpsComma
     }
 
     private async Task<int> ExecuteInternalAsync(
-        DpsCommandSettings settings)
+        IotHubModuleCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var dpsService = DeviceProvisioningServiceFactory.Create(
+        var deviceId = settings.DeviceId!;
+        var moduleId = settings.ModuleId!;
+
+        var iotHubService = IotHubServiceFactory.Create(
             loggerFactory,
             settings.ConnectionString!);
 
         var sw = Stopwatch.StartNew();
 
-        var succeeded = await dpsService.DeleteIndividualEnrollment(
-            settings.RegistrationId!,
+        var succeeded = await iotHubService.RemoveModuleFromDevice(
+            deviceId,
+            moduleId,
             CancellationToken.None);
 
         if (!succeeded)
@@ -41,7 +45,7 @@ public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DpsComma
             return ConsoleExitStatusCodes.Failure;
         }
 
-        logger.LogInformation($"Individual enrollment with registration id '{settings.RegistrationId}' was deleted successfully.");
+        logger.LogInformation($"Module '{moduleId}' removed from device '{deviceId}'.");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");

@@ -1,4 +1,4 @@
-namespace Atc.Azure.IoT.CLI.Commands;
+namespace Atc.Azure.IoT.CLI.Commands.IotHub;
 
 public sealed class IotHubDeviceTwinUpdateCommand : AsyncCommand<IotHubDeviceTwinUpdateCommandSettings>
 {

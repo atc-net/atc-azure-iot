@@ -1,20 +1,20 @@
-namespace Atc.Azure.IoT.CLI.Commands;
+namespace Atc.Azure.IoT.CLI.Commands.DPS;
 
-public sealed class IotHubDeviceDeleteCommand : AsyncCommand<IotHubDeviceCommandSettings>
+public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DpsCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
-    private readonly ILogger<IotHubDeviceDeleteCommand> logger;
+    private readonly ILogger<DpsEnrollmentIndividualDeleteCommand> logger;
 
-    public IotHubDeviceDeleteCommand(
+    public DpsEnrollmentIndividualDeleteCommand(
         ILoggerFactory loggerFactory)
     {
         this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<IotHubDeviceDeleteCommand>();
+        logger = loggerFactory.CreateLogger<DpsEnrollmentIndividualDeleteCommand>();
     }
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubDeviceCommandSettings settings)
+        DpsCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,19 +22,18 @@ public sealed class IotHubDeviceDeleteCommand : AsyncCommand<IotHubDeviceCommand
     }
 
     private async Task<int> ExecuteInternalAsync(
-        IotHubDeviceCommandSettings settings)
+        DpsCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
-        var deviceId = settings.DeviceId!;
-        var iotHubService = IotHubServiceFactory.Create(
+        var dpsService = DeviceProvisioningServiceFactory.Create(
             loggerFactory,
             settings.ConnectionString!);
 
         var sw = Stopwatch.StartNew();
 
-        var succeeded = await iotHubService.DeleteDevice(
-            deviceId,
+        var succeeded = await dpsService.DeleteIndividualEnrollment(
+            settings.RegistrationId!,
             CancellationToken.None);
 
         if (!succeeded)
@@ -42,7 +41,7 @@ public sealed class IotHubDeviceDeleteCommand : AsyncCommand<IotHubDeviceCommand
             return ConsoleExitStatusCodes.Failure;
         }
 
-        logger.LogInformation($"Device with id '{deviceId}' was deleted successfully.");
+        logger.LogInformation($"Individual enrollment with registration id '{settings.RegistrationId}' was deleted successfully.");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");

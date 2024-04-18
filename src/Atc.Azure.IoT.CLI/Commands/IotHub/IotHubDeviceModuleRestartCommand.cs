@@ -1,20 +1,20 @@
-namespace Atc.Azure.IoT.CLI.Commands;
+namespace Atc.Azure.IoT.CLI.Commands.IotHub;
 
-public sealed class IotHubDeviceGetCommand : AsyncCommand<IotHubDeviceCommandSettings>
+public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubModuleCommandSettings>
 {
     private readonly ILoggerFactory loggerFactory;
-    private readonly ILogger<IotHubDeviceGetCommand> logger;
+    private readonly ILogger<IotHubDeviceModuleRestartCommand> logger;
 
-    public IotHubDeviceGetCommand(
+    public IotHubDeviceModuleRestartCommand(
         ILoggerFactory loggerFactory)
     {
         this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<IotHubDeviceGetCommand>();
+        logger = loggerFactory.CreateLogger<IotHubDeviceModuleRestartCommand>();
     }
 
     public override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubDeviceCommandSettings settings)
+        IotHubModuleCommandSettings settings)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
@@ -22,7 +22,7 @@ public sealed class IotHubDeviceGetCommand : AsyncCommand<IotHubDeviceCommandSet
     }
 
     private async Task<int> ExecuteInternalAsync(
-        IotHubDeviceCommandSettings settings)
+        IotHubModuleCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
@@ -32,20 +32,18 @@ public sealed class IotHubDeviceGetCommand : AsyncCommand<IotHubDeviceCommandSet
 
         var sw = Stopwatch.StartNew();
 
-        var device = await iotHubService.GetDevice(
+        var (succeeded, statusCode, jsonPayload) = await iotHubService.RestartModuleOnDevice(
             settings.DeviceId!,
+            settings.ModuleId!,
             CancellationToken.None);
 
-        if (device is null)
+        if (!succeeded)
         {
+            logger.LogError($"Failed to restart module on device - StatusCode: {statusCode} - Response: {jsonPayload}");
             return ConsoleExitStatusCodes.Failure;
         }
 
-        logger.LogInformation("Device:\n" +
-                              $"\t\tId: {device.Id}\n" +
-                              $"\t\tConnectionState: {device.ConnectionState}\n" +
-                              $"\t\tStatus: {device.Status}\n" +
-                              $"\t\tStatusReason: {device.StatusReason}");
+        logger.LogInformation("Module restarted successfully.");
 
         sw.Stop();
         logger.LogDebug($"Time for operation: {sw.Elapsed.GetPrettyTime()}");

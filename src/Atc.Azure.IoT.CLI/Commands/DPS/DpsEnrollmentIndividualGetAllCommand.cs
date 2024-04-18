@@ -1,4 +1,4 @@
-namespace Atc.Azure.IoT.CLI.Commands;
+namespace Atc.Azure.IoT.CLI.Commands.DPS;
 
 public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<ConnectionBaseCommandSettings>
 {
