@@ -5,6 +5,11 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Services.Docker;
 /// </summary>
 public partial class DockerService : IDockerService
 {
+    public const int ManagementApiPort = 15580;
+    public const int WorkloadApiPort = 15581;
+    public const int HttpsPort = 443;
+    public const int MqttPort = 8883;
+    public const int AmqpPort = 5671;
     private const string DeviceContainerImage = "toolboc/azure-iot-edge-device-container";
 
     public string ContainerId { get; set; } = string.Empty;
@@ -13,6 +18,8 @@ public partial class DockerService : IDockerService
 
     private readonly ISystemEnvironmentService systemEnvironmentService;
     private readonly DockerClient dockerClient;
+
+    public static readonly int[] ExposedPorts = [ManagementApiPort, WorkloadApiPort, HttpsPort, MqttPort, AmqpPort];
 
     public DockerService(
         ILoggerFactory loggerFactory,
@@ -43,7 +50,7 @@ public partial class DockerService : IDockerService
             return false;
         }
 
-        var createContainerSucceeded = await CreateContainer(deviceConnectionString, exposedPorts, cancellationToken);
+        var createContainerSucceeded = await CreateContainer(deviceConnectionString, ExposedPorts, cancellationToken);
         if (!createContainerSucceeded)
         {
             return false;
