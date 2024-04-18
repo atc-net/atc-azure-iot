@@ -1,6 +1,6 @@
-namespace Atc.Azure.IoTEdge.DeviceEmulator.Options;
+namespace Atc.Azure.IoTEdge.DeviceEmulator.Extensions;
 
-public static class EmulatorOptionsExtensions
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection ConfigureEmulatorOptions(
         this IServiceCollection services,
@@ -8,11 +8,7 @@ public static class EmulatorOptionsExtensions
     {
         services.Configure<EmulatorOptions>(options => config.GetRequiredSection(nameof(EmulatorOptions)).Bind(options));
 
-        services.AddSingleton(s =>
-        {
-            var options = s.GetRequiredService<IOptions<EmulatorOptions>>().Value;
-            return options;
-        });
+        services.AddSingleton(s => s.GetRequiredService<IOptions<EmulatorOptions>>().Value);
 
         return services;
     }
