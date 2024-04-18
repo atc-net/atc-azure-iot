@@ -5,6 +5,8 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Services;
 /// </summary>
 public partial class IoTEdgeEmulationService : IIoTEdgeEmulationService
 {
+    public const string DefaultDeviceId = "emulation_device";
+    public const string DefaultContainerName = "dev_iot_edge";
     private const string IotEdgeWorkLoadUri = "IOTEDGE_WORKLOADURI";
     private const string IotEdgeGatewayHostname = "IOTEDGE_GATEWAYHOSTNAME";
 
@@ -29,9 +31,9 @@ public partial class IoTEdgeEmulationService : IIoTEdgeEmulationService
 
     public string? IotHubConnectionString { get; set; }
 
-    public string DeviceId { get; set; } = $"{DeviceEmulationConstants.DefaultDeviceId}_{Dns.GetHostName()}";
+    public string DeviceId { get; set; } = $"{DefaultDeviceId}_{Dns.GetHostName()}";
 
-    public string ContainerName { get; set; } = DeviceEmulationConstants.DefaultContainerName;
+    public string ContainerName { get; set; } = DefaultContainerName;
 
     public async Task<bool> StartEmulator(
         string filePath,
