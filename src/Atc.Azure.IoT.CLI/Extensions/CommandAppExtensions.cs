@@ -83,7 +83,7 @@ public static class CommandAppExtensions
 
                 twin.AddCommand<IotHubDeviceTwinGetAllCommand>("all")
                     .WithDescription("Retrieve all device twins in the IoT Hub.")
-                    .WithExample("iothub device twin all -c <connection-string> -e");
+                    .WithExample("iothub device twin all -c <connection-string> --edge-devices-only");
 
                 twin.AddCommand<IotHubDeviceTwinGetCommand>("get")
                     .WithDescription("Retrieve a device twin in the IoT Hub.")
