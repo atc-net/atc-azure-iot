@@ -87,6 +87,29 @@
               "image": "${MODULES.simulationmodule.debug}",
               "createOptions": {}
             }
+          },
+          "opcpublishernodemanagermodule": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.opcpublishernodemanagermodule}",
+              "createOptions": {
+                "HostConfig": {
+                  "LogConfig": {
+                    "Type": "json-file",
+                    "Config": {
+                      "max-size": "10m",
+                      "max-file": "10"
+                    }
+                  },
+                  "Binds": [
+                    "/etc/aziot/opc/:/app/opc/"
+                  ]
+                }
+              }
+            }
           }
         }
       }
@@ -95,7 +118,8 @@
       "properties.desired": {
         "schemaVersion": "1.1",
         "routes": {
-          "simulationmoduleToIoTHub": "FROM /messages/modules/simulationmodule/outputs/* INTO $upstream"
+          "simulationmoduleToIoTHub": "FROM /messages/modules/simulationmodule/outputs/* INTO $upstream",
+          "opcpublishernodemanagermoduleToIoTHub": "FROM /messages/modules/opcpublishernodemanagermodule/outputs/* INTO $upstream"
         },
         "storeAndForwardConfiguration": {
           "timeToLiveSecs": 7200
