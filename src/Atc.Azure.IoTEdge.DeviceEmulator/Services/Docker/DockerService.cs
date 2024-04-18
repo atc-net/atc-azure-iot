@@ -27,7 +27,7 @@ public partial class DockerService : IDockerService
     {
         logger = loggerFactory.CreateLogger<DockerService>();
         this.systemEnvironmentService = systemEnvironmentService;
-        this.dockerClient = CreateDockerClient();
+        dockerClient = CreateDockerClient();
     }
 
     public async Task<bool> StartContainer(
@@ -35,8 +35,7 @@ public partial class DockerService : IDockerService
         string deviceConnectionString,
         CancellationToken cancellationToken)
     {
-        this.ContainerName = containerName;
-        var exposedPorts = new[] { 15580, 15581, 443, 8883, 5671 }; // TODO: Constants
+        ContainerName = containerName;
 
         var pullAndCreateDockerImageSucceeded = await PullAndCreateDockerImage(cancellationToken);
         if (!pullAndCreateDockerImageSucceeded)
@@ -199,7 +198,7 @@ public partial class DockerService : IDockerService
                     AttachStdin = true,
                     AttachStdout = true,
                     Tty = true,
-                    Env = new List<string> { $"connectionString={deviceConnectionString}" },
+                    Env = [$"connectionString={deviceConnectionString}"],
                     Name = ContainerName,
                     Image = DeviceContainerImage,
                     ExposedPorts = GetExposedPortsDictionary(exposedPorts),
@@ -260,7 +259,7 @@ public partial class DockerService : IDockerService
             foreach (var container in containers)
             {
                 if (!container.Names.Contains(ContainerName, StringComparer.Ordinal) &&
-                    !container.Names.Contains($@"/{ContainerName}", StringComparer.Ordinal))
+                    !container.Names.Contains($"/{ContainerName}", StringComparer.Ordinal))
                 {
                     continue;
                 }
@@ -290,8 +289,8 @@ public partial class DockerService : IDockerService
     private static Uri GetLocalDockerSocketUri()
     {
         var localDockerSocket = OperatingSystem.IsWindows()
-            ? @"npipe://./pipe/docker_engine"
-            : @"unix:/var/run/docker.sock";
+            ? "npipe://./pipe/docker_engine"
+            : "unix:/var/run/docker.sock";
 
         return new Uri(localDockerSocket);
     }
@@ -300,10 +299,7 @@ public partial class DockerService : IDockerService
         IEnumerable<int> exposedPorts)
         => exposedPorts.ToDictionary(
             x => x.ToString(GlobalizationConstants.EnglishCultureInfo),
-            x => (IList<PortBinding>)new List<PortBinding>
-            {
-                new() { HostPort = x.ToString(GlobalizationConstants.EnglishCultureInfo), },
-            },
+            x => (IList<PortBinding>)[ new PortBinding { HostPort = x.ToString(GlobalizationConstants.EnglishCultureInfo), }],
             StringComparer.Ordinal);
 
     private static Dictionary<string, EmptyStruct> GetExposedPortsDictionary(
