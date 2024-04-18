@@ -532,3 +532,5 @@ dotnet_diagnostic.CA2007.severity = none            # Consider calling Configure
 
 dotnet_diagnostic.MA0004.severity = none            # Use Task.ConfigureAwait(false) as the current SynchronizationContext is not needed
 dotnet_diagnostic.MA0016.severity = none            # Prefer returning collection abstraction instead of implementation
+
+dotnet_diagnostic.S3267.severity = none             #
