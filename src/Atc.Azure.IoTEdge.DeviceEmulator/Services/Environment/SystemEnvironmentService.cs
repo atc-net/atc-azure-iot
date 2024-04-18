@@ -23,14 +23,7 @@ public partial class SystemEnvironmentService : ISystemEnvironmentService
             return new FileInfo("/bin/sh");
         }
 
-        if (OperatingSystem.IsMacOS())
-        {
-            const string message = "MacOS Platform is not implemented!";
-            LogEnvironmentPlatformNotImplemented(message);
-            throw new NotImplementedException(message);
-        }
-
-        const string notSupportedMessage = "Unknown OS Platform is not supported!";
+        var notSupportedMessage = $"Platform {RuntimeInformation.OSDescription} is not supported!";
         LogEnvironmentPlatformNotSupported(notSupportedMessage);
         throw new NotSupportedException(notSupportedMessage);
     }

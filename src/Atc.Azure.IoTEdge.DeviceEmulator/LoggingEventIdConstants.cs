@@ -55,8 +55,7 @@ internal static class LoggingEventIdConstants
     public const int IotHubRemoveModulesFromIotEdgeDeviceSucceeded = 220;
     public const int IotHubRemoveModulesFromIotEdgeDeviceFailed = 221;
 
-    public const int EnvironmentInjectedVariable = 240;
+    public const int EnvironmentInjectedVariable = 230;
 
-    public const int EnvironmentPlatformNotImplemented = 250;
-    public const int EnvironmentPlatformNotSupported = 251;
+    public const int EnvironmentPlatformNotSupported = 240;
 }
