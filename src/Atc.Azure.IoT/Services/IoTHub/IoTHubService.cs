@@ -149,7 +149,6 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 deviceId);
 
             return $"HostName={ioTHubHostName!};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}";
-
         }
         catch (Exception ex)
         {

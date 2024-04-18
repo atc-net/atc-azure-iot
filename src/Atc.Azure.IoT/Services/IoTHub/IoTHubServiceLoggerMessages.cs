@@ -78,7 +78,6 @@ public sealed partial class IoTHubService
         [CallerMemberName] string callerMethodName = "",
         [CallerLineNumber] int callerLineNumber = 0);
 
-
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubService.RetrievingIotDeviceTwins,
         Level = LogLevel.Trace,
