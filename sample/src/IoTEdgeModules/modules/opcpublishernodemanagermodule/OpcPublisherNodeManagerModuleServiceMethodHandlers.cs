@@ -8,6 +8,8 @@ public sealed partial class OpcPublisherNodeManagerModuleService
 {
     private const int MaxNodesForPageSize = 250;
 
+    private const int SyncLockTimeoutInMs = 2000;
+
     /// <summary>
     /// Semaphore to protect the node configuration file.
     /// </summary>
@@ -38,7 +40,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.BadRequest, "No data in request.");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -100,7 +102,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.InternalServerError, "Request deserialization error");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -127,7 +129,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
     {
         LogMethodCalled(OpcPublisherNodeManagerModuleConstants.DirectMethodGetEndpointsWithEmptyOpcNodesList, OpcPublisherNodeManagerModuleConstants.ModuleId);
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -185,7 +187,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.InternalServerError, "Request deserialization error");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -259,7 +261,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.InternalServerError, $"Exception ({ex.Message}) while deserializing message payload");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -327,7 +329,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.InternalServerError, $"Exception ({ex.Message}) while deserializing message payload");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -395,7 +397,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.InternalServerError, $"Exception ({ex.Message}) while deserializing message payload");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -479,7 +481,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.InternalServerError, $"Exception ({ex.Message}) while deserializing message payload");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -566,7 +568,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.InternalServerError, $"Exception ({ex.Message}) while deserializing message payload");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -635,7 +637,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.InternalServerError, $"Exception ({ex.Message}) while deserializing message payload");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -710,7 +712,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.InternalServerError, $"Exception ({ex.Message}) while deserializing message payload");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
@@ -770,7 +772,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
             return methodResponseFactory.Create(HttpStatusCode.InternalServerError, $"Exception ({ex.Message}) while deserializing message payload");
         }
 
-        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(CancellationToken.None);
+        await OpcPublisherNodeConfigurationFileSemaphore.WaitAsync(SyncLockTimeoutInMs, CancellationToken.None);
 
         try
         {
