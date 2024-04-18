@@ -19,7 +19,8 @@ public static class LoggingEventIdConstants
     public const int MethodRequestEmpty = 14_000;
     public const int MethodRequestDeserializationError = 14_010;
     public const int MethodRequestUriParsingError = 14_020;
-    public const int MethodRequestError = 14_030;
+    public const int MethodRequestUriFormatExceptionError = 14_030;
+    public const int MethodRequestError = 14_040;
 
     public const int DesiredPropertyChangedInvoked = 15_000;
     public const int DesiredPropertyChangedHandled = 15_010;
