@@ -2,7 +2,7 @@ namespace Atc.Azure.IoTEdge.Factories;
 
 public static class TransportSettingsFactory
 {
-    public static AmqpTransportSettings BuildEmulatorTransportSettings()
+    public static AmqpTransportSettings BuildAmqpTransportSettings()
         => new(TransportType.Amqp_Tcp_Only)
         {
             RemoteCertificateValidationCallback = (_, _, _, _) => true,
