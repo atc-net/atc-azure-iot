@@ -5,6 +5,7 @@ global using System.Text.Json;
 global using Atc.Azure.IoTEdge.Wrappers;
 global using Atc.Serialization;
 global using Microsoft.Azure.Devices.Client;
+global using Microsoft.Azure.Devices.Client.Transport.Mqtt;
 global using Microsoft.Azure.Devices.Shared;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;

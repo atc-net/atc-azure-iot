@@ -17,6 +17,7 @@ global using Docker.DotNet;
 global using Docker.DotNet.Models;
 global using Microsoft.Azure.Devices;
 global using Microsoft.Azure.Devices.Client;
+global using Microsoft.Azure.Devices.Client.Transport.Mqtt;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
