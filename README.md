@@ -4,11 +4,17 @@
 
 Write Introduction...
 
+- Description of common services for Azure IoT Hub, DeviceProvisioningService, and IoT edge devices.
+- Details about the IoT edge module emulator.
+- Examples for setting up Microsoft OPC publisher module.
+
 # Table of Content
 - [Atc.Azure.Iot](#atcazureiot)
 - [Table of Content](#table-of-content)
 - [Services](#services)
   - [IoTHubService](#iothubservice)
+    - [DeviceTwinModuleExtractor](#devicetwinmoduleextractor)
+    - [IoTHubModuleService](#iothubmoduleservice)
   - [DeviceProvisioningService](#deviceprovisioningservice)
 - [CLI](#cli)
 - [Atc.Azure.IoTEdge](#atcazureiotedge)
@@ -28,6 +34,14 @@ Write Introduction...
 Write...
 
 ## IoTHubService
+
+Write...
+
+### DeviceTwinModuleExtractor
+
+Write...
+
+### IoTHubModuleService
 
 Write...
 
