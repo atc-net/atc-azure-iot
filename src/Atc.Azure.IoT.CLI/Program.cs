@@ -18,8 +18,6 @@ public static class Program
         ProgramCsHelper.SetMinimumLogLevelIfNeeded(args, consoleLoggerConfiguration);
 
         var serviceCollection = ServiceCollectionFactory.Create(consoleLoggerConfiguration);
-
-        // TODO: Wire-up services using e.g. ServiceCollectionExtensions
         serviceCollection.TryAddSingleton<IDeviceTwinModuleExtractor, DeviceTwinModuleExtractor>();
 
         var app = CommandAppFactory.Create(serviceCollection);
