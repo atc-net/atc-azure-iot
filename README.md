@@ -13,6 +13,8 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
       - [Device Twin Management](#device-twin-management)
       - [Module Management](#module-management)
     - [Usage Example](#usage-example)
+    - [Configuring IIoTHubService](#configuring-iiothubservice)
+      - [Example Usage](#example-usage)
   - [IoTHubModuleService](#iothubmoduleservice)
     - [Features](#features-1)
     - [Method](#method)
@@ -23,6 +25,8 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
     - [Methods](#methods-1)
       - [Individual Enrollment Management](#individual-enrollment-management)
     - [Usage Example](#usage-example-2)
+    - [Configuring IDeviceProvisioningService](#configuring-ideviceprovisioningservice)
+      - [Example Usage](#example-usage-1)
   - [IDeviceTwinModuleExtractor](#idevicetwinmoduleextractor)
     - [Features](#features-3)
     - [Method](#method-1)
@@ -94,6 +98,26 @@ var result = await iotHubService.CreateDevice("myDeviceId", true, CancellationTo
 if (result.Succeeded)
 {
     Console.WriteLine($"Device created with ID: {result.Device?.Id}");
+}
+```
+
+### Configuring IIoTHubService
+
+The `ConfigureIotHubServices` extension method from `ServiceCollectionExtensions` helps configure and register IoT Hub related services with your application's `IServiceCollection`. This setup is crucial for utilizing the IIoTHubService and related services effectively.
+
+#### Example Usage
+
+Here's how you can configure your services using this extension method:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    var iotHubOptions = new IotHubOptions
+    {
+        ConnectionString = "your_iot_hub_connection_string"
+    };
+
+    services.ConfigureIotHubServices(iotHubOptions);
 }
 ```
 
@@ -182,6 +206,26 @@ if (result.Enrollment != null)
 else
 {
     Console.WriteLine($"Failed to create enrollment: {result.ErrorMessage}");
+}
+```
+
+### Configuring IDeviceProvisioningService
+
+The `ConfigureDeviceProvisioningServices` extension method simplifies the integration of Azure DPS related services into your service collection, facilitating easy management of device enrollments.
+
+#### Example Usage
+
+To set up your services, you can add the following code to your `ConfigureServices` method:
+
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    var deviceProvisioningServiceOptions = new DeviceProvisioningServiceOptions
+    {
+        ConnectionString = "your_device_provisioning_service_connection_string"
+    };
+
+    services.ConfigureDeviceProvisioningServices(deviceProvisioningServiceOptions);
 }
 ```
 
