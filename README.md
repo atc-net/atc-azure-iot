@@ -56,6 +56,8 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
     - [SimulationModule](#simulationmodule)
     - [OpcPublisherNodeManager](#opcpublishernodemanager)
     - [OpcPublisher](#opcpublisher)
+      - [Certificate](#certificate)
+      - [Deployment](#deployment)
 - [Requirements](#requirements)
 - [How to contribute](#how-to-contribute)
 
@@ -557,6 +559,48 @@ Direct Methods supported:
 For guidance on how to configure the OpcPublisher from Microsoft, refer to this [example](/sample/src/IoTEdgeModules/deployment.template.json) located in the sample folder. This file provides a detailed template for setting up your deployment configuration.
 
 The latest release of the OpcPublisher can be accessed [here](https://github.com/Azure/Industrial-IoT/releases).
+
+#### Certificate
+
+If the OpcPublisher container is not provided with a certificate, it will generate a new self-signed certificate upon each startup. This approach may not be suitable in scenarios where a consuming party needs to trust the certificate for OpcPublisher to establish a connection with an OPC-UA server.
+
+To address this, a certificate can be specifically created for the OpcPublisher module and included in the module's `createOptions`/`Cmd-parameters` as illustrated in the deployment template:
+
+```json
+    "--ApplicationName=opcpublisher",
+    "--ApplicationCertificateSubjectName=O=myorganization,CN=opcpublisher"
+```
+
+In the sample folder, there are two methods provided for generating this certificate. You can either use the [Generate OpcPublisher Certificate.bat](/sample/src/IoTEdgeModules/Generate%20OpcPublisher%20Certificate.bat) script or the C# program [Atc.Azure.Iot.Certificate.Sample](sample/src/Atc.Azure.Iot.Certificate.Sample/Program.cs).
+
+Make sure to correctly set the organisation and CN name for the certificate generation to align with those specified in the deployment manifest.
+
+#### Deployment
+
+Once you are ready to deploy the OpcPublisher module, there are several requirements that need to be met on your IoTEdge device.
+
+1. Create the following folders on your IoTEdge device and ensure the Binds in the [deployment manifest](/sample/src/IoTEdgeModules/deployment.template.json) match these folders. This setup ensures that the Container Mounts are correctly mapped to the file system on your IoTEdge device.
+ > ```json
+   > "/opc/opcpublisher"
+   > "/opc/pki/own/certs"
+   > "/opc/pki/own/private"
+   > "/opc/pki/trusted/certs"
+ > ```
+2. Ensure the iotedge user has 777 chmod permissions on the opc folder
+3. Copy the generated certificate files to the proper folders on your IoTEdge device
+ > ```json
+   > Empty file "pn.json" to "/opc/opcpublisher"
+   > "opcpublisher.der" to "/opc/pki/own/certs"
+   > "opcpublisher.pfx" to "/opc/pki/own/private"
+   > "opcpublisher.der" to "/opc/pki/trusted/certs"
+ > ```
+4. Change ownership and ensure 777 permissions on the files
+ > ```json
+   > iotedge on "/opc/opcpublisher/pn.json"
+   > aziotcs on "/opc/pki/own/certs/opcpublisher.der"
+   > aziotks on "/opc/pki/own/private/opcpublisher.pfx"
+   > aziotcs on "/opc/pki/trusted/certs/opcpublisher.der"
+ > ```
 
 # Requirements
 
