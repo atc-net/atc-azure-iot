@@ -61,8 +61,6 @@ public static class Program
             .Build();
 
         loggerFactory = host.Services.GetRequiredService<ILoggerFactory>();
-
-        ////logger = host.Services.GetRequiredService<ILogger<OpcPublisherNodeManagerService>>();
         logger = loggerFactory.CreateLogger<OpcPublisherNodeManagerModuleService>();
 
         if (isEmulatorMode)
