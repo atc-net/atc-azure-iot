@@ -1,0 +1,22 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim AS build-env
+WORKDIR /app
+
+RUN mkdir src
+COPY src/IoTEdgeModules/modules/simulationmodule/*.csproj ./src/
+COPY src/Atc.Azure.Iot.Sample.Modules.Contracts/*.csproj ./src/
+COPY Directory.Build.props .
+COPY .editorconfig .
+
+RUN dotnet restore "./src/SimulationModule.csproj"
+
+COPY src/ ./src/
+RUN dotnet publish "src/IoTEdgeModules/modules/simulationmodule/SimulationModule.csproj" -c Release -o out
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim
+WORKDIR /app
+COPY --from=build-env /app/out ./
+
+RUN useradd -ms /bin/bash moduleuser
+USER moduleuser
+
+ENTRYPOINT ["dotnet", "SimulationModule.dll"]

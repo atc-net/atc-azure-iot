@@ -1,0 +1,20 @@
+# ATC coding rules - https://github.com/atc-net/atc-coding-rules
+# Version: 1.0.9
+# Updated: 18-04-2024
+# Location: src/Atc.Azure.IoTEdge
+# Distribution: DotNet8
+# Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+
+##########################################
+# Code Analyzers Rules
+##########################################
+[*.{cs,csx,cake}]
+
+##########################################
+# Custom - Code Analyzers Rules
+##########################################
+
+dotnet_diagnostic.CA1062.severity = none            # Validate arguments of public methods
+dotnet_diagnostic.CA5359.severity = none            # The ServerCertificateValidationCallback is set to a function that accepts any server certificate, by always returning true. Ensure that server certificates are validated to verify the identity of the server receiving requests.
+
+dotnet_diagnostic.S4830.severity = none             #

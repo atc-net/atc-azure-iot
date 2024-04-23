@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <PackageId>atc-azure-iot</PackageId>
+    <PackageTags>azure-iot</PackageTags>
+    <Description>A .NET Tool that can interact with Azure IoTHub and Azure Device Provisioning Service.</Description>
+    <Title>ATC AZURE IOT CLI</Title>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>atc-azure-iot</AssemblyName>
+    <PackAsTool>true</PackAsTool>
+    <DebugType>pdbonly</DebugType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Atc" Version="2.0.469" />
+    <PackageReference Include="Atc.Console.Spectre" Version="2.0.469" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Atc.Azure.IoT\Atc.Azure.IoT.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

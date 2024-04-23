@@ -1,0 +1,30 @@
+# ATC coding rules - https://github.com/atc-net/atc-coding-rules
+# Version: 1.0.9
+# Updated: 15-08-2023
+# Location: IotEdgeModules
+# Distribution: DotNet8
+# Inspired by: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-style-rule-options
+
+##########################################
+# Custom - Code Analyzers Rules
+##########################################
+[*.{cs,csx,cake}]
+
+dotnet_diagnostic.SA1615.severity = none            # Element return value should be documented.
+
+dotnet_diagnostic.CA1002.severity = none			# Of no use for the internal domain project.
+dotnet_diagnostic.CA1031.severity = none            # Catch more specific allowed exception type, or rethrow the exception
+dotnet_diagnostic.CA1056.severity = none            # string to System.Uri
+dotnet_diagnostic.CA1062.severity = none            # Validate arguments of public methods
+dotnet_diagnostic.CA1303.severity = none            # Do not pass literals as localized parameters
+dotnet_diagnostic.CA1848.severity = none            # Logging
+dotnet_diagnostic.CA2007.severity = none            # Consider calling ConfigureAwait on the awaited task
+dotnet_diagnostic.CA2201.severity = none            # Do not raise reserved exception types
+dotnet_diagnostic.CA2254.severity = none            # Logging
+dotnet_diagnostic.CA5359.severity = none            # Do Not Disable Certificate Validation
+
+dotnet_diagnostic.S112.severity = none              # System.Exception should not be thrown by user code
+dotnet_diagnostic.S4830.severity = none             # Server certificates should be verified during SSL/TLS connections
+
+dotnet_diagnostic.MA0004.severity = none            # Use Task.ConfigureAwait(false) as the current SynchronizationContext is not needed
+dotnet_diagnostic.MA0048.severity = none            # File name must match type name
