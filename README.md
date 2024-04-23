@@ -335,6 +335,8 @@ COMMANDS:
 
 # Atc.Azure.IoTEdge
 
+[![NuGet Version](https://img.shields.io/nuget/v/atc.azure.iotedge.svg?logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/atc.azure.iotedge)
+
 The `Atc.Azure.IoTEdge` package is specifically designed to enhance Azure IoT Edge module projects, providing critical functionalities for both development and testing environments. This library simplifies the creation, configuration, and testing of IoT Edge modules, enabling developers to efficiently manage device interactions and module behaviors.
 
 ## Features
@@ -404,6 +406,8 @@ await host.RunAsync();
 ```
 
 # Atc.Azure.IoTEdge.DeviceEmulator
+
+[![NuGet Version](https://img.shields.io/nuget/v/atc.azure.iotedge.deviceemulator.svg?logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/atc.azure.iotedge.deviceemulator)
 
 The `Atc.Azure.IoTEdge.DeviceEmulator` package is specifically designed for adding to IoTEdge module projects, when developing and testing IoTEdge modules locally. This package does so, by providing an emulator.
 
