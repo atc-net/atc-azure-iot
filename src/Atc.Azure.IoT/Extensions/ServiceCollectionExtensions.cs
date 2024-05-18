@@ -20,7 +20,7 @@ public static class ServiceCollectionExtensions
         if (iotHubOptions is null ||
             string.IsNullOrEmpty(iotHubOptions.ConnectionString))
         {
-            throw new InvalidOperationException("Required service 'IotHubOptions' is not registered");
+            throw new InvalidOperationException($"Required service '{nameof(IotHubOptions)}' is not registered");
         }
 
         services.TryAddSingleton<IDeviceTwinModuleExtractor, DeviceTwinModuleExtractor>();
@@ -53,7 +53,7 @@ public static class ServiceCollectionExtensions
         if (deviceProvisioningServiceOptions is null ||
             string.IsNullOrEmpty(deviceProvisioningServiceOptions.ConnectionString))
         {
-            throw new InvalidOperationException("Required service 'DeviceProvisioningServiceOptions' is not registered");
+            throw new InvalidOperationException($"Required service '{nameof(DeviceProvisioningServiceOptions)}' is not registered");
         }
 
         services.AddSingleton<IDeviceProvisioningService, DeviceProvisioningService>(s => new DeviceProvisioningService(
