@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Atc.Azure.IoT.Wpf.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:userControls="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls"
     Title="..:: Atc.Azure.IoT ::.."
     Width="1920"
     Height="1080"
@@ -16,5 +17,9 @@
     WindowStartupLocation="CenterScreen"
     WindowState="{Binding Path=WindowState}"
     mc:Ignorable="d">
-    <Grid />
+    <atcTheming:BusyOverlay IsBusy="{Binding Path=IsBusy}">
+        <atcTheming:GridEx Rows="Auto,*,Auto">
+            <userControls:StatusBarView Grid.Row="2" DataContext="{Binding Path=StatusBarViewModel}" />
+        </atcTheming:GridEx>
+    </atcTheming:BusyOverlay>
 </atcTheming:NiceWindow>

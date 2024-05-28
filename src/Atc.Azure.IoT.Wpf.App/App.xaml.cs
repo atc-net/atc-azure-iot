@@ -23,6 +23,7 @@ public partial class App
                 })
             .ConfigureServices((_, services) =>
             {
+                services.AddSingleton<StatusBarViewModel>();
                 services.AddSingleton<IMainWindowViewModelBase, MainWindowViewModel>();
                 services.AddSingleton<MainWindow>();
             })

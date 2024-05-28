@@ -1,0 +1,20 @@
+<fluent:StatusBar
+    x:Class="Atc.Azure.IoT.Wpf.App.UserControls.StatusBarView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="urn:fluent-ribbon"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:userControls="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls"
+    d:DataContext="{d:DesignInstance Type=userControls:StatusBarViewModel}"
+    d:DesignHeight="25"
+    d:DesignWidth="600"
+    ContextMenu="{x:Null}"
+    mc:Ignorable="d">
+
+    <fluent:StatusBarItem Margin="10,0" HorizontalAlignment="Left">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock>Hej</TextBlock>
+        </StackPanel>
+    </fluent:StatusBarItem>
+</fluent:StatusBar>
