@@ -14,7 +14,7 @@ env:
 
 jobs:
   merge-to-stable:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: 🛒 Checkout repository
         uses: actions/checkout@v4
@@ -48,7 +48,7 @@ jobs:
         run: dotnet restore
 
       - name: 🛠️ Build
-        run: dotnet build -c Release --no-restore /p:UseSourceLink=true
+        run: dotnet build Atc.Azure.IoT.sln -c Release --no-restore /p:UseSourceLink=true
 
       - name: 🧪 Run unit tests
         run: dotnet test -c Release --no-build --filter "Category!=Integration"

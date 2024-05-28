@@ -11,7 +11,7 @@ env:
 jobs:
   release:
     if: github.ref == 'refs/heads/stable'
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: 🛒 Checkout repository
         uses: actions/checkout@v4
@@ -39,7 +39,7 @@ jobs:
         run: dotnet restore
 
       - name: 🛠️ Building library in release mode
-        run: dotnet build -c Release --no-restore /p:UseSourceLink=true
+        run: dotnet build Atc.Azure.IoT.sln -c Release --no-restore /p:UseSourceLink=true
 
       - name: ⏩ Merge to release-branch
         run: |
