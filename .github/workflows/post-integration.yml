@@ -14,7 +14,7 @@ env:
 
 jobs:
   merge-to-stable:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: 🛒 Checkout repository
         uses: actions/checkout@v4
@@ -42,16 +42,16 @@ jobs:
           distribution: 'zulu'
 
       - name: 🧹 Clean
-        run: dotnet clean -c Release && dotnet nuget locals all --clear
+        run: dotnet clean Atc.Azure.IoT.sln -c Release && dotnet nuget locals all --clear
 
       - name: 🔁 Restore packages
-        run: dotnet restore
+        run: dotnet restore Atc.Azure.IoT.sln
 
       - name: 🛠️ Build
-        run: dotnet build -c Release --no-restore /p:UseSourceLink=true
+        run: dotnet build Atc.Azure.IoT.sln -c Release --no-restore /p:UseSourceLink=true
 
       - name: 🧪 Run unit tests
-        run: dotnet test -c Release --no-build --filter "Category!=Integration"
+        run: dotnet test Atc.Azure.IoT.sln -c Release --no-build --filter "Category!=Integration"
 
       - name: 🌩️ SonarCloud install scanner
         run: dotnet tool install --global dotnet-sonarscanner
