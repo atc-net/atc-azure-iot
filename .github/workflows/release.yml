@@ -33,10 +33,10 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: 🧹 Clean
-        run: dotnet clean -c Release && dotnet nuget locals all --clear
+        run: dotnet clean Atc.Azure.IoT.sln -c Release && dotnet nuget locals all --clear
 
       - name: 🔁 Restore packages
-        run: dotnet restore
+        run: dotnet restore Atc.Azure.IoT.sln
 
       - name: 🛠️ Building library in release mode
         run: dotnet build Atc.Azure.IoT.sln -c Release --no-restore /p:UseSourceLink=true
