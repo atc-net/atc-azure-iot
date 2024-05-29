@@ -50,7 +50,7 @@ jobs:
           git push origin release
 
       - name: 🗳️ Creating library package for release
-        run: dotnet pack -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH_NAME /p:PublicRelease=true
+        run: dotnet pack Atc.Azure.IoT.sln -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH_NAME /p:PublicRelease=true
 
       - name: 📦 Push packages to NuGet
         run: |
