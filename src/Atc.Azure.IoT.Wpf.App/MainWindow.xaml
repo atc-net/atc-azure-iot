@@ -1,9 +1,12 @@
-<atcTheming:NiceWindow
+<atc:NiceWindow
     x:Class="Atc.Azure.IoT.Wpf.App.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:atcTheming="https://github.com/atc-net/atc-wpf/tree/main/schemas"
+    xmlns:atc="https://github.com/atc-net/atc-wpf/tree/main/schemas"
+    xmlns:atcFontIconsValueConverters="https://github.com/atc-net/atc-wpf/tree/main/schemas/value-converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fluent="urn:fluent-ribbon"
+    xmlns:fontIcons="clr-namespace:Atc.Wpf.FontIcons;assembly=Atc.Wpf.FontIcons"
     xmlns:local="clr-namespace:Atc.Azure.IoT.Wpf.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:userControls="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls"
@@ -17,9 +20,59 @@
     WindowStartupLocation="CenterScreen"
     WindowState="{Binding Path=WindowState}"
     mc:Ignorable="d">
-    <atcTheming:BusyOverlay IsBusy="{Binding Path=IsBusy}">
-        <atcTheming:GridEx Rows="Auto,*,Auto">
+
+    <atc:NiceWindow.Resources>
+        <ResourceDictionary>
+            <atcFontIconsValueConverters:FontIconImageSourceValueConverter x:Key="FontIconImageConverter" />
+        </ResourceDictionary>
+    </atc:NiceWindow.Resources>
+
+    <atc:BusyOverlay IsBusy="{Binding Path=IsBusy}">
+        <atc:GridEx Rows="Auto,*,Auto">
+            <fluent:Ribbon
+                Grid.Row="0"
+                AutomaticStateManagement="True"
+                CanCustomizeQuickAccessToolBar="False"
+                IsQuickAccessToolBarMenuDropDownVisible="False"
+                IsQuickAccessToolBarVisible="False">
+
+                <!--  Backstage  -->
+                <fluent:Ribbon.Menu>
+                    <fluent:Backstage Header="Application" KeyTip="A">
+                        <fluent:BackstageTabControl>
+                            <fluent:Button
+                                Command="{Binding Path=OpenApplicationAboutCommand}"
+                                Header="About"
+                                Icon="{Binding Source={x:Static fontIcons:FontAwesomeSolidType.InfoCircle}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}" />
+                            <Separator />
+                            <fluent:Button
+                                Command="{Binding Path=ApplicationExitCommand}"
+                                Header="Exit"
+                                Icon="{Binding Source={x:Static fontIcons:FontAwesomeRegularType.TimesCircle}, Converter={StaticResource FontIconImageConverter}, ConverterParameter={StaticResource AtcApps.Brushes.ThemeForeground}}"
+                                KeyTip="X" />
+                        </fluent:BackstageTabControl>
+                    </fluent:Backstage>
+                </fluent:Ribbon.Menu>
+
+                <!--  Tabs  -->
+                <fluent:RibbonTabItem Header="Device Provisioning Service (DPS)" KeyTip="D">
+                    <fluent:RibbonGroupBox Header="XXX">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>Hej</TextBlock>
+                        </StackPanel>
+                    </fluent:RibbonGroupBox>
+                </fluent:RibbonTabItem>
+                <fluent:RibbonTabItem Header="IoTHub" KeyTip="I">
+                    <fluent:RibbonGroupBox Header="XXX">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>Hej 2</TextBlock>
+                        </StackPanel>
+                    </fluent:RibbonGroupBox>
+                </fluent:RibbonTabItem>
+            </fluent:Ribbon>
+
+            <atc:GridEx Grid.Row="1" Rows="Auto,*" />
             <userControls:StatusBarView Grid.Row="2" DataContext="{Binding Path=StatusBarViewModel}" />
-        </atcTheming:GridEx>
-    </atcTheming:BusyOverlay>
-</atcTheming:NiceWindow>
+        </atc:GridEx>
+    </atc:BusyOverlay>
+</atc:NiceWindow>

@@ -1,8 +1,12 @@
 global using System.ComponentModel;
 global using System.IO;
+global using System.Reflection;
 global using System.Windows;
 global using System.Windows.Input;
+global using System.Windows.Media.Imaging;
+global using Atc.Azure.IoT.Wpf.App.Dialogs;
 global using Atc.Azure.IoT.Wpf.App.UserControls;
+global using Atc.Wpf.Command;
 global using Atc.Wpf.Mvvm;
 global using ControlzEx.Theming;
 global using Microsoft.Extensions.Configuration;

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Resources\AppIcon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Atc.Wpf" Version="2.0.505" />
     <PackageReference Include="Atc.Wpf.Controls" Version="2.0.505" />
+    <PackageReference Include="Atc.Wpf.FontIcons" Version="2.0.505" />
     <PackageReference Include="Atc.Wpf.Theming" Version="2.0.505" />
     <PackageReference Include="Fluent.Ribbon" Version="10.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
@@ -28,6 +30,10 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\AppIcon.ico" />
   </ItemGroup>
 
 </Project>

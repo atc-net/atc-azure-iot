@@ -8,6 +8,8 @@ public partial class App
     private readonly IHost host;
     private IConfiguration? configuration;
 
+    public static readonly BitmapImage DefaultIcon = new(new Uri("pack://application:,,,/Resources/AppIcon.ico", UriKind.Absolute));
+
     public App()
     {
         host = Host.CreateDefaultBuilder()
