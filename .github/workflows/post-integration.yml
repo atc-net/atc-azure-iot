@@ -63,7 +63,7 @@ jobs:
         shell: pwsh
         run: |
           dotnet sonarscanner begin /k:"atc-net_atc-azure-iot" /o:"atc-net" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build -c Release /p:UseSourceLink=true --no-restore
+          dotnet build Atc.Azure.IoT.sln -c Release /p:UseSourceLink=true --no-restore
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: ⏩ Merge to stable-branch
@@ -75,7 +75,7 @@ jobs:
           git push origin stable
 
       - name: 🗳️ Creating library package for pre-release
-        run: dotnet pack -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH_NAME
+        run: dotnet pack Atc.Azure.IoT.sln -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH_NAME
 
       - name: 📦 Push packages to GitHub Package Registry
         run: |
