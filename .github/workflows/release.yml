@@ -54,7 +54,7 @@ jobs:
 
       - name: 📦 Push packages to NuGet
         run: |
-          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'Atc.Azure.IoT.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols
-          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'Atc.Azure.IoTEdge.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols
-          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'Atc.Azure.IoTEdge.DeviceEmulator.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols
-          dotnet nuget push ${GITHUB_WORKSPACE}/packages/'atc-azure-iot.'${NBGV_NuGetPackageVersion}'.nupkg' -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/Atc.Azure.IoT.${{ env.NBGV_NuGetPackageVersion }}.nupkg -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/Atc.Azure.IoTEdge.${{ env.NBGV_NuGetPackageVersion }}.nupkg -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/Atc.Azure.IoTEdge.DeviceEmulator.${{ env.NBGV_NuGetPackageVersion }}.nupkg -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols
+          dotnet nuget push ${GITHUB_WORKSPACE}/packages/atc-azure-iot.${{ env.NBGV_NuGetPackageVersion }}.nupkg -k ${{ secrets.NUGET_KEY }} -s ${{ env.NUGET_REPO_URL }} --skip-duplicate --no-symbols
