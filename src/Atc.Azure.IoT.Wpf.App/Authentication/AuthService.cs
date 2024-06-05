@@ -57,7 +57,10 @@ public sealed class AuthService
     {
         try
         {
-            var credential = new InteractiveBrowserCredential(tenantId);
+            var credential = new InteractiveBrowserCredential(new InteractiveBrowserCredentialOptions
+            {
+                TenantId = tenantId,
+            }); // TODO: Verify
 
             try
             {
@@ -79,7 +82,6 @@ public sealed class AuthService
         }
         catch (MsalUiRequiredException)
         {
-            ///* authentication*/Result = await AcquireTokenInteractive(windowHandle, cancellationToken, forceLogin: true);
             return null;
         }
         catch (MsalClientException)

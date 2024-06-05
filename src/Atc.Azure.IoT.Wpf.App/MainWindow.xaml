@@ -88,6 +88,7 @@
                         Orientation="Vertical"
                         SelectedKey="{Binding Path=SelectedTenantId}" />
                     <ListView
+                        Height="200"
                         AlternationCount="0"
                         FontFamily="Modern"
                         ItemsSource="{Binding Tenants}">
@@ -108,6 +109,27 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <Button Command="{Binding Path=GetTestCommand1}" Content="Login To Tenant" />
+                    <ListView
+                        Height="200"
+                        AlternationCount="0"
+                        FontFamily="Modern"
+                        ItemsSource="{Binding Subscriptions}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="300"
+                                    DisplayMemberBinding="{Binding Path=Data.DisplayName}"
+                                    Header="DisplayName" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=Data.SubscriptionId}"
+                                    Header="SubscriptionId" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <Button Command="{Binding Path=GetTestCommand2}" Content="Get IoTHubs" />
+                    <Button Command="{Binding Path=GetTestCommand3}" Content="Get DPS" />
                 </atc:UniformSpacingPanel>
             </atc:GridEx>
             <userControls:StatusBarView Grid.Row="2" DataContext="{Binding Path=StatusBarViewModel}" />

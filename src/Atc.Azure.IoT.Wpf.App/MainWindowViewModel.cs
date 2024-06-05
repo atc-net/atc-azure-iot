@@ -36,6 +36,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
 
     public ObservableCollectionEx<TenantViewModel> Tenants { get; set; } = [];
 
+    public ObservableCollectionEx<SubscriptionResource> Subscriptions { get; set; } = [];
+
     public string AuthorizationText
     {
         get => authorizationText;
