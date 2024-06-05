@@ -23,6 +23,8 @@
     <PackageReference Include="Atc.Wpf.Controls" Version="2.0.505" />
     <PackageReference Include="Atc.Wpf.FontIcons" Version="2.0.505" />
     <PackageReference Include="Atc.Wpf.Theming" Version="2.0.505" />
+    <PackageReference Include="Azure.Identity" Version="1.11.3" />
+    <PackageReference Include="Azure.ResourceManager" Version="1.12.0" />
     <PackageReference Include="Fluent.Ribbon" Version="10.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
@@ -30,6 +32,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Identity.Client" Version="4.61.1" />
+    <PackageReference Include="Microsoft.Identity.Client.Broker" Version="4.61.1" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.0" />
   </ItemGroup>
 
   <ItemGroup>
