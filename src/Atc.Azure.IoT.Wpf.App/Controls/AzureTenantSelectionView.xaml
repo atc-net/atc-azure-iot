@@ -32,6 +32,7 @@
                 LabelText="Tenants"
                 Orientation="Vertical"
                 SelectedKey="{Binding Path=SelectedTenantId}"
+                SelectorChanged="OnTenantSelectedChangedHandler"
                 Visibility="{Binding Path=IsAuthorizedToAzure, Converter={StaticResource BoolToVisibilityVisibleValueConverter}}" />
         </atc:UniformSpacingPanel>
     </atc:BusyOverlay>
