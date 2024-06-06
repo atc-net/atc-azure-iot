@@ -10,8 +10,8 @@ public partial class MainWindowViewModel
         {
             IconImage =
             {
-                Source = App.DefaultIcon
-            }
+                Source = App.DefaultIcon,
+            },
         };
 
         aboutBoxDialog.ShowDialog();
