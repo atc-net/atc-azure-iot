@@ -10,6 +10,7 @@
     xmlns:local="clr-namespace:Atc.Azure.IoT.Wpf.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:userControls="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls"
+    xmlns:valueConverters="clr-namespace:Atc.Azure.IoT.Wpf.App.ValueConverters"
     Title="..:: Atc.Azure.IoT ::.."
     Width="1920"
     Height="1080"
@@ -25,6 +26,7 @@
     <atc:NiceWindow.Resources>
         <ResourceDictionary>
             <atcFontIconsValueConverters:FontIconImageSourceValueConverter x:Key="FontIconImageConverter" />
+            <valueConverters:ContextViewModeVisibilityValueConverter x:Key="ContextViewModeVisibilityValueConverter" />
         </ResourceDictionary>
     </atc:NiceWindow.Resources>
 
@@ -35,7 +37,8 @@
                 AutomaticStateManagement="True"
                 CanCustomizeQuickAccessToolBar="False"
                 IsQuickAccessToolBarMenuDropDownVisible="False"
-                IsQuickAccessToolBarVisible="False">
+                IsQuickAccessToolBarVisible="False"
+                SelectedTabChanged="OnRibbonOnSelectedTabChanged">
 
                 <!--  Backstage  -->
                 <fluent:Ribbon.Menu>
@@ -56,14 +59,30 @@
                 </fluent:Ribbon.Menu>
 
                 <!--  Tabs  -->
-                <fluent:RibbonTabItem Header="Device Provisioning Service (DPS)" KeyTip="D">
+                <fluent:RibbonTabItem
+                    Header="Home"
+                    KeyTip="H"
+                    Tag="{x:Static local:ContextViewMode.TenantSelection}">
+                    <fluent:RibbonGroupBox Header="XX">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>Hej</TextBlock>
+                        </StackPanel>
+                    </fluent:RibbonGroupBox>
+                </fluent:RibbonTabItem>
+                <fluent:RibbonTabItem
+                    Header="Device Provisioning Service (DPS)"
+                    KeyTip="D"
+                    Tag="{x:Static local:ContextViewMode.DeviceProvisioning}">
                     <fluent:RibbonGroupBox Header="XXX">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock>Hej</TextBlock>
                         </StackPanel>
                     </fluent:RibbonGroupBox>
                 </fluent:RibbonTabItem>
-                <fluent:RibbonTabItem Header="IoTHub" KeyTip="I">
+                <fluent:RibbonTabItem
+                    Header="IoTHub"
+                    KeyTip="I"
+                    Tag="{x:Static local:ContextViewMode.IotHub}">
                     <fluent:RibbonGroupBox Header="XXX">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock>Hej 2</TextBlock>
@@ -74,7 +93,9 @@
 
             <atc:BusyOverlay Grid.Row="1" IsBusy="{Binding Path=IsBusy}">
                 <atc:GridEx Columns="*" Rows="*">
-                    <userControls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelectionViewModel}" />
+                    <userControls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelectionViewModel}" Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.TenantSelection}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
+                    <userControls:AzureDeviceProvisioningServiceView Visibility="{Binding Path=ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.DeviceProvisioning}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
+                    <userControls:AzureIoTHubServiceView Visibility="{Binding Path=ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.IotHub}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
                     <atc:ToastNotificationArea
                         x:Name="ToastNotificationArea"
                         Panel.ZIndex="1"
