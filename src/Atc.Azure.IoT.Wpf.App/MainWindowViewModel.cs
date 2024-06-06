@@ -13,19 +13,29 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
 
     public MainWindowViewModel(
         StatusBarViewModel statusBarViewModel,
-        AzureTenantSelectionViewModel azureTenantSelectionViewModel)
+        AzureTenantSelectionViewModel azureTenantSelectionViewModel,
+        AzureDeviceProvisioningServiceViewModel azureDeviceProvisioningServiceViewModel,
+        AzureIoTHubServiceViewModel azureIoTHubServiceViewModel)
     {
         ArgumentNullException.ThrowIfNull(statusBarViewModel);
         ArgumentNullException.ThrowIfNull(azureTenantSelectionViewModel);
+        ArgumentNullException.ThrowIfNull(azureDeviceProvisioningServiceViewModel);
+        ArgumentNullException.ThrowIfNull(azureIoTHubServiceViewModel);
 
         ContextViewMode = ContextViewMode.TenantSelection;
         StatusBarViewModel = statusBarViewModel;
         AzureTenantSelectionViewModel = azureTenantSelectionViewModel;
+        AzureDeviceProvisioningServiceViewModel = azureDeviceProvisioningServiceViewModel;
+        AzureIoTHubServiceViewModel = azureIoTHubServiceViewModel;
     }
 
     public StatusBarViewModel StatusBarViewModel { get; set; }
 
     public AzureTenantSelectionViewModel AzureTenantSelectionViewModel { get; set; }
+
+    public AzureDeviceProvisioningServiceViewModel AzureDeviceProvisioningServiceViewModel { get; set; }
+
+    public AzureIoTHubServiceViewModel AzureIoTHubServiceViewModel { get; set; }
 
     public ContextViewMode ContextViewMode
     {
