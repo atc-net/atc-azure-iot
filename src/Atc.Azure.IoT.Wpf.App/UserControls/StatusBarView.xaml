@@ -27,6 +27,8 @@
         <atc:UniformSpacingPanel Orientation="Horizontal" Spacing="5">
             <TextBlock>Logged in as:</TextBlock>
             <TextBlock Text="{Binding Path=AuthenticatedUser, FallbackValue=User}" />
+            <TextBlock>on</TextBlock>
+            <TextBlock Text="{Binding Path=TenantName, FallbackValue=Tenant}" />
         </atc:UniformSpacingPanel>
     </fluent:StatusBarItem>
 </fluent:StatusBar>
