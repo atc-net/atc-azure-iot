@@ -9,6 +9,8 @@ global using Atc.Azure.IoT.Wpf.App.Controls;
 global using Atc.Azure.IoT.Wpf.App.Dialogs;
 global using Atc.Azure.IoT.Wpf.App.Services;
 global using Atc.Azure.IoT.Wpf.App.UserControls;
+global using Atc.Helpers;
+global using Atc.Wpf;
 global using Atc.Wpf.Command;
 global using Atc.Wpf.Controls.Notifications;
 global using Atc.Wpf.Messaging;

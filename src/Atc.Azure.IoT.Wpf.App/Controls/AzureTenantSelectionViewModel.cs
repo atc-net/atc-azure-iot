@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.Wpf.App.Controls;
 
-public sealed class AzureTenantSelectionViewModel : ViewModelBase
+public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
 {
     private readonly AzureAuthService azureAuthService;
     private readonly AzureResourceManagerService azureResourceManagerService;
@@ -8,7 +8,6 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase
     private readonly CancellationTokenSource cancellationTokenSource;
 
     private bool isAuthorizedToAzure;
-    private bool isAuthorizedSelectedTenant;
     private string? selectedTenantId;
     private Dictionary<string, string> tenants = [];
 
@@ -57,6 +56,22 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase
         }
     }
 
+    public void OnTenantSelectedChangedHandler(
+        object? sender,
+        ValueChangedEventArgs<string?> e)
+    {
+        ArgumentNullException.ThrowIfNull(e);
+
+        if (e.NewValue! == SelectedTenantId)
+        {
+            return;
+        }
+
+        var tenantId = Guid.Parse(e.NewValue!);
+
+        TaskHelper.FireAndForget(ChangeTenant(tenantId));
+    }
+
     private bool CanSignInToAzureCommandHandler()
         => !isAuthorizedToAzure;
 
@@ -96,7 +111,7 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
                 Tenants = tenantResources
-                    .OrderBy(x => x.Data.DisplayName)
+                    .OrderBy(x => x.Data.DisplayName, StringComparer.Ordinal)
                     .ToDictionary(x => x.Data.TenantId!.ToString()!, x => x.Data.DisplayName);
 
                 SelectedTenantId = azureAuthService.AuthenticationRecord.TenantId;
@@ -105,17 +120,51 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-
-            var content = new ToastNotificationContent(
-                ToastNotificationType.Error,
-                "Sign in error",
-                ex.GetLastInnerMessage());
-
-            toastNotificationManager.Show(false, areaName: "ToastNotificationArea", content: content);
+            NotifySignInError(ex.GetLastInnerMessage());
         }
         finally
         {
             IsBusy = false;
         }
     }
+
+    private async Task ChangeTenant(
+        Guid tenantId)
+    {
+        IsBusy = true;
+
+        try
+        {
+            var (succeeded, errorMessage) = await azureAuthService
+                .SignInToTenant(tenantId, cancellationTokenSource.Token)
+                .ConfigureAwait(false);
+
+            if (!succeeded)
+            {
+                throw new Exception(errorMessage);
+            }
+        }
+        catch (Exception ex)
+        {
+            NotifySignInError(ex.GetLastInnerMessage());
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private void NotifySignInError(
+        string errorMessage)
+    {
+        var content = new ToastNotificationContent(
+            ToastNotificationType.Error,
+            "Sign in error",
+            errorMessage);
+
+        toastNotificationManager.Show(false, areaName: "ToastNotificationArea", content: content);
+    }
+
+    public void Dispose()
+        => cancellationTokenSource.Dispose();
 }

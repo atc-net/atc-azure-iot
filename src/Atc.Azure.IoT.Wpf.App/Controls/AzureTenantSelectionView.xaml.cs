@@ -9,4 +9,12 @@ public partial class AzureTenantSelectionView
     {
         InitializeComponent();
     }
+
+    private void OnTenantSelectedChangedHandler(
+        object? sender,
+        ValueChangedEventArgs<string?> e)
+    {
+        var vm = DataContext as AzureTenantSelectionViewModel;
+        vm!.OnTenantSelectedChangedHandler(sender, e);
+    }
 }

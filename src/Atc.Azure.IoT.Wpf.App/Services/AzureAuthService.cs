@@ -34,7 +34,7 @@ public sealed class AzureAuthService // TODO: interface
         var credential = new InteractiveBrowserCredential(new InteractiveBrowserCredentialOptions
         {
             TenantId = tenantId.ToString(),
-            //BrowserCustomization = new BrowserCustomizationOptions(){}
+            ////BrowserCustomization = new BrowserCustomizationOptions(){} // TODO: Test
         });
 
         try
@@ -52,7 +52,4 @@ public sealed class AzureAuthService // TODO: interface
             return (false, ex.Message);
         }
     }
-
-    //public List<TenantViewModel> Tenants { get; private set; } = [];
-
 }
