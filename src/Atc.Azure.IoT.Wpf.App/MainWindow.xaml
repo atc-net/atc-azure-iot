@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:atc="https://github.com/atc-net/atc-wpf/tree/main/schemas"
     xmlns:atcFontIconsValueConverters="https://github.com/atc-net/atc-wpf/tree/main/schemas/value-converters"
-    xmlns:converters="clr-namespace:Atc.Azure.IoT.Wpf.App.Converters"
+    xmlns:controls="clr-namespace:Atc.Azure.IoT.Wpf.App.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="urn:fluent-ribbon"
     xmlns:fontIcons="clr-namespace:Atc.Wpf.FontIcons;assembly=Atc.Wpf.FontIcons"
@@ -17,6 +17,7 @@
     MinWidth="800"
     MinHeight="600"
     d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
+    Icon="Resources\AppIcon.ico"
     ResizeMode="CanResizeWithGrip"
     WindowStartupLocation="CenterScreen"
     WindowState="{Binding Path=WindowState}"
@@ -25,7 +26,6 @@
     <atc:NiceWindow.Resources>
         <ResourceDictionary>
             <atcFontIconsValueConverters:FontIconImageSourceValueConverter x:Key="FontIconImageConverter" />
-            <converters:TenantViewModelToDictionaryValueConverter x:Key="TenantViewModelToDictionaryValueConverter" />
         </ResourceDictionary>
     </atc:NiceWindow.Resources>
 
@@ -73,65 +73,16 @@
                 </fluent:RibbonTabItem>
             </fluent:Ribbon>
 
-            <atc:GridEx Grid.Row="1" Rows="Auto,*">
-                <atc:UniformSpacingPanel
-                    Margin="20"
-                    Orientation="Vertical"
-                    Spacing="20">
-                    <Button Command="{Binding Path=GetTenantsCommand}" Content="Get Tenants" />
-                    <TextBlock Text="{Binding Path=AuthorizationText}" />
-                    <atc:LabelComboBox
-                        HideAreas="InformationAndValidation"
-                        IsEnabled="{Binding Path=IsAuthorizedToAzure}"
-                        Items="{Binding Path=Tenants, Converter={StaticResource TenantViewModelToDictionaryValueConverter}}"
-                        LabelText="Tenants"
-                        Orientation="Vertical"
-                        SelectedKey="{Binding Path=SelectedTenantId}" />
-                    <ListView
-                        Height="200"
-                        AlternationCount="0"
-                        FontFamily="Modern"
-                        ItemsSource="{Binding Tenants}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn
-                                    Width="300"
-                                    DisplayMemberBinding="{Binding Path=DisplayName}"
-                                    Header="DisplayName" />
-                                <GridViewColumn
-                                    Width="Auto"
-                                    DisplayMemberBinding="{Binding Path=TenantId}"
-                                    Header="TenantId" />
-                                <GridViewColumn
-                                    Width="Auto"
-                                    DisplayMemberBinding="{Binding Path=IsCurrent}"
-                                    Header="IsCurrent" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <Button Command="{Binding Path=GetTestCommand1}" Content="Login To Tenant" />
-                    <ListView
-                        Height="200"
-                        AlternationCount="0"
-                        FontFamily="Modern"
-                        ItemsSource="{Binding Subscriptions}">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn
-                                    Width="300"
-                                    DisplayMemberBinding="{Binding Path=Data.DisplayName}"
-                                    Header="DisplayName" />
-                                <GridViewColumn
-                                    Width="Auto"
-                                    DisplayMemberBinding="{Binding Path=Data.SubscriptionId}"
-                                    Header="SubscriptionId" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                    <Button Command="{Binding Path=GetTestCommand2}" Content="Get IoTHubs" />
-                    <Button Command="{Binding Path=GetTestCommand3}" Content="Get DPS" />
-                </atc:UniformSpacingPanel>
-            </atc:GridEx>
+            <atc:BusyOverlay Grid.Row="1" IsBusy="{Binding Path=IsBusy}">
+                <atc:GridEx Columns="*" Rows="*">
+                    <controls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelectionViewModel}" />
+                    <atc:ToastNotificationArea
+                        x:Name="ToastNotificationArea"
+                        Panel.ZIndex="1"
+                        MaxItems="3"
+                        Position="BottomRight" />
+                </atc:GridEx>
+            </atc:BusyOverlay>
             <userControls:StatusBarView Grid.Row="2" DataContext="{Binding Path=StatusBarViewModel}" />
         </atc:GridEx>
     </atc:BusyOverlay>
