@@ -1,4 +1,4 @@
-namespace Atc.Azure.IoT.Wpf.App.Controls;
+namespace Atc.Azure.IoT.Wpf.App.UserControls;
 
 public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
 {

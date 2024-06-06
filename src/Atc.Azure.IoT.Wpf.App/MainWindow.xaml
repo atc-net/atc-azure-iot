@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:atc="https://github.com/atc-net/atc-wpf/tree/main/schemas"
     xmlns:atcFontIconsValueConverters="https://github.com/atc-net/atc-wpf/tree/main/schemas/value-converters"
-    xmlns:controls="clr-namespace:Atc.Azure.IoT.Wpf.App.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="urn:fluent-ribbon"
     xmlns:fontIcons="clr-namespace:Atc.Wpf.FontIcons;assembly=Atc.Wpf.FontIcons"
@@ -75,7 +74,7 @@
 
             <atc:BusyOverlay Grid.Row="1" IsBusy="{Binding Path=IsBusy}">
                 <atc:GridEx Columns="*" Rows="*">
-                    <controls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelectionViewModel}" />
+                    <userControls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelectionViewModel}" />
                     <atc:ToastNotificationArea
                         x:Name="ToastNotificationArea"
                         Panel.ZIndex="1"
