@@ -96,8 +96,6 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
                 throw new Exception(errorMessage);
             }
 
-            Messenger.Default.Send(new AuthenticatedUserMessage(azureAuthService.AuthenticationRecord.Username));
-
             var (tenantSucceeded, tenantResources, tenantErrorMessage) = await azureResourceManagerService
                 .GetTenants(azureAuthService.Credential!, cancellationTokenSource.Token)
                 .ConfigureAwait(false);
@@ -117,6 +115,10 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
                 SelectedTenantId = azureAuthService.AuthenticationRecord.TenantId;
                 IsAuthorizedToAzure = true;
             });
+
+            Messenger.Default.Send(new AuthenticatedUserMessage(
+                UserName: azureAuthService.AuthenticationRecord.Username,
+                TenantName: Tenants.Single(x => x.Key.Equals(azureAuthService.AuthenticationRecord.TenantId)).Value));
         }
         catch (Exception ex)
         {
@@ -143,6 +145,10 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
             {
                 throw new Exception(errorMessage);
             }
+            
+            Messenger.Default.Send(new AuthenticatedUserMessage(
+                UserName: azureAuthService.AuthenticationRecord!.Username,
+                TenantName: Tenants.Single(x => x.Key.Equals(azureAuthService.AuthenticationRecord.TenantId)).Value));
         }
         catch (Exception ex)
         {
