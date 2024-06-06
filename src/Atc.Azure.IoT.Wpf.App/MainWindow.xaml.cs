@@ -48,4 +48,26 @@ public partial class MainWindow
         var vm = DataContext as IMainWindowViewModelBase;
         vm!.OnKeyUp(this, e);
     }
+
+    private void OnRibbonOnSelectedTabChanged(
+        object sender,
+        SelectionChangedEventArgs e)
+    {
+        if (e.AddedItems[0] is not RibbonTabItem tabItem)
+        {
+            return;
+        }
+
+        if (!Enum<ContextViewMode>.TryParse(tabItem.Tag?.ToString()!, out var contextViewMode))
+        {
+            return;
+        }
+
+        var vm = DataContext as MainWindowViewModel;
+
+        if (vm!.ContextViewMode != contextViewMode)
+        {
+            vm!.ContextViewMode = contextViewMode;
+        }
+    }
 }

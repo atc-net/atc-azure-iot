@@ -118,7 +118,7 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
 
             Messenger.Default.Send(new AuthenticatedUserMessage(
                 UserName: azureAuthService.AuthenticationRecord.Username,
-                TenantName: Tenants.Single(x => x.Key.Equals(azureAuthService.AuthenticationRecord.TenantId)).Value));
+                TenantName: Tenants.Single(x => x.Key.Equals(azureAuthService.AuthenticationRecord.TenantId, StringComparison.Ordinal)).Value));
         }
         catch (Exception ex)
         {
@@ -145,10 +145,10 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
             {
                 throw new Exception(errorMessage);
             }
-            
+
             Messenger.Default.Send(new AuthenticatedUserMessage(
                 UserName: azureAuthService.AuthenticationRecord!.Username,
-                TenantName: Tenants.Single(x => x.Key.Equals(azureAuthService.AuthenticationRecord.TenantId)).Value));
+                TenantName: Tenants.Single(x => x.Key.Equals(azureAuthService.AuthenticationRecord.TenantId, StringComparison.Ordinal)).Value));
         }
         catch (Exception ex)
         {
