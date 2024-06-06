@@ -71,6 +71,7 @@
                 </fluent:RibbonTabItem>
                 <fluent:RibbonTabItem
                     Header="Device Provisioning Service (DPS)"
+                    IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelectionViewModel.IsAuthorizedToAzure}"
                     KeyTip="D"
                     Tag="{x:Static local:ContextViewMode.DeviceProvisioning}">
                     <fluent:RibbonGroupBox Header="XXX">
@@ -81,6 +82,7 @@
                 </fluent:RibbonTabItem>
                 <fluent:RibbonTabItem
                     Header="IoTHub"
+                    IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelectionViewModel.IsAuthorizedToAzure}"
                     KeyTip="I"
                     Tag="{x:Static local:ContextViewMode.IotHub}">
                     <fluent:RibbonGroupBox Header="XXX">
@@ -94,8 +96,14 @@
             <atc:BusyOverlay Grid.Row="1" IsBusy="{Binding Path=IsBusy}">
                 <atc:GridEx Columns="*" Rows="*">
                     <userControls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelectionViewModel}" Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.TenantSelection}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
-                    <userControls:AzureDeviceProvisioningServiceView Visibility="{Binding Path=ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.DeviceProvisioning}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
-                    <userControls:AzureIoTHubServiceView Visibility="{Binding Path=ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.IotHub}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
+                    <userControls:AzureDeviceProvisioningServiceView
+                        DataContext="{Binding Path=AzureDeviceProvisioningServiceViewModel}"
+                        IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelectionViewModel.IsAuthorizedToAzure}"
+                        Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.DeviceProvisioning}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
+                    <userControls:AzureIoTHubServiceView
+                        DataContext="{Binding Path=AzureIoTHubServiceViewModel}"
+                        IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelectionViewModel.IsAuthorizedToAzure}"
+                        Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.IotHub}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
                     <atc:ToastNotificationArea
                         x:Name="ToastNotificationArea"
                         Panel.ZIndex="1"
