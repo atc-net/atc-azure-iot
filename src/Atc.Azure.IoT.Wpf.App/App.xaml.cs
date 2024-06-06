@@ -25,7 +25,12 @@ public partial class App
                 })
             .ConfigureServices((_, services) =>
             {
+                services.AddSingleton<AzureAuthService>();
+                services.AddSingleton<AzureResourceManagerService>();
+                services.AddSingleton<ToastNotificationManager>();
+
                 services.AddSingleton<StatusBarViewModel>();
+                services.AddSingleton<AzureTenantSelectionViewModel>();
                 services.AddSingleton<IMainWindowViewModelBase, MainWindowViewModel>();
                 services.AddSingleton<MainWindow>();
             })
