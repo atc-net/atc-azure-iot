@@ -1,4 +1,4 @@
-namespace Atc.Azure.IoT.Wpf.App.Controls;
+namespace Atc.Azure.IoT.Wpf.App.UserControls;
 
 /// <summary>
 /// Interaction logic for AzureTenantSelectionView.

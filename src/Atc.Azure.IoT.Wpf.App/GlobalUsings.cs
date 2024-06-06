@@ -5,7 +5,6 @@ global using System.Security.Claims;
 global using System.Windows;
 global using System.Windows.Input;
 global using System.Windows.Media.Imaging;
-global using Atc.Azure.IoT.Wpf.App.Controls;
 global using Atc.Azure.IoT.Wpf.App.Dialogs;
 global using Atc.Azure.IoT.Wpf.App.Services;
 global using Atc.Azure.IoT.Wpf.App.UserControls;
