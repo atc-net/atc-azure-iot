@@ -56,6 +56,8 @@ public static class ServiceCollectionExtensions
             throw new InvalidOperationException($"Required service '{nameof(DeviceProvisioningServiceOptions)}' is not registered");
         }
 
+        services.TryAddSingleton<IConfigurationContentProvider, ConfigurationContentProvider>();
+
         services.AddSingleton<IDeviceProvisioningService, DeviceProvisioningService>(s => new DeviceProvisioningService(
             s.GetRequiredService<ILoggerFactory>(),
             deviceProvisioningServiceOptions));

@@ -8,6 +8,7 @@ global using Atc.Azure.IoT.Extensions;
 global using Atc.Azure.IoT.Extractors;
 global using Atc.Azure.IoT.Models;
 global using Atc.Azure.IoT.Options;
+global using Atc.Azure.IoT.Providers;
 global using Atc.Azure.IoT.Serialization.JsonConverters;
 global using Atc.Azure.IoT.Services.DeviceProvisioning;
 global using Atc.Azure.IoT.Services.IoTHub;
