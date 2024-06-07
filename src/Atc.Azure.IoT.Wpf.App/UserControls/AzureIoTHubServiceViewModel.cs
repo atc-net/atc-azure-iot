@@ -10,12 +10,12 @@ public class AzureIoTHubServiceViewModel : ViewModelBase
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     public AzureIoTHubServiceViewModel(
-        IoTHubSubscriptionViewModel ioTHubSubscriptionViewModel)
+        AzureIoTHubSelectorViewModel azureIoTHubSelectorViewModel)
     {
-        ArgumentNullException.ThrowIfNull(ioTHubSubscriptionViewModel);
+        ArgumentNullException.ThrowIfNull(azureIoTHubSelectorViewModel);
 
-        IoTHubSubscriptionViewModel = ioTHubSubscriptionViewModel;
+        AzureIoTHubSelectorViewModel = azureIoTHubSelectorViewModel;
     }
 
-    public IoTHubSubscriptionViewModel IoTHubSubscriptionViewModel { get; set; }
+    public AzureIoTHubSelectorViewModel AzureIoTHubSelectorViewModel { get; set; }
 }

@@ -1,10 +1,9 @@
 namespace Atc.Azure.IoT.Wpf.App.UserControls;
 
-public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
+public sealed class AzureTenantSelectionViewModel : IoTViewModelBase, IDisposable
 {
     private readonly AzureAuthService azureAuthService;
     private readonly AzureResourceManagerService azureResourceManagerService;
-    private readonly ToastNotificationManager toastNotificationManager;
     private readonly CancellationTokenSource cancellationTokenSource;
 
     private bool isAuthorizedToAzure;
@@ -19,10 +18,10 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
         AzureAuthService azureAuthService,
         AzureResourceManagerService azureResourceManagerService,
         ToastNotificationManager toastNotificationManager)
+        : base(toastNotificationManager)
     {
         this.azureAuthService = azureAuthService;
         this.azureResourceManagerService = azureResourceManagerService;
-        this.toastNotificationManager = toastNotificationManager;
         cancellationTokenSource = new CancellationTokenSource();
     }
 
@@ -82,7 +81,7 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
             return;
         }
 
-        IsBusy = true;
+        SetBusyFlagAndNotify(true);
 
         try
         {
@@ -119,21 +118,23 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
             Messenger.Default.Send(new AuthenticatedUserMessage(
                 UserName: azureAuthService.AuthenticationRecord.Username,
                 TenantName: Tenants.Single(x => x.Key.Equals(azureAuthService.AuthenticationRecord.TenantId, StringComparison.Ordinal)).Value));
+
+            await ReloadSubscriptions().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            NotifySignInError(ex.GetLastInnerMessage());
+            NotifyError("Sign in error", ex.GetLastInnerMessage());
         }
         finally
         {
-            IsBusy = false;
+            SetBusyFlagAndNotify(false);
         }
     }
 
     private async Task ChangeTenant(
         Guid tenantId)
     {
-        IsBusy = true;
+        SetBusyFlagAndNotify(true);
 
         try
         {
@@ -149,26 +150,36 @@ public sealed class AzureTenantSelectionViewModel : ViewModelBase, IDisposable
             Messenger.Default.Send(new AuthenticatedUserMessage(
                 UserName: azureAuthService.AuthenticationRecord!.Username,
                 TenantName: Tenants.Single(x => x.Key.Equals(azureAuthService.AuthenticationRecord.TenantId, StringComparison.Ordinal)).Value));
+
+            await ReloadSubscriptions().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            NotifySignInError(ex.GetLastInnerMessage());
+            NotifyError("Sign in error", ex.GetLastInnerMessage());
         }
         finally
         {
-            IsBusy = false;
+            SetBusyFlagAndNotify(false);
         }
     }
 
-    private void NotifySignInError(
-        string errorMessage)
+    private async Task ReloadSubscriptions()
     {
-        var content = new ToastNotificationContent(
-            ToastNotificationType.Error,
-            "Sign in error",
-            errorMessage);
+        Messenger.Default.Send(new SubscriptionsCollectionStateMessage(CollectionActionType.Cleared));
 
-        toastNotificationManager.Show(false, areaName: "ToastNotificationArea", content: content);
+        var (succeeded, errorMessage) = await azureResourceManagerService
+            .LoadSubscriptions(
+                azureAuthService.Credential!,
+                cancellationTokenSource.Token)
+            .ConfigureAwait(false);
+
+        if (!succeeded)
+        {
+            NotifyError("Subscription retrieval", errorMessage);
+            return;
+        }
+
+        Messenger.Default.Send(new SubscriptionsCollectionStateMessage(CollectionActionType.Loaded));
     }
 
     public void Dispose()
