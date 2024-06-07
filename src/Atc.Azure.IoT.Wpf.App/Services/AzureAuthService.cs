@@ -34,7 +34,10 @@ public sealed class AzureAuthService // TODO: interface
         var credential = new InteractiveBrowserCredential(new InteractiveBrowserCredentialOptions
         {
             TenantId = tenantId.ToString(),
-            ////BrowserCustomization = new BrowserCustomizationOptions(){} // TODO: Test
+            ////BrowserCustomization = new BrowserCustomizationOptions
+            ////{
+            ////    UseEmbeddedWebView = true,
+            ////}, // TODO: Test - REF: https://github.com/Azure/azure-sdk-for-net/issues/42235
         });
 
         try
