@@ -33,13 +33,17 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
     - [Method](#method-1)
       - [Module Retrieval](#module-retrieval)
     - [Usage Example](#usage-example-3)
-- [CLI](#cli)
-  - [Installation](#installation)
+  - [IConfigurationContentProvider](#iconfigurationcontentprovider)
+    - [Features](#features-4)
+    - [Methods](#methods-2)
+      - [Configuration Content Retrieval from File](#configuration-content-retrieval-from-file)
+      - [Configuration Content Retrieval from Stream](#configuration-content-retrieval-from-stream)
+    - [Usage Example](#usage-example-4)
   - [Update](#update)
   - [Usage](#usage)
     - [Option --help](#option---help)
 - [Atc.Azure.IoTEdge](#atcazureiotedge)
-  - [Features](#features-4)
+  - [Features](#features-5)
     - [Extensions](#extensions)
     - [Factories](#factories)
     - [Wrappers](#wrappers)
@@ -275,6 +279,44 @@ else
     Console.WriteLine("Module not found.");
 }
 ```
+
+## IConfigurationContentProvider
+
+The `IConfigurationContentProvider` is designed to assist in retrieving configuration content from deployment manifests in Azure IoT solutions. This interface provides methods for obtaining configuration content from both file and stream sources, ensuring flexibility and reliability in handling deployment manifests.
+
+### Features
+
+- **Configuration Content Retrieval**: Extract configuration content from deployment manifests, facilitating efficient deployment and management of IoT modules.
+
+### Methods
+
+#### Configuration Content Retrieval from File
+
+- `GetConfigurationContent(FileInfo deploymentManifestFileInfo, CancellationToken cancellationToken)`: Retrieves configuration content from a deployment manifest file.
+
+#### Configuration Content Retrieval from Stream
+
+- `GetConfigurationContent(Stream deploymentManifestFileStream, CancellationToken cancellationToken)`: Retrieves configuration content from a deployment manifest stream.
+
+### Usage Example
+
+Below is an example demonstrating how to use the `ConfigurationContentProvider` to retrieve configuration content from a deployment manifest file:
+
+```csharp
+var configurationContentProvider = serviceProvider.GetRequiredService<IConfigurationContentProvider>();
+var deploymentManifestFile = new FileInfo("path/to/deploymentManifest.json");
+var cancellationToken = new CancellationToken();
+
+var (configurationContent, errorMessage) = await configurationContentProvider.GetConfigurationContent(deploymentManifestFile, cancellationToken);
+
+if (configurationContent != null)
+{
+    Console.WriteLine("Configuration content retrieved successfully.");
+}
+else
+{
+    Console.WriteLine($"Failed to retrieve configuration content: {errorMessage}");
+}
 
 # CLI
 
