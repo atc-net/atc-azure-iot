@@ -1,4 +1,4 @@
-namespace Atc.Azure.IoT.Wpf.App.UserControls;
+namespace Atc.Azure.IoT.Wpf.App.UserControls.IoTHub;
 
 public class AzureIoTHubServiceViewModel : ViewModelBase
 {

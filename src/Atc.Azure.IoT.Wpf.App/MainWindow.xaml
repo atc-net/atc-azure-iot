@@ -5,8 +5,10 @@
     xmlns:atc="https://github.com/atc-net/atc-wpf/tree/main/schemas"
     xmlns:atcFontIconsValueConverters="https://github.com/atc-net/atc-wpf/tree/main/schemas/value-converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:deviceProvisioning="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.DeviceProvisioning"
     xmlns:fluent="urn:fluent-ribbon"
     xmlns:fontIcons="clr-namespace:Atc.Wpf.FontIcons;assembly=Atc.Wpf.FontIcons"
+    xmlns:ioTHub="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.IoTHub"
     xmlns:local="clr-namespace:Atc.Azure.IoT.Wpf.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:userControls="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls"
@@ -98,11 +100,11 @@
                 Columns="*"
                 Rows="*">
                 <userControls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelectionViewModel}" Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.TenantSelection}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
-                <userControls:AzureDeviceProvisioningServiceView
+                <deviceProvisioning:AzureDeviceProvisioningServiceView
                     DataContext="{Binding Path=AzureDeviceProvisioningServiceViewModel}"
                     IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelectionViewModel.IsAuthorizedToAzure}"
                     Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.DeviceProvisioning}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
-                <userControls:AzureIoTHubServiceView
+                <ioTHub:AzureIoTHubServiceView
                     DataContext="{Binding Path=AzureIoTHubServiceViewModel}"
                     IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelectionViewModel.IsAuthorizedToAzure}"
                     Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.IotHub}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />

@@ -1,12 +1,12 @@
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
-
-namespace Atc.Azure.IoT.Wpf.App.UserControls;
+namespace Atc.Azure.IoT.Wpf.App.UserControls.IoTHub;
 
 public class AzureIoTHubSelectorViewModel : IoTViewModelBase, IDisposable
 {
     private readonly AzureResourceStateService azureResourceStateService;
     private readonly AzureResourceManagerService azureResourceManagerService;
     private readonly CancellationTokenSource cancellationTokenSource;
+    private IoTHubSubscriptionViewModel? selectedItem;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public AzureIoTHubSelectorViewModel()
@@ -27,6 +27,17 @@ public class AzureIoTHubSelectorViewModel : IoTViewModelBase, IDisposable
         cancellationTokenSource = new CancellationTokenSource();
 
         Messenger.Default.Register<SubscriptionsCollectionStateMessage>(this, OnSubscriptionsCollectionStateMessage);
+    }
+
+    public IoTHubSubscriptionViewModel? SelectedItem
+    {
+        get => selectedItem;
+        set
+        {
+            selectedItem = value;
+            RaisePropertyChanged();
+            Messenger.Default.Send(new SelectedIoTHubSubscriptionMessage(value));
+        }
     }
 
     public ObservableCollectionEx<IoTHubSubscriptionViewModel> IotHubs { get; set; } = [];

@@ -1,4 +1,4 @@
-namespace Atc.Azure.IoT.Wpf.App.UserControls;
+namespace Atc.Azure.IoT.Wpf.App.UserControls.IoTHub;
 
 /// <summary>
 /// Interaction logic for AzureIoTHubSelectorView.
