@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.Wpf.App.Services;
 
-public sealed class AzureResourceManagerService // TODO: Interface  
+public sealed class AzureResourceManagerService // TODO: Interface
 {
     private readonly AzureResourceStateService azureResourceStateService;
 

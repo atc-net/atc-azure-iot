@@ -1,12 +1,12 @@
 <UserControl
-    x:Class="Atc.Azure.IoT.Wpf.App.UserControls.AzureIoTHubSelectorView"
+    x:Class="Atc.Azure.IoT.Wpf.App.UserControls.IoTHub.AzureIoTHubSelectorView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:atc="https://github.com/atc-net/atc-wpf/tree/main/schemas"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:userControls="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls"
-    d:DataContext="{d:DesignInstance Type=userControls:AzureIoTHubSelectorViewModel}"
+    xmlns:ucIotHub="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.IoTHub"
+    d:DataContext="{d:DesignInstance Type=ucIotHub:AzureIoTHubSelectorViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -16,7 +16,9 @@
             Height="200"
             AlternationCount="0"
             FontFamily="Modern"
-            ItemsSource="{Binding Path=IotHubs}">
+            ItemsSource="{Binding Path=IotHubs}"
+            SelectedItem="{Binding Path=SelectedItem}"
+            SelectionMode="Single">
             <ListView.View>
                 <GridView>
                     <GridViewColumn

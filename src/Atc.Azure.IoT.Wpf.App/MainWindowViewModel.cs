@@ -61,7 +61,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
             {
                 IsBusy = true;
             }
-            
+
             return;
         }
 

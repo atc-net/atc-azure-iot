@@ -1,4 +1,4 @@
-namespace Atc.Azure.IoT.Wpf.App.UserControls;
+namespace Atc.Azure.IoT.Wpf.App.UserControls.DeviceProvisioning;
 
 /// <summary>
 /// Interaction logic for AzureDeviceProvisioningServiceView.
