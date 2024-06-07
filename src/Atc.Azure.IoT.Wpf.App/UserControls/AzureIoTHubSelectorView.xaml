@@ -20,11 +20,11 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn
-                        Width="200"
+                        Width="300"
                         DisplayMemberBinding="{Binding Path=SubscriptionName}"
                         Header="Subscription Name" />
                     <GridViewColumn
-                        Width="200"
+                        Width="300"
                         DisplayMemberBinding="{Binding Path=ResourceGroupName}"
                         Header="Resource Group Name" />
                     <GridViewColumn

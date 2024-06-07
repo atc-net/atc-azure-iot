@@ -27,6 +27,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
         AzureTenantSelectionViewModel = azureTenantSelectionViewModel;
         AzureDeviceProvisioningServiceViewModel = azureDeviceProvisioningServiceViewModel;
         AzureIoTHubServiceViewModel = azureIoTHubServiceViewModel;
+
+        Messenger.Default.Register<IsBusyMessage>(this, OnBusyMessage);
     }
 
     public StatusBarViewModel StatusBarViewModel { get; set; }
@@ -44,6 +46,28 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
         {
             contextViewMode = value;
             RaisePropertyChanged();
+        }
+    }
+
+    private void OnBusyMessage(
+        IsBusyMessage obj)
+    {
+        if (AzureTenantSelectionViewModel.IsBusy ||
+            AzureDeviceProvisioningServiceViewModel.IsBusy ||
+            AzureIoTHubServiceViewModel.IsBusy ||
+            AzureIoTHubServiceViewModel.AzureIoTHubSelectorViewModel.IsBusy)
+        {
+            if (!IsBusy)
+            {
+                IsBusy = true;
+            }
+            
+            return;
+        }
+
+        if (IsBusy)
+        {
+            IsBusy = false;
         }
     }
 }

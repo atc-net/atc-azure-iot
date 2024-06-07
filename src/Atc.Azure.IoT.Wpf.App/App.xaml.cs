@@ -25,6 +25,7 @@ public partial class App
                 })
             .ConfigureServices((_, services) =>
             {
+                services.AddSingleton<AzureResourceStateService>();
                 services.AddSingleton<AzureAuthService>();
                 services.AddSingleton<AzureResourceManagerService>();
                 services.AddSingleton<ToastNotificationManager>();

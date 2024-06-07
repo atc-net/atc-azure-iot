@@ -19,21 +19,19 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <atc:BusyOverlay IsBusy="{Binding Path=IsBusy}">
-        <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
-            <Button
-                Command="{Binding Path=SignInToAzureCommand}"
-                Content="Sign in to Azure"
-                Visibility="{Binding Path=IsAuthorizedToAzure, Converter={StaticResource BoolToVisibilityCollapsedValueConverter}}" />
-            <atc:LabelComboBox
-                HideAreas="InformationAndValidation"
-                IsEnabled="{Binding Path=IsAuthorizedToAzure}"
-                Items="{Binding Path=Tenants}"
-                LabelText="Tenants"
-                Orientation="Vertical"
-                SelectedKey="{Binding Path=SelectedTenantId}"
-                SelectorChanged="OnTenantSelectedChangedHandler"
-                Visibility="{Binding Path=IsAuthorizedToAzure, Converter={StaticResource BoolToVisibilityVisibleValueConverter}}" />
-        </atc:UniformSpacingPanel>
-    </atc:BusyOverlay>
+    <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
+        <Button
+            Command="{Binding Path=SignInToAzureCommand}"
+            Content="Sign in to Azure"
+            Visibility="{Binding Path=IsAuthorizedToAzure, Converter={StaticResource BoolToVisibilityCollapsedValueConverter}}" />
+        <atc:LabelComboBox
+            HideAreas="InformationAndValidation"
+            IsEnabled="{Binding Path=IsAuthorizedToAzure}"
+            Items="{Binding Path=Tenants}"
+            LabelText="Tenants"
+            Orientation="Vertical"
+            SelectedKey="{Binding Path=SelectedTenantId}"
+            SelectorChanged="OnTenantSelectedChangedHandler"
+            Visibility="{Binding Path=IsAuthorizedToAzure, Converter={StaticResource BoolToVisibilityVisibleValueConverter}}" />
+    </atc:UniformSpacingPanel>
 </UserControl>
