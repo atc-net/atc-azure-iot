@@ -33,6 +33,7 @@ public partial class App
                 services.AddSingleton<AzureTenantSelectionViewModel>();
                 services.AddSingleton<AzureDeviceProvisioningServiceViewModel>();
                 services.AddSingleton<AzureIoTHubServiceViewModel>();
+                services.AddSingleton<AzureIoTHubSelectorViewModel>();
                 services.AddSingleton<IMainWindowViewModelBase, MainWindowViewModel>();
                 services.AddSingleton<MainWindow>();
             })
