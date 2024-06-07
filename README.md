@@ -87,6 +87,7 @@ The `IIoTHubService` is designed to facilitate communication with Azure IoT Hub,
 ### Methods
 
 #### Device Management
+
 - `CreateDevice(string deviceId, bool edgeEnabled, CancellationToken cancellationToken)`: Create a new device with the option to enable as an edge device.
 - `DeleteDevice(string deviceId, CancellationToken cancellationToken)`: Delete a device from the IoT Hub.
 - `GetDevice(string deviceId, CancellationToken cancellationToken)`: Retrieve a specific device using its device ID.
@@ -99,6 +100,7 @@ The `IIoTHubService` is designed to facilitate communication with Azure IoT Hub,
 - `GetDeviceTwins(bool onlyIncludeEdgeDevices)`: Retrieve all device twins, with an option to filter for only edge devices.
 
 #### Module Management
+
 - `GetModuleTwin(string deviceId, string moduleId, CancellationToken cancellationToken)`: Retrieve a specific module twin.
 - `UpdateDesiredProperties(string deviceId, string moduleId, TwinCollection twinCollection, CancellationToken cancellationToken)`: Update desired properties on a module twin.
 - `RemoveModuleFromDevice(string deviceId, string moduleId, CancellationToken cancellationToken)`: Remove a module from an IoT device.
@@ -149,6 +151,7 @@ The `IIoTHubModuleService` is tailored for direct interactions with IoT devices 
 ### Method
 
 #### Direct Method Invocation
+
 - `CallMethod(string deviceId, string moduleId, MethodParameterModel parameters, CancellationToken cancellationToken)`: This method sends a direct command to a specified module on a device. The `MethodParameterModel` allows for detailed specification of the command, and the operation returns a `MethodResultModel` that includes the status of the call and any resultant data in JSON format.
 
 ### Usage Example
@@ -187,6 +190,7 @@ The `IDeviceProvisioningService` is designed to manage device enrollments within
 ### Methods
 
 #### Individual Enrollment Management
+
 - `GetIndividualEnrollment(string registrationId, CancellationToken cancellationToken)`: Retrieves a specific enrollment using the registration ID.
 - `GetIndividualEnrollments(CancellationToken cancellationToken)`: Fetches all registered individual enrollments.
 - `CreateIndividualTpmEnrollment(string endorsementKey, string registrationId, string deviceId, Dictionary<string, string>? tags, Dictionary<string, string>? desiredProperties, CancellationToken cancellationToken)`: Creates or updates a TPM enrollment with specified parameters.
@@ -257,6 +261,7 @@ The `IDeviceTwinModuleExtractor` is designed to aid in extracting module informa
 ### Method
 
 #### Module Retrieval
+
 - `GetModuleFromEdgeAgentTwin(Twin twin, string moduleId)`: Extracts a module from the Edge Agent twin using the module identifier. This method is essential for operations needing detailed information about individual modules managed by the Edge Agent.
 
 ### Usage Example
