@@ -9,4 +9,10 @@ public class IoTHubSubscriptionViewModel
     public string ResourceGroupName { get; set; } = string.Empty;
 
     public string IoTHubName { get; set; } = string.Empty;
+
+    // TODO:
+    // Data.Location
+    // Data.Sku (Capacity, Name)
+
+    // Filter on ProvisioningState == Succeeded
 }

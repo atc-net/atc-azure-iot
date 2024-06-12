@@ -49,12 +49,20 @@ public interface IIoTHubService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Asynchronously retrieves all devices in the IoT Hub.
+    /// </summary>
+    /// <param name="onlyIncludeEdgeDevices">Indicates if only edge device twins should be returned.</param>
+    /// <returns>A collection of devices.</returns>
+    Task<IReadOnlyCollection<IotDevice>> GetDevices(
+        bool onlyIncludeEdgeDevices = false);
+
+    /// <summary>
     /// Asynchronously retrieves all device twins in the IoT Hub.
     /// </summary>
     /// <param name="onlyIncludeEdgeDevices">Indicates if only edge device twins should be returned.</param>
     /// <returns>A collection of device twins.</returns>
     Task<IReadOnlyCollection<Twin>> GetDeviceTwins(
-        bool onlyIncludeEdgeDevices);
+        bool onlyIncludeEdgeDevices = false);
 
     /// <summary>
     /// Asynchronously retrieves a device twin from the IoT Hub using its deviceId.

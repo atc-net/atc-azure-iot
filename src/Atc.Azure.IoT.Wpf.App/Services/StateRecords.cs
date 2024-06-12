@@ -11,7 +11,8 @@ public abstract record ResourceStateBase(
 public record IotHubServiceState(
     SubscriptionResource Subscription,
     ResourceGroupResource ResourceGroup,
-    IotHubDescriptionResource Resource)
+    IotHubDescriptionResource Resource,
+    string? ConnectionString)
     : ResourceStateBase(
         Subscription,
         ResourceGroup);

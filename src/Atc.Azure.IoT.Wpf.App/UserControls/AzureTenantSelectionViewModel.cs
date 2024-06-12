@@ -105,7 +105,7 @@ public sealed class AzureTenantSelectionViewModel : IoTViewModelBase, IDisposabl
                 throw new Exception(tenantErrorMessage);
             }
 
-            await Application.Current.Dispatcher.InvokeAsync(() =>
+            await Application.Current.Dispatcher.BeginInvokeIfRequired(() =>
             {
                 Tenants = tenantResources
                     .OrderBy(x => x.Data.DisplayName, StringComparer.Ordinal)
@@ -113,7 +113,7 @@ public sealed class AzureTenantSelectionViewModel : IoTViewModelBase, IDisposabl
 
                 SelectedTenantId = azureAuthService.AuthenticationRecord.TenantId;
                 IsAuthorizedToAzure = true;
-            });
+            }).ConfigureAwait(false);
 
             Messenger.Default.Send(new AuthenticatedUserMessage(
                 UserName: azureAuthService.AuthenticationRecord.Username,

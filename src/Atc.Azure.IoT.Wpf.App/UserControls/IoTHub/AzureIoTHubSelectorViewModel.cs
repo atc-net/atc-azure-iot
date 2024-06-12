@@ -84,10 +84,10 @@ public class AzureIoTHubSelectorViewModel : IoTViewModelBase, IDisposable
             .ThenBy(x => x.IoTHubName)
             .ToList();
 
-        await Application.Current.Dispatcher.InvokeAsync(() =>
+        await Application.Current.Dispatcher.BeginInvokeIfRequired(() =>
         {
             IotHubs.AddRange(result);
-        });
+        }).ConfigureAwait(false);
 
         SetBusyFlagAndNotify(false);
     }

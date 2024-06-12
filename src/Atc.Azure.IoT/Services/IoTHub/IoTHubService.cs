@@ -13,8 +13,25 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     private const string QueryPrefix = "SELECT * FROM devices";
 
     private readonly IIoTHubModuleService iotHubModuleService;
+    private readonly JsonSerializerOptions jsonSerializerOptions;
     private RegistryManager? registryManager;
     private string? ioTHubHostName;
+
+    public IoTHubService(
+        ILoggerFactory loggerFactory,
+        IIoTHubModuleService iotHubModuleService,
+        string connectionString)
+    {
+        logger = loggerFactory.CreateLogger<IoTHubService>();
+        this.iotHubModuleService = iotHubModuleService;
+
+        jsonSerializerOptions = JsonSerializerOptionsFactory.Create(new JsonSerializerFactorySettings
+        {
+            UseConverterDatetimeOffsetMinToNull = true,
+        });
+
+        ValidateAndAssign(connectionString, Assign);
+    }
 
     public IoTHubService(
         ILoggerFactory loggerFactory,
@@ -161,8 +178,49 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         }
     }
 
+    public async Task<IReadOnlyCollection<IotDevice>> GetDevices(
+        bool onlyIncludeEdgeDevices = false)
+    {
+        try
+        {
+            //TODO: 
+            //LogRetrievingDevices(ioTHubHostName!);
+
+            var queryString = onlyIncludeEdgeDevices
+                ? $"{QueryPrefix} WHERE capabilities.iotEdge = true"
+                : QueryPrefix;
+
+            var devices = new List<IotDevice>();
+            var query = registryManager!.CreateQuery(queryString);
+
+            while (query.HasMoreResults)
+            {
+                var page = await query.GetNextAsJsonAsync();
+                foreach (var json in page)
+                {
+                    var device = JsonSerializer.Deserialize<IotDevice>(json, jsonSerializerOptions);
+                    devices.Add(device!);
+                }
+            }
+
+            //TODO:
+            //LogRetrieveDevicesSucceeded(ioTHubHostName!, devices.Count);
+            return devices;
+        }
+        catch (Exception ex)
+        {
+            LogFailure(
+                ioTHubHostName!,
+                ex.GetType().ToString(),
+                ex.GetLastInnerMessage());
+
+            return new List<IotDevice>();
+        }
+    }
+
+
     public async Task<IReadOnlyCollection<Twin>> GetDeviceTwins(
-        bool onlyIncludeEdgeDevices)
+        bool onlyIncludeEdgeDevices = false)
     {
         var result = new List<Twin>();
 
