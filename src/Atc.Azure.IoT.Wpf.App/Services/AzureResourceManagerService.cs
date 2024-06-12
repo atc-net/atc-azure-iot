@@ -97,7 +97,20 @@ public sealed class AzureResourceManagerService // TODO: Interface
                                        .GetAllAsync(cancellationToken)
                                        .ConfigureAwait(false))
                     {
-                        result.Add(new IotHubServiceState(subscription, resourceGroup, iothub));
+                        string? connectionString = null;
+
+                        await foreach (var sasSignature in iothub.GetKeysAsync().ConfigureAwait(false))
+                        {
+                            if (!sasSignature.Rights.IsSet(IotHubSharedAccessRight.RegistryReadRegistryWriteServiceConnectDeviceConnect))
+                            {
+                                continue;
+                            }
+
+                            connectionString = $"HostName={iothub.Data.Name}.azure-devices.net;SharedAccessKeyName={sasSignature.KeyName};SharedAccessKey={sasSignature.PrimaryKey}";
+                            break;
+                        }
+
+                        result.Add(new IotHubServiceState(subscription, resourceGroup, iothub, connectionString));
                     }
                 }
             }
