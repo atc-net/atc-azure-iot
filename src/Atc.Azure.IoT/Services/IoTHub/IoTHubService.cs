@@ -218,7 +218,6 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         }
     }
 
-
     public async Task<IReadOnlyCollection<Twin>> GetDeviceTwins(
         bool onlyIncludeEdgeDevices = false)
     {
