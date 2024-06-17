@@ -10,12 +10,17 @@
   <ItemGroup>
     <None Remove="appsettings.json" />
     <None Remove="Resources\AppIcon.ico" />
+    <None Remove="Resources\Images\32\AzureSignIn.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\32\AzureSignIn.png" />
   </ItemGroup>
 
   <ItemGroup>
