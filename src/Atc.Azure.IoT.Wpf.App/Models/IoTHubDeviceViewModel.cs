@@ -1,6 +1,6 @@
 namespace Atc.Azure.IoT.Wpf.App.Models;
 
-public sealed class IoTHubDeviceViewModel
+public sealed class IoTHubDeviceViewModel : ViewModelBase
 {
     public string Id { get; set; } = string.Empty;
 
@@ -13,4 +13,6 @@ public sealed class IoTHubDeviceViewModel
     public IotDeviceAuthenticationType AuthenticationType { get; set; }
 
     public bool IotEdgeDevice { get; set; }
+
+    public IoTEdgeDeviceDetailsViewModel? DeviceDetails { get; set; }
 }

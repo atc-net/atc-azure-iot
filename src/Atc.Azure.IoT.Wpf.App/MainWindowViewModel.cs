@@ -23,21 +23,21 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
         ArgumentNullException.ThrowIfNull(azureIoTHubServiceViewModel);
 
         ContextViewMode = ContextViewMode.TenantSelection;
-        StatusBarViewModel = statusBarViewModel;
-        AzureTenantSelectionViewModel = azureTenantSelectionViewModel;
-        AzureDeviceProvisioningServiceViewModel = azureDeviceProvisioningServiceViewModel;
-        AzureIoTHubServiceViewModel = azureIoTHubServiceViewModel;
+        StatusBar = statusBarViewModel;
+        AzureTenantSelection = azureTenantSelectionViewModel;
+        AzureDeviceProvisioningService = azureDeviceProvisioningServiceViewModel;
+        AzureIoTHubService = azureIoTHubServiceViewModel;
 
         Messenger.Default.Register<IsBusyMessage>(this, OnBusyMessage);
     }
 
-    public StatusBarViewModel StatusBarViewModel { get; set; }
+    public StatusBarViewModel StatusBar { get; set; }
 
-    public AzureTenantSelectionViewModel AzureTenantSelectionViewModel { get; set; }
+    public AzureTenantSelectionViewModel AzureTenantSelection { get; set; }
 
-    public AzureDeviceProvisioningServiceViewModel AzureDeviceProvisioningServiceViewModel { get; set; }
+    public AzureDeviceProvisioningServiceViewModel AzureDeviceProvisioningService { get; set; }
 
-    public AzureIoTHubServiceViewModel AzureIoTHubServiceViewModel { get; set; }
+    public AzureIoTHubServiceViewModel AzureIoTHubService { get; set; }
 
     public ContextViewMode ContextViewMode
     {
@@ -52,10 +52,10 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
     private void OnBusyMessage(
         IsBusyMessage obj)
     {
-        if (AzureTenantSelectionViewModel.IsBusy ||
-            AzureDeviceProvisioningServiceViewModel.IsBusy ||
-            AzureIoTHubServiceViewModel.IsBusy ||
-            AzureIoTHubServiceViewModel.AzureIoTHubSelectorViewModel.IsBusy)
+        if (AzureTenantSelection.IsBusy ||
+            AzureDeviceProvisioningService.IsBusy ||
+            AzureIoTHubService.IsBusy ||
+            AzureIoTHubService.AzureIoTHubSelector.IsBusy)
         {
             if (!IsBusy)
             {
