@@ -11,8 +11,8 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
-        <ucIotHub:AzureIoTHubSelectorView DataContext="{Binding Path=AzureIoTHubSelectorViewModel}" />
-        <ucIotHub:AzureIoTHubDeviceSelectorView DataContext="{Binding Path=AzureIoTHubDeviceSelectorViewModel}" />
-        <ucIotHub:AzureIoTHubDeviceView />
+        <ucIotHub:AzureIoTHubSelectorView DataContext="{Binding Path=AzureIoTHubSelector}" />
+        <ucIotHub:AzureIoTHubDeviceSelectorView DataContext="{Binding Path=AzureIoTHubDeviceSelector}" />
+        <ucIotHub:AzureIoTHubDeviceView DataContext="{Binding Path=AzureIoTHubDevice}" />
     </atc:UniformSpacingPanel>
 </UserControl>

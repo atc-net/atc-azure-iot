@@ -31,7 +31,14 @@ public class AzureIoTHubDeviceSelectorViewModel : IoTViewModelBase
     private void OnSelectedIoTHubSubscriptionMessage(
         SelectedIoTHubSubscriptionMessage obj)
     {
-        TaskHelper.FireAndForget(LoadDevices(obj.IoTHubSubscriptionViewModel!.IoTHubName));
+        if (obj.IoTHubSubscriptionViewModel is null)
+        {
+            return;
+        }
+
+        TaskHelper.FireAndForget(
+            LoadDevices(
+                obj.IoTHubSubscriptionViewModel.IoTHubName));
     }
 
     public IoTHubDeviceViewModel? SelectedDevice
@@ -41,6 +48,7 @@ public class AzureIoTHubDeviceSelectorViewModel : IoTViewModelBase
         {
             selectedDevice = value;
             RaisePropertyChanged();
+            Messenger.Default.Send(new SelectedIoTHubDeviceMessage(value));
         }
     }
 

@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc.Wpf" Version="2.0.517" />
-    <PackageReference Include="Atc.Wpf.Controls" Version="2.0.517" />
-    <PackageReference Include="Atc.Wpf.FontIcons" Version="2.0.517" />
-    <PackageReference Include="Atc.Wpf.Theming" Version="2.0.517" />
+    <PackageReference Include="Atc.Wpf" Version="2.0.524" />
+    <PackageReference Include="Atc.Wpf.Controls" Version="2.0.524" />
+    <PackageReference Include="Atc.Wpf.FontIcons" Version="2.0.524" />
+    <PackageReference Include="Atc.Wpf.Theming" Version="2.0.524" />
     <PackageReference Include="Azure.Identity" Version="1.11.4" />
     <PackageReference Include="Azure.ResourceManager" Version="1.12.0" />
     <PackageReference Include="Azure.ResourceManager.DeviceProvisioningServices" Version="1.2.0" />

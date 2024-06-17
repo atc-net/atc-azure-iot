@@ -38,6 +38,7 @@ public partial class App
                 services.AddSingleton<AzureIoTHubServiceViewModel>();
                 services.AddSingleton<AzureIoTHubSelectorViewModel>();
                 services.AddSingleton<AzureIoTHubDeviceSelectorViewModel>();
+                services.AddSingleton<AzureIoTHubDeviceViewModel>();
 
                 services.AddSingleton<IMainWindowViewModelBase, MainWindowViewModel>();
                 services.AddSingleton<MainWindow>();

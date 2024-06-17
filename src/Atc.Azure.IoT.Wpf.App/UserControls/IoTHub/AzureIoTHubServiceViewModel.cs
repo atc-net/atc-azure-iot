@@ -11,15 +11,21 @@ public class AzureIoTHubServiceViewModel : ViewModelBase
 
     public AzureIoTHubServiceViewModel(
         AzureIoTHubSelectorViewModel azureIoTHubSelectorViewModel,
-        AzureIoTHubDeviceSelectorViewModel azureIoTHubDeviceSelectorViewModel)
+        AzureIoTHubDeviceSelectorViewModel azureIoTHubDeviceSelectorViewModel,
+        AzureIoTHubDeviceViewModel azureIoTHubDeviceViewModel)
     {
         ArgumentNullException.ThrowIfNull(azureIoTHubSelectorViewModel);
+        ArgumentNullException.ThrowIfNull(azureIoTHubDeviceSelectorViewModel);
+        ArgumentNullException.ThrowIfNull(azureIoTHubDeviceViewModel);
 
-        AzureIoTHubSelectorViewModel = azureIoTHubSelectorViewModel;
-        AzureIoTHubDeviceSelectorViewModel = azureIoTHubDeviceSelectorViewModel;
+        AzureIoTHubSelector = azureIoTHubSelectorViewModel;
+        AzureIoTHubDeviceSelector = azureIoTHubDeviceSelectorViewModel;
+        AzureIoTHubDevice = azureIoTHubDeviceViewModel;
     }
 
-    public AzureIoTHubSelectorViewModel AzureIoTHubSelectorViewModel { get; set; }
+    public AzureIoTHubSelectorViewModel AzureIoTHubSelector { get; set; }
 
-    public AzureIoTHubDeviceSelectorViewModel AzureIoTHubDeviceSelectorViewModel { get; set; }
+    public AzureIoTHubDeviceSelectorViewModel AzureIoTHubDeviceSelector { get; set; }
+
+    public AzureIoTHubDeviceViewModel AzureIoTHubDevice { get; set; }
 }
