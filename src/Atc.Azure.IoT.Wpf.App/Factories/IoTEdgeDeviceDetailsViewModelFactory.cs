@@ -11,7 +11,7 @@ public static class IoTEdgeDeviceDetailsViewModelFactory
             OperatingSystem = edgeAgentReportedProperties.Runtime?.Platform.OperatingSystem ?? "N/A",
             OperatingSystemArchitecture = edgeAgentReportedProperties.Runtime?.Platform.OperatingSystemArchitecture ?? "N/A",
             RuntimeStatusCode = edgeAgentReportedProperties.LastDesiredStatus?.RuntimeStatusCode ?? -1,
-            RuntimeStatusDescription = edgeAgentReportedProperties.LastDesiredStatus?.RuntimeStatusDescription ?? "N/A"
+            RuntimeStatusDescription = edgeAgentReportedProperties.LastDesiredStatus?.RuntimeStatusDescription ?? "N/A",
         };
 
         if (edgeAgentReportedProperties.SystemModules is not null &&

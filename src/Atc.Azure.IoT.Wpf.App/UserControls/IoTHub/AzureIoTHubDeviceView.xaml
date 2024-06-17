@@ -26,7 +26,172 @@
             Visibility="{Binding Path=IotDevice, Converter={StaticResource ObjectNotNullToVisibilityVisibleValueConverter}}">
             <!--  ReSharper disable Xaml.PossibleNullReferenceException  -->
             <!--  ReSharper disable GrammarMistakeInMarkupAttribute  -->
-            <atc:LabelTextInfo Text="{Binding Path=IotDevice.Id}" />
+            <atc:LabelTextInfo
+                HideAreas="InformationAndValidation"
+                LabelText="Device ID"
+                Text="{Binding Path=IotDevice.Id}" />
+            <atc:LabelTextInfo
+                HideAreas="InformationAndValidation"
+                LabelText="ConnectionState"
+                Text="{Binding Path=IotDevice.ConnectionState}" />
+            <atc:LabelTextInfo
+                HideAreas="InformationAndValidation"
+                LabelText="Status"
+                Text="{Binding Path=IotDevice.Status}" />
+            <atc:LabelTextInfo
+                HideAreas="InformationAndValidation"
+                LabelText="Status Reason"
+                Text="{Binding Path=IotDevice.StatusReason}" />
+            <atc:LabelTextInfo
+                HideAreas="InformationAndValidation"
+                LabelText="Authentication Type"
+                Text="{Binding Path=IotDevice.AuthenticationType}" />
+            <atc:LabelTextInfo
+                HideAreas="InformationAndValidation"
+                LabelText="Is IotEdge Device"
+                Text="{Binding Path=IotDevice.IotEdgeDevice}" />
+
+            <GroupBox Header="Details">
+                <atc:UniformSpacingPanel
+                    Orientation="Vertical"
+                    Spacing="10"
+                    Visibility="{Binding Path=IotDevice.DeviceDetails, Converter={StaticResource ObjectNotNullToVisibilityVisibleValueConverter}}">
+                    <atc:LabelTextInfo
+                        HideAreas="InformationAndValidation"
+                        LabelText="Runtime Status Code"
+                        Text="{Binding Path=IotDevice.DeviceDetails.RuntimeStatusCode}" />
+                    <atc:LabelTextInfo
+                        HideAreas="InformationAndValidation"
+                        LabelText="Runtime Status Description"
+                        Text="{Binding Path=IotDevice.DeviceDetails.RuntimeStatusDescription}" />
+                    <atc:LabelTextInfo
+                        HideAreas="InformationAndValidation"
+                        LabelText="OperatingSystem"
+                        Text="{Binding Path=IotDevice.DeviceDetails.OperatingSystem}" />
+                    <atc:LabelTextInfo
+                        HideAreas="InformationAndValidation"
+                        LabelText="OperatingSystem Architecture"
+                        Text="{Binding Path=IotDevice.DeviceDetails.OperatingSystemArchitecture}" />
+                    <GroupBox Header="System Modules">
+                        <ListView
+                            Height="200"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            AlternationCount="0"
+                            FontFamily="Modern"
+                            ItemsSource="{Binding Path=IotDevice.DeviceDetails.SystemModules}"
+                            SelectionMode="Single">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=ModuleId}"
+                                        Header="ModuleId" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=UpstreamProtocol}"
+                                        Header="UpstreamProtocol" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=StartupOrder}"
+                                        Header="StartupOrder" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=ContainerImage}"
+                                        Header="ContainerImage" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=State}"
+                                        Header="State" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=LastExitTimeUtc}"
+                                        Header="LastExitTimeUtc" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=LastStartTimeUtc}"
+                                        Header="LastStartTimeUtc" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=LastRestartTimeUtc}"
+                                        Header="LastRestartTimeUtc" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=RestartCount}"
+                                        Header="RestartCount" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=ExitCode}"
+                                        Header="ExitCode" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=StatusDescription}"
+                                        Header="Status Description" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </GroupBox>
+                    <GroupBox Header="Custom Modules">
+                        <ListView
+                            Height="200"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            AlternationCount="0"
+                            FontFamily="Modern"
+                            ItemsSource="{Binding Path=IotDevice.DeviceDetails.CustomModules}"
+                            SelectionMode="Single">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=ModuleId}"
+                                        Header="ModuleId" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=UpstreamProtocol}"
+                                        Header="UpstreamProtocol" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=StartupOrder}"
+                                        Header="StartupOrder" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=ContainerImage}"
+                                        Header="ContainerImage" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=State}"
+                                        Header="State" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=LastExitTimeUtc}"
+                                        Header="LastExitTimeUtc" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=LastStartTimeUtc}"
+                                        Header="LastStartTimeUtc" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=LastRestartTimeUtc}"
+                                        Header="LastRestartTimeUtc" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=RestartCount}"
+                                        Header="RestartCount" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=ExitCode}"
+                                        Header="ExitCode" />
+                                    <GridViewColumn
+                                        Width="Auto"
+                                        DisplayMemberBinding="{Binding Path=StatusDescription}"
+                                        Header="Status Description" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </GroupBox>
+                </atc:UniformSpacingPanel>
+            </GroupBox>
             <!--  ReSharper restore GrammarMistakeInMarkupAttribute  -->
             <!--  ReSharper restore Xaml.PossibleNullReferenceException  -->
         </atc:UniformSpacingPanel>

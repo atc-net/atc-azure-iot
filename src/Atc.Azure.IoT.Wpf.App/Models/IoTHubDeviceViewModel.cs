@@ -2,6 +2,8 @@ namespace Atc.Azure.IoT.Wpf.App.Models;
 
 public sealed class IoTHubDeviceViewModel : ViewModelBase
 {
+    private IoTEdgeDeviceDetailsViewModel? deviceDetails;
+
     public string Id { get; set; } = string.Empty;
 
     public IotDeviceConnectionState ConnectionState { get; set; }
@@ -14,5 +16,13 @@ public sealed class IoTHubDeviceViewModel : ViewModelBase
 
     public bool IotEdgeDevice { get; set; }
 
-    public IoTEdgeDeviceDetailsViewModel? DeviceDetails { get; set; }
+    public IoTEdgeDeviceDetailsViewModel? DeviceDetails
+    {
+        get => deviceDetails;
+        set
+        {
+            deviceDetails = value;
+            RaisePropertyChanged();
+        }
+    }
 }

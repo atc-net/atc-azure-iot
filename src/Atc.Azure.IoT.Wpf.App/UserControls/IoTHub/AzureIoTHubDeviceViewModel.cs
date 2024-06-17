@@ -71,10 +71,12 @@ public sealed class AzureIoTHubDeviceViewModel : IoTViewModelBase
             iotHubServiceState.ConnectionString!);
 
 
-        var edgeAgentModuleTwin = await iotHubService.GetModuleTwin(
-            IotDevice!.Id,
-            EdgeAgentConstants.ModuleId,
-            cancellationTokenSource.Token);
+        var edgeAgentModuleTwin = await iotHubService
+            .GetModuleTwin(
+                IotDevice!.Id,
+                EdgeAgentConstants.ModuleId,
+                cancellationTokenSource.Token)
+            .ConfigureAwait(false);
 
         if (edgeAgentModuleTwin is null)
         {
