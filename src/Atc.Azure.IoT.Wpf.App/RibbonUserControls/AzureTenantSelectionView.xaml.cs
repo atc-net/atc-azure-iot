@@ -1,4 +1,4 @@
-namespace Atc.Azure.IoT.Wpf.App.UserControls;
+namespace Atc.Azure.IoT.Wpf.App.RibbonUserControls;
 
 /// <summary>
 /// Interaction logic for AzureTenantSelectionView.
