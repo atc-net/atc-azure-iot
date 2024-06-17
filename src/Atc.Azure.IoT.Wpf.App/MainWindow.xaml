@@ -95,26 +95,27 @@
                 </fluent:RibbonTabItem>
             </fluent:Ribbon>
 
-            <atc:GridEx
+            <ScrollViewer
                 Grid.Row="1"
-                Columns="*"
-                Rows="*">
-                <userControls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelection}" Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.TenantSelection}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
-                <deviceProvisioning:AzureDeviceProvisioningServiceView
-                    DataContext="{Binding Path=AzureDeviceProvisioningService}"
-                    IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelection.IsAuthorizedToAzure}"
-                    Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.DeviceProvisioning}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
-                <ioTHub:AzureIoTHubServiceView
-                    DataContext="{Binding Path=AzureIoTHubService}"
-                    IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelection.IsAuthorizedToAzure}"
-                    Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.IotHub}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
-                <atc:ToastNotificationArea
-                    x:Name="ToastNotificationArea"
-                    Panel.ZIndex="1"
-                    MaxItems="3"
-                    Position="BottomRight" />
-            </atc:GridEx>
-
+                HorizontalScrollBarVisibility="Visible"
+                VerticalScrollBarVisibility="Visible">
+                <atc:GridEx Columns="*" Rows="*">
+                    <userControls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelection}" Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.TenantSelection}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
+                    <deviceProvisioning:AzureDeviceProvisioningServiceView
+                        DataContext="{Binding Path=AzureDeviceProvisioningService}"
+                        IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelection.IsAuthorizedToAzure}"
+                        Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.DeviceProvisioning}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
+                    <ioTHub:AzureIoTHubServiceView
+                        DataContext="{Binding Path=AzureIoTHubService}"
+                        IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelection.IsAuthorizedToAzure}"
+                        Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.IotHub}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
+                    <atc:ToastNotificationArea
+                        x:Name="ToastNotificationArea"
+                        Panel.ZIndex="1"
+                        MaxItems="3"
+                        Position="BottomRight" />
+                </atc:GridEx>
+            </ScrollViewer>
             <userControls:StatusBarView Grid.Row="2" DataContext="{Binding Path=StatusBar}" />
         </atc:GridEx>
     </atc:BusyOverlay>

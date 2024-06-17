@@ -5,5 +5,5 @@ public enum IotEdgeModuleState
 {
     Unknown,
     Running,
-    Failed
+    Failed,
 }
