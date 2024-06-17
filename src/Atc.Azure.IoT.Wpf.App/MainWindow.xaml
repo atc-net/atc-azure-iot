@@ -11,6 +11,7 @@
     xmlns:ioTHub="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.IoTHub"
     xmlns:local="clr-namespace:Atc.Azure.IoT.Wpf.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ribbonUserControls="clr-namespace:Atc.Azure.IoT.Wpf.App.RibbonUserControls"
     xmlns:userControls="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls"
     xmlns:valueConverters="clr-namespace:Atc.Azure.IoT.Wpf.App.ValueConverters"
     Title="..:: Atc.Azure.IoT ::.."
@@ -61,16 +62,7 @@
                 </fluent:Ribbon.Menu>
 
                 <!--  Tabs  -->
-                <fluent:RibbonTabItem
-                    Header="Home"
-                    KeyTip="H"
-                    Tag="{x:Static local:ContextViewMode.TenantSelection}">
-                    <fluent:RibbonGroupBox Header="XX">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock>Hej</TextBlock>
-                        </StackPanel>
-                    </fluent:RibbonGroupBox>
-                </fluent:RibbonTabItem>
+                <ribbonUserControls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelection}" />
                 <fluent:RibbonTabItem
                     Header="Device Provisioning Service (DPS)"
                     IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelection.IsAuthorizedToAzure}"
@@ -100,7 +92,6 @@
                 HorizontalScrollBarVisibility="Visible"
                 VerticalScrollBarVisibility="Visible">
                 <atc:GridEx Columns="*" Rows="*">
-                    <userControls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelection}" Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.TenantSelection}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
                     <deviceProvisioning:AzureDeviceProvisioningServiceView
                         DataContext="{Binding Path=AzureDeviceProvisioningService}"
                         IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelection.IsAuthorizedToAzure}"

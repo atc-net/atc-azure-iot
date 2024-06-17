@@ -15,6 +15,7 @@ global using Atc.Azure.IoT.Services.IoTHub;
 global using Atc.Azure.IoT.Wpf.App.Dialogs;
 global using Atc.Azure.IoT.Wpf.App.Factories;
 global using Atc.Azure.IoT.Wpf.App.Models;
+global using Atc.Azure.IoT.Wpf.App.RibbonUserControls;
 global using Atc.Azure.IoT.Wpf.App.Services;
 global using Atc.Azure.IoT.Wpf.App.UserControls;
 global using Atc.Azure.IoT.Wpf.App.UserControls.DeviceProvisioning;
