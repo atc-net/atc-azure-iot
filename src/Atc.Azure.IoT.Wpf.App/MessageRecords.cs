@@ -14,12 +14,6 @@ public record SubscriptionsCollectionStateMessage(
 public record IsBusyMessage(
     bool IsBusy);
 
-public record SelectedIoTHubSubscriptionMessage(
-    IoTHubSubscriptionViewModel? IoTHubSubscriptionViewModel);
-
-public record SelectedIoTHubDeviceMessage(
-    IoTHubDeviceViewModel? IoTHubDeviceViewModel);
-
 #pragma warning restore SA1649 // File name should match first type name
 #pragma warning restore SA1402 // File may only contain a single type
 #pragma warning restore MA0048 // File name must match type name

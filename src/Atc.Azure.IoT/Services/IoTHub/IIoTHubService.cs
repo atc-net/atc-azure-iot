@@ -23,7 +23,7 @@ public interface IIoTHubService
     /// <param name="edgeEnabled">Specifies whether the device is edge enabled.</param>
     /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
     /// <returns><see langword="true" /> if the device was successfully created with the newly created device; otherwise, <see langword="false" /> and null.</returns>
-    Task<(bool Succeeded, Device? Device)> CreateDevice(
+    Task<(bool Succeeded, IotDevice? Device)> CreateDevice(
         string deviceId,
         bool edgeEnabled,
         CancellationToken cancellationToken = default);
@@ -34,7 +34,7 @@ public interface IIoTHubService
     /// <param name="deviceId">The identifier of the device to retrieve.</param>
     /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
     /// <returns>The device if found; otherwise, null.</returns>
-    Task<Device?> GetDevice(
+    Task<IotDevice?> GetDevice(
         string deviceId,
         CancellationToken cancellationToken = default);
 

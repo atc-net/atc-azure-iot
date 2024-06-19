@@ -150,7 +150,8 @@ public partial class AzureIoTHubService : IAzureIoTHubService
             }
 
             LogIotHubProvisionIotEdgeDeviceSucceeded(deviceId);
-            return device.Authentication.SymmetricKey.PrimaryKey;
+            // TODO: return device.Authentication.SymmetricKey.PrimaryKey;
+            throw new NotImplementedException();
         }
         catch (Exception ex)
         {

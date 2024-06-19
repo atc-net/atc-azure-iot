@@ -1,7 +1,7 @@
 // ReSharper disable UnusedMember.Global
 namespace Atc.Azure.IoT.Models;
 
-public record EdgeAgentDesiredProperties();
+public record EdgeAgentDesiredProperties;
 
 public record LastDesiredStatus(
     [property: JsonPropertyName(DeviceTwinPropertyNames.LastDesiredStatusCode)] int RuntimeStatusCode,

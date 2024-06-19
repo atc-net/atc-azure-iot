@@ -99,7 +99,7 @@ public sealed class AzureResourceManagerService // TODO: Interface
                     {
                         string? connectionString = null;
 
-                        await foreach (var sasSignature in iothub.GetKeysAsync().ConfigureAwait(false))
+                        await foreach (var sasSignature in iothub.GetKeysAsync(cancellationToken).ConfigureAwait(false))
                         {
                             if (!sasSignature.Rights.IsSet(IotHubSharedAccessRight.RegistryReadRegistryWriteServiceConnectDeviceConnect))
                             {

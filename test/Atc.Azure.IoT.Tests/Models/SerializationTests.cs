@@ -3,18 +3,18 @@ namespace Atc.Azure.IoT.Tests.Models;
 public sealed class SerializationTests
 {
     [Fact]
-    public void CanSerializeAndDeserialize_IotDevice()
+    public void DeserializeAndMapIotDevice()
     {
         // Arrange
         const string json = """
                             {
-                              "deviceId": "test",
-                              "etag": "AAAAAAAAAAE=",
-                              "deviceEtag": "MTQ1NzQ5NDU4",
+                              "deviceId": "Connect-Edge-Tst",
+                              "etag": "AAAAAAAAAAc=",
+                              "deviceEtag": "Njc2NzA5MjU3",
                               "status": "enabled",
                               "statusUpdateTime": "0001-01-01T00:00:00Z",
                               "connectionState": "Disconnected",
-                              "lastActivityTime": "0001-01-01T00:00:00Z",
+                              "lastActivityTime": "2023-08-24T12:39:49.5076305Z",
                               "cloudToDeviceMessageCount": 0,
                               "authenticationType": "sas",
                               "x509Thumbprint": {
@@ -22,49 +22,53 @@ public sealed class SerializationTests
                                 "secondaryThumbprint": null
                               },
                               "modelId": "",
-                              "version": 2,
+                              "version": 8,
+                              "tags": {
+                                "test": "test"
+                              },
                               "properties": {
                                 "desired": {
                                   "$metadata": {
-                                    "$lastUpdated": "2024-05-28T11:04:38.4422737Z"
+                                    "$lastUpdated": "2023-10-12T13:38:52.3108419Z",
+                                    "$lastUpdatedVersion": 4
                                   },
-                                  "$version": 1
+                                  "$version": 4
                                 },
                                 "reported": {
                                   "$metadata": {
-                                    "$lastUpdated": "2024-05-28T11:04:38.4422737Z"
+                                    "$lastUpdated": "2023-08-17T08:24:40.736671Z"
                                   },
                                   "$version": 1
                                 }
                               },
                               "capabilities": {
-                                "iotEdge": false
-                              }
+                                "iotEdge": true
+                              },
+                              "deviceScope": "ms-azure-iot-edge://Connect-Edge-Tst-638278574807366710"
                             }
                             """;
 
-
         var expected = new IotDevice
         {
-            DeviceId = "test",
-            Etag = "AAAAAAAAAAE=",
-            DeviceEtag = "MTQ1NzQ5NDU4",
+            DeviceId = "Connect-Edge-Tst",
+            Etag = "Njc2NzA5MjU3",
             Status = IotDeviceStatus.Enabled,
             StatusUpdateTime = null,
             ConnectionState = IotDeviceConnectionState.Disconnected,
-            LastActivityTime = null,
+            LastActivityTime = DateTimeOffset.Parse("2023-08-24T12:39:49.5076305Z", GlobalizationConstants.EnglishCultureInfo),
             AuthenticationType = IotDeviceAuthenticationType.Sas,
-            Capabilities = new IoTDeviceCapabilities
-            {
-                IotEdge = false,
-            },
+            IotEdge = true,
         };
 
         // Act
-        var actual = JsonSerializer.Deserialize<IotDevice>(json, JsonSerializerOptionsFactory.Create(new JsonSerializerFactorySettings
-        {
-            UseConverterDatetimeOffsetMinToNull = true,
-        }));
+        var deserializeActual = JsonSerializer.Deserialize<SerializableDevice>(
+            json,
+            JsonSerializerOptionsFactory.Create(new JsonSerializerFactorySettings
+            {
+                UseConverterDatetimeOffsetMinToNull = true,
+            }));
+
+        var actual = deserializeActual!.ToIotDevice();
 
         // Assert
         actual

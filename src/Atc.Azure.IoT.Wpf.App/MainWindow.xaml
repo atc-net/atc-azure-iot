@@ -8,10 +8,10 @@
     xmlns:deviceProvisioning="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.DeviceProvisioning"
     xmlns:fluent="urn:fluent-ribbon"
     xmlns:fontIcons="clr-namespace:Atc.Wpf.FontIcons;assembly=Atc.Wpf.FontIcons"
-    xmlns:ioTHub="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.IoTHub"
+    xmlns:iotHub="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.IotHub"
     xmlns:local="clr-namespace:Atc.Azure.IoT.Wpf.App"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ribbonUserControls="clr-namespace:Atc.Azure.IoT.Wpf.App.RibbonUserControls"
+    xmlns:ribbonParts="clr-namespace:Atc.Azure.IoT.Wpf.App.RibbonParts"
     xmlns:userControls="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls"
     xmlns:valueConverters="clr-namespace:Atc.Azure.IoT.Wpf.App.ValueConverters"
     Title="..:: Atc.Azure.IoT ::.."
@@ -62,49 +62,35 @@
                 </fluent:Ribbon.Menu>
 
                 <!--  Tabs  -->
-                <ribbonUserControls:AzureTenantSelectionView DataContext="{Binding Path=AzureTenantSelection}" />
-                <fluent:RibbonTabItem
-                    Header="Device Provisioning Service (DPS)"
-                    IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelection.IsAuthorizedToAzure}"
-                    KeyTip="D"
-                    Tag="{x:Static local:ContextViewMode.DeviceProvisioning}">
-                    <fluent:RibbonGroupBox Header="XXX">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock>Hej</TextBlock>
-                        </StackPanel>
-                    </fluent:RibbonGroupBox>
-                </fluent:RibbonTabItem>
-                <fluent:RibbonTabItem
-                    Header="IoTHub"
-                    IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelection.IsAuthorizedToAzure}"
-                    KeyTip="I"
-                    Tag="{x:Static local:ContextViewMode.IotHub}">
-                    <fluent:RibbonGroupBox Header="XXX">
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock>Hej 2</TextBlock>
-                        </StackPanel>
-                    </fluent:RibbonGroupBox>
-                </fluent:RibbonTabItem>
+                <ribbonParts:RibbonTabHome DataContext="{Binding Path=AzureTenantSelection}" />
+                <ribbonParts:RibbonTabDeviceProvisioning DataContext="{Binding Path=AzureDeviceProvisioningService}" />
+                <ribbonParts:RibbonTabIotHub DataContext="{Binding Path=AzureIoTHubService}" />
             </fluent:Ribbon>
 
             <ScrollViewer
                 Grid.Row="1"
-                HorizontalScrollBarVisibility="Visible"
+                HorizontalScrollBarVisibility="Auto"
                 VerticalScrollBarVisibility="Visible">
                 <atc:GridEx Columns="*" Rows="*">
-                    <deviceProvisioning:AzureDeviceProvisioningServiceView
+
+                    <deviceProvisioning:DeviceProvisioningServiceView
+                        Margin="10"
                         DataContext="{Binding Path=AzureDeviceProvisioningService}"
                         IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelection.IsAuthorizedToAzure}"
                         Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.DeviceProvisioning}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
-                    <ioTHub:AzureIoTHubServiceView
+
+                    <iotHub:IotHubServiceView
+                        Margin="10"
                         DataContext="{Binding Path=AzureIoTHubService}"
                         IsEnabled="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.AzureTenantSelection.IsAuthorizedToAzure}"
                         Visibility="{Binding RelativeSource={RelativeSource AncestorType=atc:NiceWindow}, Path=DataContext.ContextViewMode, ConverterParameter={x:Static local:ContextViewMode.IotHub}, Converter={StaticResource ContextViewModeVisibilityValueConverter}, FallbackValue=Collapsed}" />
+
                     <atc:ToastNotificationArea
                         x:Name="ToastNotificationArea"
                         Panel.ZIndex="1"
                         MaxItems="3"
                         Position="BottomRight" />
+
                 </atc:GridEx>
             </ScrollViewer>
             <userControls:StatusBarView Grid.Row="2" DataContext="{Binding Path=StatusBar}" />
