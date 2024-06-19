@@ -37,10 +37,11 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         ILoggerFactory loggerFactory,
         IIoTHubModuleService iotHubModuleService,
         IotHubOptions options)
+        : this(
+            loggerFactory,
+            iotHubModuleService,
+            options.ConnectionString)
     {
-        logger = loggerFactory.CreateLogger<IoTHubService>();
-        this.iotHubModuleService = iotHubModuleService;
-        ValidateAndAssign(options.ConnectionString, Assign);
     }
 
     public async Task<RegistryStatistics?> GetDeviceRegistryStatistics(
@@ -161,7 +162,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 return null;
             }
 
-            LogRetrieveIotEdgeDeviceConnectionStringSucceeded(
+            LogRetrieveDeviceConnectionStringSucceeded(
                 ioTHubHostName!,
                 deviceId);
 
@@ -183,8 +184,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     {
         try
         {
-            //TODO: 
-            //LogRetrievingDevices(ioTHubHostName!);
+            LogRetrievingDevices(ioTHubHostName!);
 
             var queryString = onlyIncludeEdgeDevices
                 ? $"{QueryPrefix} WHERE capabilities.iotEdge = true"
@@ -203,8 +203,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 }
             }
 
-            //TODO:
-            //LogRetrieveDevicesSucceeded(ioTHubHostName!, devices.Count);
+            LogRetrieveIotDevicesSucceeded(ioTHubHostName!, devices.Count);
             return devices;
         }
         catch (Exception ex)

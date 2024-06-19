@@ -13,7 +13,10 @@ internal static class SerializableDeviceExtensions
             StatusUpdateTime = serializableDevice.StatusUpdateTime,
             ConnectionState = serializableDevice.ConnectionState,
             LastActivityTime = serializableDevice.LastActivityTime,
-            AuthenticationType = serializableDevice.AuthenticationType,
+            AuthenticationMechanism = new IotDeviceAuthenticationMechanism
+            {
+                AuthenticationType = serializableDevice.AuthenticationType,
+            },
             IotEdge = serializableDevice.Capabilities?.IotEdge ?? false,
         };
 }

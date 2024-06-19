@@ -31,7 +31,7 @@ public sealed partial class IoTHubService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubService.RetrievingIotDevice,
         Level = LogLevel.Trace,
-        Message = "{callerMethodName}({callerLineNumber}) - Starting to retrieve iot edge device for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
+        Message = "{callerMethodName}({callerLineNumber}) - Starting to retrieve iot device for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
     private partial void LogRetrievingDevice(
         string iotHubHostName,
         string deviceId,
@@ -41,7 +41,7 @@ public sealed partial class IoTHubService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubService.IotDeviceNotFound,
         Level = LogLevel.Warning,
-        Message = "{callerMethodName}({callerLineNumber}) - Could not find iot edge device by deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
+        Message = "{callerMethodName}({callerLineNumber}) - Could not find iot device by deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
     private partial void LogIotEdgeDeviceNotFound(
         string iotHubHostName,
         string deviceId,
@@ -51,7 +51,7 @@ public sealed partial class IoTHubService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubService.RetrieveIotDeviceSucceeded,
         Level = LogLevel.Trace,
-        Message = "{callerMethodName}({callerLineNumber}) - Retrieved iot edge device for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
+        Message = "{callerMethodName}({callerLineNumber}) - Retrieved iot device for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
     private partial void LogRetrieveIotDeviceSucceeded(
         string iotHubHostName,
         string deviceId,
@@ -59,9 +59,28 @@ public sealed partial class IoTHubService
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
+        EventId = LoggingEventIdConstants.IoTHubService.RetrievingIotDevices,
+        Level = LogLevel.Trace,
+        Message = "{callerMethodName}({callerLineNumber}) - Starting to retrieve iot devices on iot hub '{iotHubHostName}'")]
+    private partial void LogRetrievingDevices(
+        string iotHubHostName,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
+
+    [LoggerMessage(
+        EventId = LoggingEventIdConstants.IoTHubService.RetrieveIotDevicesSucceeded,
+        Level = LogLevel.Trace,
+        Message = "{callerMethodName}({callerLineNumber}) - Retrieved {count} iot devices from on iot hub '{iotHubHostName}'")]
+    private partial void LogRetrieveIotDevicesSucceeded(
+        string iotHubHostName,
+        int count,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
+
+    [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubService.RetrievingDeviceConnectionString,
         Level = LogLevel.Trace,
-        Message = "{callerMethodName}({callerLineNumber}) - Starting to retrieve iot edge device connection-string for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
+        Message = "{callerMethodName}({callerLineNumber}) - Starting to retrieve iot device connection-string for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
     private partial void LogRetrievingDeviceConnectionString(
         string iotHubHostName,
         string deviceId,
@@ -69,10 +88,10 @@ public sealed partial class IoTHubService
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubService.RetrieveIotEdgeDeviceConnectionStringSucceeded,
+        EventId = LoggingEventIdConstants.IoTHubService.RetrieveDeviceConnectionStringSucceeded,
         Level = LogLevel.Trace,
-        Message = "{callerMethodName}({callerLineNumber}) - Retrieved iot edge device connection-string for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
-    private partial void LogRetrieveIotEdgeDeviceConnectionStringSucceeded(
+        Message = "{callerMethodName}({callerLineNumber}) - Retrieved iot device connection-string for deviceId '{deviceId}' on iot hub '{iotHubHostName}'")]
+    private partial void LogRetrieveDeviceConnectionStringSucceeded(
         string iotHubHostName,
         string deviceId,
         [CallerMemberName] string callerMethodName = "",

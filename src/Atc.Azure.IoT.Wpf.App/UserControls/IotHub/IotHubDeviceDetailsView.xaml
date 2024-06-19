@@ -16,6 +16,7 @@
         <atcValueConverters:ObjectNullToVisibilityCollapsedValueConverter x:Key="ObjectNullToVisibilityCollapsedValueConverter" />
     </UserControl.Resources>
 
+    <!--  ReSharper disable Xaml.PossibleNullReferenceException  -->
     <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
 
         <GroupBox Header="Header" Visibility="{Binding Path=SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
@@ -25,6 +26,7 @@
                     HideAreas="InformationAndValidation"
                     LabelText="Device ID"
                     Text="{Binding Path=SelectedIotDevice.DeviceId}" />
+
 
                 <atc:LabelTextInfo
                     HideAreas="InformationAndValidation"
@@ -44,7 +46,7 @@
                 <atc:LabelTextInfo
                     HideAreas="InformationAndValidation"
                     LabelText="Authentication Type"
-                    Text="{Binding Path=SelectedIotDevice.AuthenticationType}" />
+                    Text="{Binding Path=SelectedIotDevice.AuthenticationMechanism.AuthenticationType}" />
 
                 <atc:LabelTextInfo
                     HideAreas="InformationAndValidation"
@@ -199,5 +201,6 @@
         </GroupBox>
 
     </atc:UniformSpacingPanel>
+    <!--  ReSharper restore Xaml.PossibleNullReferenceException  -->
 
 </UserControl>

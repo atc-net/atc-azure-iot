@@ -7,12 +7,16 @@ internal static class LoggingEventIdConstants
         public const int Failure = 10_000;
 
         public const int RetrievingRegistryStatistics = 10_050;
+
         public const int RetrievingIotDevice = 10_100;
         public const int IotDeviceNotFound = 10_101;
         public const int RetrieveIotDeviceSucceeded = 10_102;
 
-        public const int RetrievingDeviceConnectionString = 10_050;
-        public const int RetrieveIotEdgeDeviceConnectionStringSucceeded = 10_051;
+        public const int RetrievingIotDevices = 10_110;
+        public const int RetrieveIotDevicesSucceeded = 10_111;
+
+        public const int RetrievingDeviceConnectionString = 10_150;
+        public const int RetrieveDeviceConnectionStringSucceeded = 10_151;
 
         public const int RetrievingIotDeviceTwins = 10_200;
         public const int RetrieveIotDeviceTwinsSucceeded = 10_201;

@@ -78,7 +78,6 @@ public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
     protected virtual void Dispose(
         bool disposing)
     {
-
         if (disposing)
         {
             cancellationTokenSource.Dispose();
@@ -225,7 +224,6 @@ public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
                 NullLoggerFactory.Instance,
                 iotHubModuleService,
                 iotHubServiceState.ConnectionString!);
-
 
             var edgeAgentModuleTwin = await iotHubService
                 .GetModuleTwin(

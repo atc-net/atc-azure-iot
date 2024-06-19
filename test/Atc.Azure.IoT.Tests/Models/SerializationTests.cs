@@ -56,7 +56,10 @@ public sealed class SerializationTests
             StatusUpdateTime = null,
             ConnectionState = IotDeviceConnectionState.Disconnected,
             LastActivityTime = DateTimeOffset.Parse("2023-08-24T12:39:49.5076305Z", GlobalizationConstants.EnglishCultureInfo),
-            AuthenticationType = IotDeviceAuthenticationType.Sas,
+            AuthenticationMechanism = new IotDeviceAuthenticationMechanism
+            {
+                AuthenticationType = IotDeviceAuthenticationType.Sas,
+            },
             IotEdge = true,
         };
 
