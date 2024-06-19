@@ -82,7 +82,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 },
                 cancellationToken);
 
-            return (true, device.ToIotDevice());
+            return (true, device.ToIotDevice(jsonSerializerOptions));
         }
         catch (Exception ex)
         {
@@ -124,7 +124,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 ioTHubHostName!,
                 deviceId);
 
-            return device.ToIotDevice();
+            return device.ToIotDevice(jsonSerializerOptions);
         }
         catch (Exception ex)
         {
@@ -199,7 +199,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 foreach (var json in page)
                 {
                     var serializableDevice = JsonSerializer.Deserialize<SerializableDevice>(json, jsonSerializerOptions)!;
-                    devices.Add(serializableDevice.ToIotDevice());
+                    devices.Add(serializableDevice.ToIotDevice(json));
                 }
             }
 

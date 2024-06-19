@@ -1,4 +1,4 @@
-namespace Atc.Azure.IoT.Wpf.App.UserControls.IoTHub;
+namespace Atc.Azure.IoT.Wpf.App.UserControls.IotHub;
 
 public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
 {
@@ -225,16 +225,16 @@ public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
                 iotHubModuleService,
                 iotHubServiceState.ConnectionString!);
 
-            var edgeAgentModuleTwin = await iotHubService
+            var moduleTwin = await iotHubService
                 .GetModuleTwin(
                     iotDevice.DeviceId,
                     EdgeAgentConstants.ModuleId,
                     cancellationTokenSource.Token)
                 .ConfigureAwait(false);
 
-            if (edgeAgentModuleTwin is not null)
+            if (moduleTwin is not null)
             {
-                var edgeAgentReportedProperties = edgeAgentModuleTwin.GetReportedProperties<EdgeAgentReportedProperties>();
+                var edgeAgentReportedProperties = moduleTwin.GetReportedProperties<EdgeAgentReportedProperties>();
                 SelectedIotDeviceDetails = IoTEdgeDeviceDetailsViewModelFactory.Create(edgeAgentReportedProperties);
             }
         }

@@ -18,7 +18,7 @@ global using Atc.Azure.IoT.Wpf.App.Factories;
 global using Atc.Azure.IoT.Wpf.App.Services;
 global using Atc.Azure.IoT.Wpf.App.UserControls;
 global using Atc.Azure.IoT.Wpf.App.UserControls.DeviceProvisioning;
-global using Atc.Azure.IoT.Wpf.App.UserControls.IoTHub;
+global using Atc.Azure.IoT.Wpf.App.UserControls.IotHub;
 global using Atc.Azure.IoT.Wpf.App.ViewModels;
 global using Atc.Helpers;
 global using Atc.Wpf.Collections;

@@ -19,4 +19,6 @@ public class IotDevice
     public IotDeviceAuthenticationMechanism AuthenticationMechanism { get; set; } = new();
 
     public bool IotEdge { get; set; }
+
+    public string RawJson { get; set; } = string.Empty;
 }

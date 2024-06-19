@@ -7,9 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:iotHub="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.IotHub"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ucIotHub="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.IoTHub"
     x:Name="ucIotHubServiceView"
-    d:DataContext="{d:DesignInstance Type=ucIotHub:IotHubServiceViewModel}"
+    d:DataContext="{d:DesignInstance Type=iotHub:IotHubServiceViewModel}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -20,7 +19,7 @@
     </UserControl.Resources>
 
     <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
-        <iotHub:IotHubDeviceOverviewView DataContext="{Binding Path=.}" Visibility="{Binding ElementName=ucIotHubServiceView, Path=DataContext.SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityVisibleValueConverter}}" />
+        <iotHub:IotHubDeviceOverview DataContext="{Binding Path=.}" Visibility="{Binding ElementName=ucIotHubServiceView, Path=DataContext.SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityVisibleValueConverter}}" />
         <iotHub:IotHubDeviceDetailsView DataContext="{Binding Path=.}" Visibility="{Binding ElementName=ucIotHubServiceView, Path=DataContext.SelectedIotDeviceDetails, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}" />
     </atc:UniformSpacingPanel>
 

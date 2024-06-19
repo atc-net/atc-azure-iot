@@ -3,7 +3,8 @@ namespace Atc.Azure.IoT.Extensions;
 public static class DeviceExtensions
 {
     public static IotDevice ToIotDevice(
-        this Device device)
+        this Device device,
+        JsonSerializerOptions jsonSerializerOptions)
     {
         var iotDevice = new IotDevice
         {
@@ -40,6 +41,8 @@ public static class DeviceExtensions
         {
             iotDevice.IotEdge = device.Capabilities.IotEdge;
         }
+
+        iotDevice.RawJson = JsonSerializer.Serialize(device, jsonSerializerOptions);
 
         return iotDevice;
     }

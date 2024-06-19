@@ -71,7 +71,7 @@ public sealed class SerializationTests
                 UseConverterDatetimeOffsetMinToNull = true,
             }));
 
-        var actual = deserializeActual!.ToIotDevice();
+        var actual = deserializeActual!.ToIotDevice(json);
 
         // Assert
         actual

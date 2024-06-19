@@ -1,4 +1,4 @@
-namespace Atc.Azure.IoT.Wpf.App.ViewModels;
+namespace Atc.Azure.IoT.Wpf.App.UserControls.IotHub;
 
 public class IoTEdgeModuleViewModel : ViewModelBase
 {

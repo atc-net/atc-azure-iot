@@ -3,7 +3,8 @@ namespace Atc.Azure.IoT.Extensions.Internal;
 internal static class SerializableDeviceExtensions
 {
     public static IotDevice ToIotDevice(
-        this SerializableDevice serializableDevice)
+        this SerializableDevice serializableDevice,
+        string rawJson)
         => new()
         {
             DeviceId = serializableDevice.DeviceId,
@@ -18,5 +19,6 @@ internal static class SerializableDeviceExtensions
                 AuthenticationType = serializableDevice.AuthenticationType,
             },
             IotEdge = serializableDevice.Capabilities?.IotEdge ?? false,
+            RawJson = rawJson,
         };
 }

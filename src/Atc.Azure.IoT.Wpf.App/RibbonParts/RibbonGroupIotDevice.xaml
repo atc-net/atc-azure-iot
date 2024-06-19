@@ -5,7 +5,7 @@
     xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fluent="urn:fluent-ribbon"
-    xmlns:ioTHub="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.IoTHub"
+    xmlns:ioTHub="clr-namespace:Atc.Azure.IoT.Wpf.App.UserControls.IotHub"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=ioTHub:IotHubServiceViewModel}"
     d:DesignHeight="100"
