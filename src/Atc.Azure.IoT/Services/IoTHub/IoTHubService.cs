@@ -162,7 +162,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 return null;
             }
 
-            LogRetrieveIotEdgeDeviceConnectionStringSucceeded(
+            LogRetrieveDeviceConnectionStringSucceeded(
                 ioTHubHostName!,
                 deviceId);
 
@@ -184,8 +184,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     {
         try
         {
-            //TODO: 
-            //LogRetrievingDevices(ioTHubHostName!);
+            LogRetrievingDevices(ioTHubHostName!);
 
             var queryString = onlyIncludeEdgeDevices
                 ? $"{QueryPrefix} WHERE capabilities.iotEdge = true"
@@ -204,8 +203,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 }
             }
 
-            //TODO:
-            //LogRetrieveDevicesSucceeded(ioTHubHostName!, devices.Count);
+            LogRetrieveIotDevicesSucceeded(ioTHubHostName!, devices.Count);
             return devices;
         }
         catch (Exception ex)
