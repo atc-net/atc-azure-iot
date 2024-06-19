@@ -37,10 +37,11 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         ILoggerFactory loggerFactory,
         IIoTHubModuleService iotHubModuleService,
         IotHubOptions options)
+        : this(
+            loggerFactory,
+            iotHubModuleService,
+            options.ConnectionString)
     {
-        logger = loggerFactory.CreateLogger<IoTHubService>();
-        this.iotHubModuleService = iotHubModuleService;
-        ValidateAndAssign(options.ConnectionString, Assign);
     }
 
     public async Task<RegistryStatistics?> GetDeviceRegistryStatistics(

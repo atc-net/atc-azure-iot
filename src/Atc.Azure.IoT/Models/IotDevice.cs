@@ -16,7 +16,7 @@ public class IotDevice
 
     public DateTimeOffset? LastActivityTime { get; set; }
 
-    public IotDeviceAuthenticationType AuthenticationType { get; set; }
+    public IotDeviceAuthenticationMechanism AuthenticationMechanism { get; set; } = new();
 
     public bool IotEdge { get; set; }
 }

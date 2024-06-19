@@ -27,7 +27,13 @@ public static class DeviceExtensions
         if (device.Authentication is not null &&
             Enum<IotDeviceAuthenticationType>.TryParse(device.Authentication.Type.ToString(), out var authenticationType))
         {
-            iotDevice.AuthenticationType = authenticationType;
+            iotDevice.AuthenticationMechanism.AuthenticationType = authenticationType;
+        }
+
+        if (device.Authentication is not null)
+        {
+            iotDevice.AuthenticationMechanism.SymmetricKey = device.Authentication.SymmetricKey;
+            iotDevice.AuthenticationMechanism.X509Thumbprint = device.Authentication.X509Thumbprint;
         }
 
         if (device.Capabilities is not null)
