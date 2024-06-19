@@ -42,7 +42,7 @@ public sealed class IotHubDeviceGetCommand : AsyncCommand<IotHubDeviceCommandSet
         }
 
         logger.LogInformation("Device:\n" +
-                              $"\t\tId: {device.Id}\n" +
+                              $"\t\tId: {device.DeviceId}\n" +
                               $"\t\tConnectionState: {device.ConnectionState}\n" +
                               $"\t\tStatus: {device.Status}\n" +
                               $"\t\tStatusReason: {device.StatusReason}");

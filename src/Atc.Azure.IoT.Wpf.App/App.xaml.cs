@@ -28,17 +28,13 @@ public partial class App
                 services.AddSingleton<AzureResourceStateService>();
                 services.AddSingleton<AzureAuthService>();
                 services.AddSingleton<AzureResourceManagerService>();
+                services.AddSingleton<IDeviceTwinModuleExtractor, DeviceTwinModuleExtractor>();
                 services.AddSingleton<ToastNotificationManager>();
 
                 services.AddSingleton<StatusBarViewModel>();
                 services.AddSingleton<AzureTenantSelectionViewModel>();
-
-                services.AddSingleton<AzureDeviceProvisioningServiceViewModel>();
-
-                services.AddSingleton<AzureIoTHubServiceViewModel>();
-                services.AddSingleton<AzureIoTHubSelectorViewModel>();
-                services.AddSingleton<AzureIoTHubDeviceSelectorViewModel>();
-                services.AddSingleton<AzureIoTHubDeviceViewModel>();
+                services.AddSingleton<DeviceProvisioningServiceViewModel>();
+                services.AddSingleton<IotHubServiceViewModel>();
 
                 services.AddSingleton<IMainWindowViewModelBase, MainWindowViewModel>();
                 services.AddSingleton<MainWindow>();

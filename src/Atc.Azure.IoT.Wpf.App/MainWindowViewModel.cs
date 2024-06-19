@@ -14,8 +14,8 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
     public MainWindowViewModel(
         StatusBarViewModel statusBarViewModel,
         AzureTenantSelectionViewModel azureTenantSelectionViewModel,
-        AzureDeviceProvisioningServiceViewModel azureDeviceProvisioningServiceViewModel,
-        AzureIoTHubServiceViewModel azureIoTHubServiceViewModel)
+        DeviceProvisioningServiceViewModel azureDeviceProvisioningServiceViewModel,
+        IotHubServiceViewModel azureIoTHubServiceViewModel)
     {
         ArgumentNullException.ThrowIfNull(statusBarViewModel);
         ArgumentNullException.ThrowIfNull(azureTenantSelectionViewModel);
@@ -35,9 +35,9 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
 
     public AzureTenantSelectionViewModel AzureTenantSelection { get; set; }
 
-    public AzureDeviceProvisioningServiceViewModel AzureDeviceProvisioningService { get; set; }
+    public DeviceProvisioningServiceViewModel AzureDeviceProvisioningService { get; set; }
 
-    public AzureIoTHubServiceViewModel AzureIoTHubService { get; set; }
+    public IotHubServiceViewModel AzureIoTHubService { get; set; }
 
     public ContextViewMode ContextViewMode
     {
@@ -54,8 +54,7 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
     {
         if (AzureTenantSelection.IsBusy ||
             AzureDeviceProvisioningService.IsBusy ||
-            AzureIoTHubService.IsBusy ||
-            AzureIoTHubService.AzureIoTHubSelector.IsBusy)
+            AzureIoTHubService.IsBusy)
         {
             if (!IsBusy)
             {

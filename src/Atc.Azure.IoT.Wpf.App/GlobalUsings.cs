@@ -10,18 +10,17 @@ global using System.Windows.Input;
 global using System.Windows.Media.Imaging;
 global using System.Windows.Threading;
 global using Atc.Azure.IoT.Extensions;
+global using Atc.Azure.IoT.Extractors;
 global using Atc.Azure.IoT.Models;
 global using Atc.Azure.IoT.Services.IoTHub;
 global using Atc.Azure.IoT.Wpf.App.Dialogs;
 global using Atc.Azure.IoT.Wpf.App.Factories;
-global using Atc.Azure.IoT.Wpf.App.Models;
-global using Atc.Azure.IoT.Wpf.App.RibbonUserControls;
 global using Atc.Azure.IoT.Wpf.App.Services;
 global using Atc.Azure.IoT.Wpf.App.UserControls;
 global using Atc.Azure.IoT.Wpf.App.UserControls.DeviceProvisioning;
 global using Atc.Azure.IoT.Wpf.App.UserControls.IoTHub;
+global using Atc.Azure.IoT.Wpf.App.ViewModels;
 global using Atc.Helpers;
-global using Atc.Wpf;
 global using Atc.Wpf.Collections;
 global using Atc.Wpf.Command;
 global using Atc.Wpf.Controls.Notifications;
@@ -35,9 +34,11 @@ global using Azure.ResourceManager.IotHub;
 global using Azure.ResourceManager.IotHub.Models;
 global using Azure.ResourceManager.Resources;
 global using Azure.ResourceManager.Resources.Models;
+
 global using ControlzEx.Theming;
+
 global using Fluent;
-global using Microsoft.Azure.Devices.Shared;
+
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;

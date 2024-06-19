@@ -62,7 +62,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         }
     }
 
-    public async Task<(bool Succeeded, Device? Device)> CreateDevice(
+    public async Task<(bool Succeeded, IotDevice? Device)> CreateDevice(
         string deviceId,
         bool edgeEnabled,
         CancellationToken cancellationToken = default)
@@ -81,7 +81,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 },
                 cancellationToken);
 
-            return (true, device);
+            return (true, device.ToIotDevice());
         }
         catch (Exception ex)
         {
@@ -94,7 +94,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         }
     }
 
-    public async Task<Device?> GetDevice(
+    public async Task<IotDevice?> GetDevice(
         string deviceId,
         CancellationToken cancellationToken = default)
     {
@@ -123,7 +123,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 ioTHubHostName!,
                 deviceId);
 
-            return device;
+            return device.ToIotDevice();
         }
         catch (Exception ex)
         {
@@ -198,8 +198,8 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 var page = await query.GetNextAsJsonAsync();
                 foreach (var json in page)
                 {
-                    var device = JsonSerializer.Deserialize<IotDevice>(json, jsonSerializerOptions);
-                    devices.Add(device!);
+                    var serializableDevice = JsonSerializer.Deserialize<SerializableDevice>(json, jsonSerializerOptions)!;
+                    devices.Add(serializableDevice.ToIotDevice());
                 }
             }
 

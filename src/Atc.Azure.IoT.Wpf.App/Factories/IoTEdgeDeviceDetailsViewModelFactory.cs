@@ -3,10 +3,12 @@ namespace Atc.Azure.IoT.Wpf.App.Factories;
 
 public static class IoTEdgeDeviceDetailsViewModelFactory
 {
-    public static IoTEdgeDeviceDetailsViewModel Create(
+    public static IotDeviceDetailsViewModel Create(
         EdgeAgentReportedProperties edgeAgentReportedProperties)
     {
-        var result = new IoTEdgeDeviceDetailsViewModel
+        ArgumentNullException.ThrowIfNull(edgeAgentReportedProperties);
+
+        var result = new IotDeviceDetailsViewModel
         {
             OperatingSystem = edgeAgentReportedProperties.Runtime?.Platform.OperatingSystem ?? "N/A",
             OperatingSystemArchitecture = edgeAgentReportedProperties.Runtime?.Platform.OperatingSystemArchitecture ?? "N/A",
@@ -36,7 +38,7 @@ public static class IoTEdgeDeviceDetailsViewModelFactory
     }
 
     private static IoTEdgeModuleViewModel BuildIotEdgeModule(
-        IoT.Models.Module module)
+        Models.Module module)
     {
         var result = new IoTEdgeModuleViewModel
         {
