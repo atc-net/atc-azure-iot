@@ -11,10 +11,11 @@ public abstract class NotifyViewModelBase : ViewModelBase
     }
 
     public void SetBusyFlagAndNotify(
+        object sender,
         bool value)
     {
         IsBusy = value;
-        Messenger.Default.Send(new IsBusyMessage(IsBusy));
+        Messenger.Default.Send(new IsBusyMessage(sender, IsBusy));
     }
 
     public void NotifyError(

@@ -68,7 +68,7 @@ public sealed class AzureTenantSelectionViewModel : NotifyViewModelBase, IDispos
             return;
         }
 
-        SetBusyFlagAndNotify(true);
+        SetBusyFlagAndNotify(this, true);
 
         try
         {
@@ -114,7 +114,7 @@ public sealed class AzureTenantSelectionViewModel : NotifyViewModelBase, IDispos
         }
         finally
         {
-            SetBusyFlagAndNotify(false);
+            SetBusyFlagAndNotify(this, false);
         }
     }
 
@@ -133,7 +133,7 @@ public sealed class AzureTenantSelectionViewModel : NotifyViewModelBase, IDispos
     private async Task ChangeTenant(
         Guid tenantId)
     {
-        SetBusyFlagAndNotify(true);
+        SetBusyFlagAndNotify(this, true);
 
         try
         {
@@ -158,7 +158,7 @@ public sealed class AzureTenantSelectionViewModel : NotifyViewModelBase, IDispos
         }
         finally
         {
-            SetBusyFlagAndNotify(false);
+            SetBusyFlagAndNotify(this, false);
         }
     }
 

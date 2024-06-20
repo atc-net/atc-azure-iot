@@ -52,21 +52,9 @@ public partial class MainWindowViewModel : MainWindowViewModelBase, IMainWindowV
     private void OnBusyMessage(
         IsBusyMessage obj)
     {
-        if (AzureTenantSelection.IsBusy ||
-            AzureDeviceProvisioningService.IsBusy ||
-            AzureIoTHubService.IsBusy)
+        if (obj.Sender is AzureTenantSelectionViewModel)
         {
-            if (!IsBusy)
-            {
-                IsBusy = true;
-            }
-
-            return;
-        }
-
-        if (IsBusy)
-        {
-            IsBusy = false;
+            IsBusy = obj.IsBusy;
         }
     }
 }

@@ -1,3 +1,4 @@
+// ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 namespace Atc.Azure.IoT.Wpf.App.UserControls.IotHub;
 
 public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
@@ -128,9 +129,11 @@ public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
 
     private async Task LoadIotHubs()
     {
-        SetBusyFlagAndNotify(true);
-
-        ClearAll();
+        await Application.Current.Dispatcher.BeginInvokeIfRequired(() =>
+        {
+            IsBusy = true;
+            ClearAll();
+        }).ConfigureAwait(false);
 
         var (succeeded, errorMessage) = await azureResourceManagerService
             .LoadIotHubServices(cancellationTokenSource.Token)
@@ -154,7 +157,7 @@ public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
             }).ConfigureAwait(false);
         }
 
-        SetBusyFlagAndNotify(false);
+        IsBusy = false;
     }
 
     private async Task LoadIotDevices(
@@ -166,7 +169,7 @@ public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
             return;
         }
 
-        SetBusyFlagAndNotify(true);
+        IsBusy = true;
 
         SelectedIotDevice = null;
         SelectedIotDeviceDetails = null;
@@ -195,7 +198,7 @@ public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
             }).ConfigureAwait(false);
         }
 
-        SetBusyFlagAndNotify(false);
+        IsBusy = false;
     }
 
     private async Task LoadIotDeviceDetails(
@@ -207,7 +210,7 @@ public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
             return;
         }
 
-        SetBusyFlagAndNotify(true);
+        IsBusy = true;
 
         SelectedIotDeviceDetails = null;
 
@@ -239,6 +242,6 @@ public class IotHubServiceViewModel : NotifyViewModelBase, IDisposable
             }
         }
 
-        SetBusyFlagAndNotify(false);
+        IsBusy = false;
     }
 }

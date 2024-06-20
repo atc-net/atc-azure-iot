@@ -18,9 +18,11 @@
         <atcValueConverters:ObjectNullToVisibilityCollapsedValueConverter x:Key="ObjectNullToVisibilityCollapsedValueConverter" />
     </UserControl.Resources>
 
-    <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
-        <iotHub:IotHubDeviceOverview DataContext="{Binding Path=.}" Visibility="{Binding ElementName=ucIotHubServiceView, Path=DataContext.SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityVisibleValueConverter}}" />
-        <iotHub:IotHubDeviceDetailsView DataContext="{Binding Path=.}" Visibility="{Binding ElementName=ucIotHubServiceView, Path=DataContext.SelectedIotDeviceDetails, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}" />
-    </atc:UniformSpacingPanel>
+    <atc:BusyOverlay IsBusy="{Binding Path=IsBusy}">
+        <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
+            <iotHub:IotHubDeviceOverview DataContext="{Binding Path=.}" Visibility="{Binding ElementName=ucIotHubServiceView, Path=DataContext.SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityVisibleValueConverter}}" />
+            <iotHub:IotHubDeviceDetailsView DataContext="{Binding Path=.}" Visibility="{Binding ElementName=ucIotHubServiceView, Path=DataContext.SelectedIotDeviceDetails, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}" />
+        </atc:UniformSpacingPanel>
+    </atc:BusyOverlay>
 
 </UserControl>

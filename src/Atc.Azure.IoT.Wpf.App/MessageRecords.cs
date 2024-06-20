@@ -12,6 +12,7 @@ public record SubscriptionsCollectionStateMessage(
     CollectionActionType CollectionActionType);
 
 public record IsBusyMessage(
+    object Sender,
     bool IsBusy);
 
 #pragma warning restore SA1649 // File name should match first type name
