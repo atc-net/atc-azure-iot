@@ -4,7 +4,7 @@ internal static class SerializableDeviceExtensions
 {
     public static IotDevice ToIotDevice(
         this SerializableDevice serializableDevice,
-        string rawJson)
+        string twinJson)
         => new()
         {
             DeviceId = serializableDevice.DeviceId,
@@ -19,6 +19,6 @@ internal static class SerializableDeviceExtensions
                 AuthenticationType = serializableDevice.AuthenticationType,
             },
             IotEdge = serializableDevice.Capabilities?.IotEdge ?? false,
-            RawJson = rawJson,
+            TwinJson = twinJson,
         };
 }

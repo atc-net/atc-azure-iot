@@ -17,6 +17,6 @@
         Margin="10,0"
         Command="{Binding Path=SignInToAzureCommand}"
         Header="Sign In"
-        LargeIcon="pack://application:,,,/Atc.Azure.IoT.Wpf.App;component/Resources/Images/32/AzureSignIn.png" />
+        LargeIcon="/Atc.Azure.IoT.Wpf.App;component/Resources/Images/32/AzureSignIn.png" />
 
 </fluent:RibbonGroupBox>

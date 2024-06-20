@@ -20,5 +20,5 @@ public class IotDevice
 
     public bool IotEdge { get; set; }
 
-    public string RawJson { get; set; } = string.Empty;
+    public string TwinJson { get; set; } = string.Empty;
 }

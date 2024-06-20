@@ -42,7 +42,7 @@ public static class DeviceExtensions
             iotDevice.IotEdge = device.Capabilities.IotEdge;
         }
 
-        iotDevice.RawJson = JsonSerializer.Serialize(device, jsonSerializerOptions);
+        iotDevice.TwinJson = JsonSerializer.Serialize(device, jsonSerializerOptions);
 
         return iotDevice;
     }
