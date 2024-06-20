@@ -20,6 +20,8 @@
         <atcValueConverters:ObjectNullToVisibilityCollapsedValueConverter x:Key="ObjectNullToVisibilityCollapsedValueConverter" />
         <atcValueConverters:FontIconDrawingImageValueConverter x:Key="FontIconImageConverter" />
         <valueConverters:SvgImageOperatingSystemValueConverter x:Key="SvgImageOperatingSystemValueConverter" />
+        <valueConverters:IotEdgeModuleStateToBrushValueConverter x:Key="IotEdgeModuleStateToBrushValueConverter" />
+        <valueConverters:IotEdgeModuleStateToVisibilityVisibleValueConverter x:Key="IotEdgeModuleStateToVisibilityVisibleValueConverter" />
 
         <Style x:Key="Header1TextBlockStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="16" />
@@ -29,20 +31,10 @@
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="Bold" />
         </Style>
-        <Style x:Key="BadgeTextBlockStyle" TargetType="TextBlock">
-            <Setter Property="Background" Value="Blue" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="Padding" Value="5,2" />
-            <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="TextAlignment" Value="Center" />
-            <Setter Property="FontSize" Value="12" />
-        </Style>
         <Style x:Key="BadgeBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="Blue" />
+            <Setter Property="Background" Value="Gray" />
             <Setter Property="CornerRadius" Value="5" />
-            <Setter Property="Padding" Value="5,2" />
+            <Setter Property="Padding" Value="5" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
@@ -65,368 +57,391 @@
         </Style>
 
         <DataTemplate x:Key="IoTEdgeModuleItemTemplate" DataType="{x:Type iotHub:IoTEdgeModuleViewModel}">
-            <atc:GridEx Margin="10" Columns="Auto,10,2*,3*,10,Auto,10,Auto">
+            <Border
+                Background="{DynamicResource AtcApps.Brushes.ThemeBackground1}"
+                BorderThickness="1"
+                CornerRadius="5">
+                <atc:GridEx Margin="10" Columns="Auto,10,2*,3*,10,Auto,10,Auto">
 
-                <!--  TODO: Change IsEnabled to Restart-Command  -->
-                <Button
-                    Grid.Column="0"
-                    Width="32"
-                    Height="32"
-                    Background="Red"
-                    IsEnabled="False">
-                    <Button.Content>
-                        <Image
-                            Width="20"
-                            Height="20"
-                            Source="{Binding Source={x:Static fontIcons:FontMaterialDesignType.Restart}, Converter={StaticResource FontIconImageConverter}}" />
-                    </Button.Content>
-                </Button>
+                    <!--  TODO: Change IsEnabled to Restart-Command  -->
+                    <Button
+                        Grid.Column="0"
+                        Width="32"
+                        Height="32"
+                        Background="Red"
+                        IsEnabled="False">
+                        <Button.Content>
+                            <Image
+                                Width="20"
+                                Height="20"
+                                Source="{Binding Source={x:Static fontIcons:FontMaterialDesignType.Restart}, Converter={StaticResource FontIconImageConverter}}" />
+                        </Button.Content>
+                    </Button>
 
-                <atc:UniformSpacingPanel
-                    Grid.Column="2"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal"
-                    Spacing="10">
-                    <TextBlock Text="{Binding Path=ModuleId}" />
-                    <TextBlock Foreground="Red" Text="{Binding Path=State}" />
-                </atc:UniformSpacingPanel>
+                    <atc:UniformSpacingPanel
+                        Grid.Column="2"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="10">
+                        <TextBlock Text="{Binding Path=ModuleId}" />
+                        <TextBlock
+                            Foreground="Red"
+                            Text="{Binding Path=State}"
+                            Visibility="{Binding Path=State, Converter={StaticResource IotEdgeModuleStateToVisibilityVisibleValueConverter}, ConverterParameter='Failed'}" />
+                    </atc:UniformSpacingPanel>
 
-                <atc:UniformSpacingPanel
-                    Grid.Column="3"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal"
-                    Spacing="10">
-                    <Border Style="{StaticResource BadgeBorderStyle}">
-                        <TextBlock Style="{StaticResource BadgeTextBlockStyle}" Text="{Binding Path=State}" />
-                    </Border>
-                    <Border Style="{StaticResource BadgeBorderStyle}">
-                        <TextBlock Style="{StaticResource BadgeTextBlockStyle}" Text="{Binding Path=ExitCode}" />
-                    </Border>
-                </atc:UniformSpacingPanel>
+                    <StackPanel Grid.Column="3" VerticalAlignment="Center">
 
-                <!--  TODO: Change IsEnabled to ??-Command  -->
-                <Button
-                    Grid.Column="5"
-                    IsEnabled="False"
-                    Style="{StaticResource RoundImage32ButtonStyle}">
-                    <Button.Content>
-                        <Image
-                            Width="20"
-                            Height="20"
-                            Margin="1,0,0,0"
-                            Source="{Binding Source={x:Static fontIcons:FontMaterialDesignType.InformationOutline}, Converter={StaticResource FontIconImageConverter}}" />
-                    </Button.Content>
-                </Button>
+                        <Border
+                            Background="{Binding Path=State, Converter={StaticResource IotEdgeModuleStateToBrushValueConverter}}"
+                            Style="{StaticResource BadgeBorderStyle}"
+                            Visibility="{Binding Path=State, Converter={StaticResource IotEdgeModuleStateToVisibilityVisibleValueConverter}, ConverterParameter='Running,Unknown'}">
+                            <TextBlock Text="{Binding Path=State}" />
+                        </Border>
 
-                <!--  TODO: Change IsEnabled to ??-Command  -->
-                <Button
-                    Grid.Column="7"
-                    IsEnabled="False"
-                    Style="{StaticResource RoundImage32ButtonStyle}">
-                    <Button.Content>
-                        <Image
-                            Width="20"
-                            Height="20"
-                            Margin="1,0,0,0"
-                            Source="{Binding Source={x:Static fontIcons:FontWeatherType.Time4}, Converter={StaticResource FontIconImageConverter}}" />
-                    </Button.Content>
-                </Button>
+                        <atc:UniformSpacingPanel Spacing="10" Visibility="{Binding Path=State, Converter={StaticResource IotEdgeModuleStateToVisibilityVisibleValueConverter}, ConverterParameter='Failed'}">
+                            <Border Background="{Binding Path=State, Converter={StaticResource IotEdgeModuleStateToBrushValueConverter}}" Style="{StaticResource BadgeBorderStyle}">
+                                <TextBlock>
+                                    <TextBlock.Inlines>
+                                        <Run Text="{Binding Path=ExitCode}" />
+                                        <Run Text="-exited" />
+                                    </TextBlock.Inlines>
+                                </TextBlock>
+                            </Border>
 
-            </atc:GridEx>
+                            <Border Background="{Binding Path=State, Converter={StaticResource IotEdgeModuleStateToBrushValueConverter}}" Style="{StaticResource BadgeBorderStyle}">
+                                <TextBlock>
+                                    <TextBlock.Inlines>
+                                        <Run Text="Restart Count: " />
+                                        <Run Text="{Binding Path=RestartCount}" />
+                                    </TextBlock.Inlines>
+                                </TextBlock>
+                            </Border>
+                        </atc:UniformSpacingPanel>
+
+                    </StackPanel>
+
+                    <!--  TODO: Change IsEnabled to ??-Command  -->
+                    <Button
+                        Grid.Column="5"
+                        IsEnabled="False"
+                        Style="{StaticResource RoundImage32ButtonStyle}">
+                        <Button.Content>
+                            <Image
+                                Width="20"
+                                Height="20"
+                                Margin="1,0,0,0"
+                                Source="{Binding Source={x:Static fontIcons:FontMaterialDesignType.InformationOutline}, Converter={StaticResource FontIconImageConverter}}" />
+                        </Button.Content>
+                    </Button>
+
+                    <!--  TODO: Change IsEnabled to ??-Command  -->
+                    <Button
+                        Grid.Column="7"
+                        IsEnabled="False"
+                        Style="{StaticResource RoundImage32ButtonStyle}">
+                        <Button.Content>
+                            <Image
+                                Width="20"
+                                Height="20"
+                                Margin="1,0,0,0"
+                                Source="{Binding Source={x:Static fontIcons:FontWeatherType.Time4}, Converter={StaticResource FontIconImageConverter}}" />
+                        </Button.Content>
+                    </Button>
+
+                </atc:GridEx>
+            </Border>
         </DataTemplate>
 
     </UserControl.Resources>
 
     <!--  ReSharper disable Xaml.PossibleNullReferenceException  -->
-    <atc:GridEx Columns="*" Rows="*">
-        <TabControl
-            Grid.Row="0"
-            Grid.Column="0"
-            TabStripPlacement="Top">
+    <TabControl BorderThickness="0" TabStripPlacement="Top">
 
-            <TabItem Header="Device status">
-                <atc:UniformSpacingPanel
-                    Margin="10"
-                    Orientation="Vertical"
-                    Spacing="10"
-                    Visibility="{Binding Path=SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
+        <TabItem Header="Device status">
+            <atc:UniformSpacingPanel
+                Margin="10"
+                Orientation="Vertical"
+                Spacing="10"
+                Visibility="{Binding Path=SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
 
-                    <TextBlock Style="{StaticResource Header1TextBlockStyle}" Text="Device status" />
+                <TextBlock Style="{StaticResource Header1TextBlockStyle}" Text="Device status" />
 
-                    <atc:GridEx Margin="10" Columns="Auto,10,*,Auto,50,Auto">
+                <atc:GridEx Margin="10" Columns="Auto,10,*,Auto,50,Auto">
 
-                        <!--  TODO: Change IsEnabled to Restart-Command  -->
-                        <Button
-                            Grid.Column="0"
+                    <!--  TODO: Change IsEnabled to Restart-Command  -->
+                    <Button
+                        Grid.Column="0"
+                        Width="32"
+                        Height="32"
+                        Background="Red"
+                        IsEnabled="False">
+                        <Button.Content>
+                            <Image
+                                Width="20"
+                                Height="20"
+                                Source="{Binding Source={x:Static fontIcons:FontMaterialDesignType.Restart}, Converter={StaticResource FontIconImageConverter}}" />
+                        </Button.Content>
+                    </Button>
+
+                    <atc:UniformSpacingPanel
+                        Grid.Column="2"
+                        ItemVerticalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="10">
+                        <TextBlock
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Text="Device ID:" />
+                        <TextBlock FontSize="16" Text="{Binding Path=SelectedIotDevice.DeviceId, FallbackValue='Test-Device'}" />
+                    </atc:UniformSpacingPanel>
+
+                    <atc:UniformSpacingPanel
+                        Grid.Column="3"
+                        Orientation="Horizontal"
+                        Spacing="10">
+                        <Image
                             Width="32"
                             Height="32"
-                            Background="Red"
-                            IsEnabled="False">
-                            <Button.Content>
-                                <Image
-                                    Width="20"
-                                    Height="20"
-                                    Source="{Binding Source={x:Static fontIcons:FontMaterialDesignType.Restart}, Converter={StaticResource FontIconImageConverter}}" />
-                            </Button.Content>
-                        </Button>
-
-                        <atc:UniformSpacingPanel
-                            Grid.Column="2"
-                            ItemVerticalAlignment="Center"
-                            Orientation="Horizontal"
-                            Spacing="10">
-                            <TextBlock
-                                FontSize="16"
-                                FontWeight="Bold"
-                                Text="Device ID:" />
-                            <TextBlock FontSize="16" Text="{Binding Path=SelectedIotDevice.DeviceId, FallbackValue='Test-Device'}" />
-                        </atc:UniformSpacingPanel>
-
-                        <atc:UniformSpacingPanel
-                            Grid.Column="3"
-                            Orientation="Horizontal"
-                            Spacing="10">
-                            <Image
-                                Width="32"
-                                Height="32"
-                                Source="{Binding Source={x:Static fontIcons:IcoFontType.Gears}, Converter={StaticResource FontIconImageConverter}}" />
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock FontWeight="Bold" Text="Runtime Status:" />
-                                <TextBlock Text="{Binding Path=SelectedIotDeviceDetails.RuntimeStatusCode, FallbackValue='406'}" />
-                            </StackPanel>
-                        </atc:UniformSpacingPanel>
-
-                        <atc:UniformSpacingPanel
-                            Grid.Column="5"
-                            Orientation="Horizontal"
-                            Spacing="10">
-                            <atc:SvgImage
-                                Width="32"
-                                Height="32"
-                                OverrideColor="{DynamicResource AtcApps.Colors.ThemeForeground}"
-                                Source="{Binding Path=SelectedIotDeviceDetails.OperatingSystem, Converter={StaticResource SvgImageOperatingSystemValueConverter}, FallbackValue='/Atc.Azure.IoT.Wpf.App;component/Resources/Images/32/linux.svg'}" />
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock FontWeight="Bold" Text="Platform:" />
-                                <TextBlock>
-                                    <Run Text="{Binding Path=SelectedIotDeviceDetails.OperatingSystem, FallbackValue='linux'}" />
-                                    <Run Text="{Binding Path=SelectedIotDeviceDetails.OperatingSystemArchitecture, FallbackValue='x86'}" />
-                                </TextBlock>
-                            </StackPanel>
-                        </atc:UniformSpacingPanel>
-
-                    </atc:GridEx>
-
-                    <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
-                        <atc:UniformSpacingPanel Orientation="Horizontal" Spacing="10">
-                            <Image
-                                Width="20"
-                                Height="20"
-                                Source="{Binding Source={x:Static fontIcons:IcoFontType.Gear}, Converter={StaticResource FontIconImageConverter}}" />
-                            <TextBlock Style="{StaticResource Header2TextBlockStyle}" Text="System modules" />
-                        </atc:UniformSpacingPanel>
-                        <ItemsControl
-                            Margin="30,0,0,0"
-                            ItemTemplate="{StaticResource IoTEdgeModuleItemTemplate}"
-                            ItemsSource="{Binding Path=SelectedIotDeviceDetails.SystemModules}" />
+                            Source="{Binding Source={x:Static fontIcons:IcoFontType.Gears}, Converter={StaticResource FontIconImageConverter}}" />
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock FontWeight="Bold" Text="Runtime Status:" />
+                            <TextBlock Text="{Binding Path=SelectedIotDeviceDetails.RuntimeStatusCode, FallbackValue='406'}" />
+                        </StackPanel>
                     </atc:UniformSpacingPanel>
 
-                    <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
-                        <atc:UniformSpacingPanel Orientation="Horizontal" Spacing="10">
-                            <Image
-                                Width="20"
-                                Height="20"
-                                Source="{Binding Source={x:Static fontIcons:FontAwesomeSolidType.User}, Converter={StaticResource FontIconImageConverter}}" />
-                            <TextBlock Style="{StaticResource Header2TextBlockStyle}" Text="Custom modules" />
-                        </atc:UniformSpacingPanel>
-                        <ItemsControl
-                            Margin="30,0,0,0"
-                            ItemTemplate="{StaticResource IoTEdgeModuleItemTemplate}"
-                            ItemsSource="{Binding Path=SelectedIotDeviceDetails.CustomModules}" />
+                    <atc:UniformSpacingPanel
+                        Grid.Column="5"
+                        Orientation="Horizontal"
+                        Spacing="10">
+                        <atc:SvgImage
+                            Width="32"
+                            Height="32"
+                            OverrideColor="{DynamicResource AtcApps.Colors.ThemeForeground}"
+                            Source="{Binding Path=SelectedIotDeviceDetails.OperatingSystem, Converter={StaticResource SvgImageOperatingSystemValueConverter}, FallbackValue='/Atc.Azure.IoT.Wpf.App;component/Resources/Images/32/linux.svg'}" />
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock FontWeight="Bold" Text="Platform:" />
+                            <TextBlock>
+                                <Run Text="{Binding Path=SelectedIotDeviceDetails.OperatingSystem, FallbackValue='linux'}" />
+                                <Run Text="{Binding Path=SelectedIotDeviceDetails.OperatingSystemArchitecture, FallbackValue='x86'}" />
+                            </TextBlock>
+                        </StackPanel>
                     </atc:UniformSpacingPanel>
 
+                </atc:GridEx>
+
+                <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
+                    <atc:UniformSpacingPanel Orientation="Horizontal" Spacing="10">
+                        <Image
+                            Width="20"
+                            Height="20"
+                            Source="{Binding Source={x:Static fontIcons:IcoFontType.Gear}, Converter={StaticResource FontIconImageConverter}}" />
+                        <TextBlock Style="{StaticResource Header2TextBlockStyle}" Text="System modules" />
+                    </atc:UniformSpacingPanel>
+                    <ItemsControl
+                        Margin="30,0,0,0"
+                        ItemTemplate="{StaticResource IoTEdgeModuleItemTemplate}"
+                        ItemsSource="{Binding Path=SelectedIotDeviceDetails.SystemModules}" />
                 </atc:UniformSpacingPanel>
-            </TabItem>
 
-            <TabItem Header="Device identity">
-                <atc:UniformSpacingPanel
-                    Margin="10"
-                    Orientation="Vertical"
-                    Spacing="10"
-                    Visibility="{Binding Path=SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
-
-                    <TextBlock Style="{StaticResource Header1TextBlockStyle}" Text="Device identity" />
-
-                    <atc:LabelTextInfo
-                        HideAreas="InformationAndValidation"
-                        LabelText="DeviceId"
-                        Text="{Binding Path=SelectedIotDevice.DeviceId, FallbackValue='Test-Device'}" />
-
-
+                <atc:UniformSpacingPanel Orientation="Vertical" Spacing="10">
+                    <atc:UniformSpacingPanel Orientation="Horizontal" Spacing="10">
+                        <Image
+                            Width="20"
+                            Height="20"
+                            Source="{Binding Source={x:Static fontIcons:FontAwesomeSolidType.User}, Converter={StaticResource FontIconImageConverter}}" />
+                        <TextBlock Style="{StaticResource Header2TextBlockStyle}" Text="Custom modules" />
+                    </atc:UniformSpacingPanel>
+                    <ItemsControl
+                        Margin="30,0,0,0"
+                        ItemTemplate="{StaticResource IoTEdgeModuleItemTemplate}"
+                        ItemsSource="{Binding Path=SelectedIotDeviceDetails.CustomModules}" />
                 </atc:UniformSpacingPanel>
-            </TabItem>
 
-            <TabItem Header="Device twin">
-                <atc:UniformSpacingPanel
-                    Margin="10"
-                    Orientation="Vertical"
-                    Spacing="10"
-                    Visibility="{Binding Path=SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
+            </atc:UniformSpacingPanel>
+        </TabItem>
 
-                    <TextBlock Style="{StaticResource Header1TextBlockStyle}" Text="Device twin" />
+        <TabItem Header="Device identity">
+            <atc:UniformSpacingPanel
+                Margin="10"
+                Orientation="Vertical"
+                Spacing="10"
+                Visibility="{Binding Path=SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
 
-                    <atc:RichTextBoxEx
-                        Background="{DynamicResource AtcApps.Brushes.ThemeBackground}"
-                        FontFamily="Courier New"
-                        Foreground="{DynamicResource AtcApps.Brushes.Text}"
-                        IsReadOnly="True"
-                        Text="{Binding Path=SelectedIotDevice.TwinJson}"
-                        TextFormatter="{x:Static textFormatters:JsonFormatter.Instance}"
-                        ThemeMode="Dark"
-                        Visibility="{Binding Path=SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}" />
+                <TextBlock Style="{StaticResource Header1TextBlockStyle}" Text="Device identity" />
 
-                </atc:UniformSpacingPanel>
-            </TabItem>
+                <atc:LabelTextInfo
+                    HideAreas="InformationAndValidation"
+                    LabelText="DeviceId"
+                    Text="{Binding Path=SelectedIotDevice.DeviceId, FallbackValue='Test-Device'}" />
 
-            <TabItem Header="Module identities">
-                <atc:UniformSpacingPanel
-                    Margin="10"
-                    Orientation="Vertical"
-                    Spacing="10"
+
+            </atc:UniformSpacingPanel>
+        </TabItem>
+
+        <TabItem Header="Device twin">
+            <atc:UniformSpacingPanel
+                Margin="10"
+                Orientation="Vertical"
+                Spacing="10"
+                Visibility="{Binding Path=SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
+
+                <TextBlock Style="{StaticResource Header1TextBlockStyle}" Text="Device twin" />
+
+                <atc:RichTextBoxEx
+                    Background="{DynamicResource AtcApps.Brushes.ThemeBackground}"
+                    FontFamily="Courier New"
+                    Foreground="{DynamicResource AtcApps.Brushes.Text}"
+                    IsReadOnly="True"
+                    Text="{Binding Path=SelectedIotDevice.TwinJson}"
+                    TextFormatter="{x:Static textFormatters:JsonFormatter.Instance}"
+                    ThemeMode="Dark"
+                    Visibility="{Binding Path=SelectedIotDevice, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}" />
+
+            </atc:UniformSpacingPanel>
+        </TabItem>
+
+        <TabItem Header="Module identities">
+            <atc:UniformSpacingPanel
+                Margin="10"
+                Orientation="Vertical"
+                Spacing="10"
+                Visibility="{Binding Path=SelectedIotDeviceDetails, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
+
+                <TextBlock Style="{StaticResource Header1TextBlockStyle}" Text="Module identities" />
+
+                <GroupBox
+                    Padding="10"
+                    Header="System modules"
                     Visibility="{Binding Path=SelectedIotDeviceDetails, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
+                    <ListView
+                        MinHeight="200"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        AlternationCount="0"
+                        FontFamily="Modern"
+                        ItemsSource="{Binding Path=SelectedIotDeviceDetails.SystemModules}"
+                        SelectionMode="Single">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=ModuleId}"
+                                    Header="ModuleId" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=UpstreamProtocol}"
+                                    Header="UpstreamProtocol" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=StartupOrder}"
+                                    Header="StartupOrder" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=ContainerImage}"
+                                    Header="ContainerImage" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=State}"
+                                    Header="State" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=LastExitTimeUtc}"
+                                    Header="LastExitTimeUtc" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=LastStartTimeUtc}"
+                                    Header="LastStartTimeUtc" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=LastRestartTimeUtc}"
+                                    Header="LastRestartTimeUtc" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=RestartCount}"
+                                    Header="RestartCount" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=ExitCode}"
+                                    Header="ExitCode" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=StatusDescription}"
+                                    Header="StatusDescription" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
 
-                    <TextBlock Style="{StaticResource Header1TextBlockStyle}" Text="Module identities" />
+                <GroupBox
+                    Padding="10"
+                    Header="Custom modules"
+                    Visibility="{Binding Path=SelectedIotDeviceDetails, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
+                    <ListView
+                        MinHeight="200"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        AlternationCount="0"
+                        FontFamily="Modern"
+                        ItemsSource="{Binding Path=SelectedIotDeviceDetails.CustomModules}"
+                        SelectionMode="Single">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=ModuleId}"
+                                    Header="ModuleId" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=UpstreamProtocol}"
+                                    Header="UpstreamProtocol" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=StartupOrder}"
+                                    Header="StartupOrder" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=ContainerImage}"
+                                    Header="ContainerImage" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=State}"
+                                    Header="State" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=LastExitTimeUtc}"
+                                    Header="LastExitTimeUtc" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=LastStartTimeUtc}"
+                                    Header="LastStartTimeUtc" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=LastRestartTimeUtc}"
+                                    Header="LastRestartTimeUtc" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=RestartCount}"
+                                    Header="RestartCount" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=ExitCode}"
+                                    Header="ExitCode" />
+                                <GridViewColumn
+                                    Width="Auto"
+                                    DisplayMemberBinding="{Binding Path=StatusDescription}"
+                                    Header="StatusDescription" />
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </GroupBox>
 
-                    <GroupBox
-                        Padding="10"
-                        Header="System modules"
-                        Visibility="{Binding Path=SelectedIotDeviceDetails, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
-                        <ListView
-                            MinHeight="200"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            AlternationCount="0"
-                            FontFamily="Modern"
-                            ItemsSource="{Binding Path=SelectedIotDeviceDetails.SystemModules}"
-                            SelectionMode="Single">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=ModuleId}"
-                                        Header="ModuleId" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=UpstreamProtocol}"
-                                        Header="UpstreamProtocol" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=StartupOrder}"
-                                        Header="StartupOrder" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=ContainerImage}"
-                                        Header="ContainerImage" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=State}"
-                                        Header="State" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=LastExitTimeUtc}"
-                                        Header="LastExitTimeUtc" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=LastStartTimeUtc}"
-                                        Header="LastStartTimeUtc" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=LastRestartTimeUtc}"
-                                        Header="LastRestartTimeUtc" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=RestartCount}"
-                                        Header="RestartCount" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=ExitCode}"
-                                        Header="ExitCode" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=StatusDescription}"
-                                        Header="StatusDescription" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </GroupBox>
+            </atc:UniformSpacingPanel>
+        </TabItem>
 
-                    <GroupBox
-                        Padding="10"
-                        Header="Custom modules"
-                        Visibility="{Binding Path=SelectedIotDeviceDetails, Converter={StaticResource ObjectNullToVisibilityCollapsedValueConverter}}">
-                        <ListView
-                            MinHeight="200"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            AlternationCount="0"
-                            FontFamily="Modern"
-                            ItemsSource="{Binding Path=SelectedIotDeviceDetails.CustomModules}"
-                            SelectionMode="Single">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=ModuleId}"
-                                        Header="ModuleId" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=UpstreamProtocol}"
-                                        Header="UpstreamProtocol" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=StartupOrder}"
-                                        Header="StartupOrder" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=ContainerImage}"
-                                        Header="ContainerImage" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=State}"
-                                        Header="State" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=LastExitTimeUtc}"
-                                        Header="LastExitTimeUtc" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=LastStartTimeUtc}"
-                                        Header="LastStartTimeUtc" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=LastRestartTimeUtc}"
-                                        Header="LastRestartTimeUtc" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=RestartCount}"
-                                        Header="RestartCount" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=ExitCode}"
-                                        Header="ExitCode" />
-                                    <GridViewColumn
-                                        Width="Auto"
-                                        DisplayMemberBinding="{Binding Path=StatusDescription}"
-                                        Header="StatusDescription" />
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </GroupBox>
+    </TabControl>
 
-                </atc:UniformSpacingPanel>
-            </TabItem>
-
-        </TabControl>
-    </atc:GridEx>
+    <!--</atc:GridEx>-->
     <!--  ReSharper restore Xaml.PossibleNullReferenceException  -->
 
 </UserControl>
