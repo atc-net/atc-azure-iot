@@ -2,9 +2,9 @@ namespace Atc.Azure.IoT.Wpf.App;
 
 public partial class MainWindowViewModel
 {
-    public IRelayCommand OpenApplicationAboutCommand => new RelayCommand(OpenApplicationAboutCommandHandler);
+    public static IRelayCommand OpenApplicationAboutCommand => new RelayCommand(OpenApplicationAboutCommandHandler);
 
-    private void OpenApplicationAboutCommandHandler()
+    private static void OpenApplicationAboutCommandHandler()
     {
         // ReSharper disable once UseObjectOrCollectionInitializer
         var aboutBoxDialog = new AboutBoxDialog();
