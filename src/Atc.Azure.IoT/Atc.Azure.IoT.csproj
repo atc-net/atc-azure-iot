@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <PackageId>Atc.Azure.IoT</PackageId>
     <PackageTags>azure;iot;dps;enrollment;iotedge</PackageTags>
     <Description>Atc.Azure.IoT contains common services for Azure IotHub, DeviceProvisioningService (DPS), Iot edge devices, modules, and device twins.</Description>
@@ -13,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Atc" Version="2.0.472" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Azure.Devices" Version="1.39.1" />
+    <PackageReference Include="Atc" Version="2.0.552" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Microsoft.Azure.Devices" Version="1.40.0" />
     <PackageReference Include="Microsoft.Azure.Devices.Provisioning.Security.Tpm" Version="1.14.4" />
     <PackageReference Include="Microsoft.Azure.Devices.Provisioning.Service" Version="1.18.4" />
   </ItemGroup>

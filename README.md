@@ -651,7 +651,7 @@ Once you are ready to deploy the OpcPublisher module, there are several requirem
 
 # Requirements
 
-* [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+* [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 
 # How to contribute
 
