@@ -1,0 +1,29 @@
+<Solution>
+  <Folder Name="/docs/">
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/sample/" />
+  <Folder Name="/sample/src/">
+    <Project Path="sample/src/Atc.Azure.Iot.Certificate.Sample/Atc.Azure.Iot.Certificate.Sample.csproj" />
+    <Project Path="sample/src/Atc.Azure.Iot.Sample.Modules.Contracts/Atc.Azure.Iot.Sample.Modules.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/sample/src/IoTEdgeModules/">
+    <File Path="sample/src/IoTEdgeModules/deployment.debug.template.json" />
+    <File Path="sample/src/IoTEdgeModules/deployment.template.emulation.manifest.json" />
+    <File Path="sample/src/IoTEdgeModules/deployment.template.json" />
+  </Folder>
+  <Folder Name="/sample/src/IoTEdgeModules/modules/">
+    <Project Path="sample/src/IoTEdgeModules/modules/opcpublishernodemanagermodule/OpcPublisherNodeManagerModule.csproj" />
+    <Project Path="sample/src/IoTEdgeModules/modules/simulationmodule/SimulationModule.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Atc.Azure.IoT.CLI/Atc.Azure.IoT.CLI.csproj" />
+    <Project Path="src/Atc.Azure.IoT/Atc.Azure.IoT.csproj" />
+    <Project Path="src/Atc.Azure.IoTEdge.DeviceEmulator/Atc.Azure.IoTEdge.DeviceEmulator.csproj" />
+    <Project Path="src/Atc.Azure.IoTEdge/Atc.Azure.IoTEdge.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/Atc.Azure.IoT.Tests/Atc.Azure.IoT.Tests.csproj" />
+    <Project Path="test/Atc.Azure.IotEdge.Client.Tests/Atc.Azure.IotEdge.Client.Tests.csproj" />
+  </Folder>
+</Solution>
