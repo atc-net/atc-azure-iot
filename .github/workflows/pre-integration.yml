@@ -25,27 +25,27 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: 🧹 Clean non-wpf solution
-        run: dotnet clean Atc.Azure.IoT-WithoutWpf.sln -c Release && dotnet nuget locals all --clear
+        run: dotnet clean Atc.Azure.IoT-WithoutWpf.slnx -c Release && dotnet nuget locals all --clear
         if: runner.os != 'Windows'
 
       - name: 🧹 Clean all
-        run: dotnet clean Atc.Azure.IoT.sln -c Release && dotnet nuget locals all --clear
+        run: dotnet clean Atc.Azure.IoT.slnx -c Release && dotnet nuget locals all --clear
         if: runner.os == 'Windows'
 
       - name: 🔁 Restore packages non-wpf solution
-        run: dotnet restore Atc.Azure.IoT-WithoutWpf.sln
+        run: dotnet restore Atc.Azure.IoT-WithoutWpf.slnx
         if: runner.os != 'Windows'
 
       - name: 🔁 Restore packages all
-        run: dotnet restore Atc.Azure.IoT.sln
+        run: dotnet restore Atc.Azure.IoT.slnx
         if: runner.os == 'Windows'
 
       - name: 🛠️ Build non-wpf solution
-        run: dotnet build Atc.Azure.IoT-WithoutWpf.sln -c Release --no-restore
+        run: dotnet build Atc.Azure.IoT-WithoutWpf.slnx -c Release --no-restore
         if: runner.os != 'Windows'
 
       - name: 🛠️ Build all
-        run: dotnet build Atc.Azure.IoT.sln -c Release --no-restore
+        run: dotnet build Atc.Azure.IoT.slnx -c Release --no-restore
         if: runner.os == 'Windows'
 
   dotnet-test:
@@ -64,10 +64,10 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: 🔁 Restore packages
-        run: dotnet restore Atc.Azure.IoT.sln
+        run: dotnet restore Atc.Azure.IoT.slnx
 
       - name: 🛠️ Build all
-        run: dotnet build Atc.Azure.IoT.sln -c Release --no-restore /p:UseSourceLink=true
+        run: dotnet build Atc.Azure.IoT.slnx -c Release --no-restore /p:UseSourceLink=true
 
       - name: 🧪 Run unit tests
-        run: dotnet test Atc.Azure.IoT.sln -c Release --no-build --filter "Category!=Integration"
+        run: dotnet test Atc.Azure.IoT.slnx -c Release --no-build --filter "Category!=Integration"

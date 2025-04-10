@@ -42,16 +42,16 @@ jobs:
           distribution: 'zulu'
 
       - name: 🧹 Clean
-        run: dotnet clean Atc.Azure.IoT.sln -c Release && dotnet nuget locals all --clear
+        run: dotnet clean Atc.Azure.IoT.slnx -c Release && dotnet nuget locals all --clear
 
       - name: 🔁 Restore packages
-        run: dotnet restore Atc.Azure.IoT.sln
+        run: dotnet restore Atc.Azure.IoT.slnx
 
       - name: 🛠️ Build
-        run: dotnet build Atc.Azure.IoT.sln -c Release --no-restore /p:UseSourceLink=true
+        run: dotnet build Atc.Azure.IoT.slnx -c Release --no-restore /p:UseSourceLink=true
 
       - name: 🧪 Run unit tests
-        run: dotnet test Atc.Azure.IoT.sln -c Release --no-build --filter "Category!=Integration"
+        run: dotnet test Atc.Azure.IoT.slnx -c Release --no-build --filter "Category!=Integration"
 
       - name: 🌩️ SonarCloud install scanner
         run: dotnet tool install --global dotnet-sonarscanner
@@ -63,7 +63,7 @@ jobs:
         shell: pwsh
         run: |
           dotnet sonarscanner begin /k:"atc-net_atc-azure-iot" /o:"atc-net" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
-          dotnet build Atc.Azure.IoT.sln -c Release /p:UseSourceLink=true --no-restore
+          dotnet build Atc.Azure.IoT.slnx -c Release /p:UseSourceLink=true --no-restore
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: ⏩ Merge to stable-branch
@@ -75,7 +75,7 @@ jobs:
           git push origin stable
 
       - name: 🗳️ Creating library package for pre-release
-        run: dotnet pack Atc.Azure.IoT.sln -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH_NAME
+        run: dotnet pack Atc.Azure.IoT.slnx -c Release --no-restore -o ${GITHUB_WORKSPACE}/packages -p:RepositoryBranch=$BRANCH_NAME
 
       - name: 📦 Push packages to GitHub Package Registry
         run: |
