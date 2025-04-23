@@ -4,42 +4,42 @@ namespace Atc.Azure.IoT.Models;
 public record EdgeAgentDesiredProperties();
 
 public record LastDesiredStatus(
-    [property: JsonPropertyName(DeviceTwinPropertyNames.LastDesiredStatusCode)] int RuntimeStatusCode,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.LastDesiredStatusDescription)] string RuntimeStatusDescription = "");
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.LastDesiredStatusCode)] int RuntimeStatusCode,
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.LastDesiredStatusDescription)] string RuntimeStatusDescription = "");
 
 [SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "OK - No Keyword.")]
 public record Module(
     [property: JsonIgnore] string Name,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleExitCode)] int ExitCode,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleStatusDescription)] string StatusDescription,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleRuntimeStatus)] string RuntimeStatus,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleLastExitTimeUtc)] DateTimeOffset? LastExitTimeUtc,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleLastStartTimeUtc)] DateTimeOffset? LastStartTimeUtc,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleLastRestartTimeUtc)] DateTimeOffset? LastRestartTimeUtc,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleRestartCount)] int RestartCount,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleStartupOrder)] int StartupOrder,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleSettings)] ModuleSettings Settings,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleEnvironment)] ModuleEnvironment? Environment);
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleExitCode)] int ExitCode,
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleStatusDescription)] string StatusDescription,
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleRuntimeStatus)] string RuntimeStatus,
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleLastExitTimeUtc)] DateTimeOffset? LastExitTimeUtc,
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleLastStartTimeUtc)] DateTimeOffset? LastStartTimeUtc,
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleLastRestartTimeUtc)] DateTimeOffset? LastRestartTimeUtc,
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleRestartCount)] int RestartCount,
+    [property: JsonPropertyName(PropertyNames.ModuleStartupOrder)] int StartupOrder,
+    [property: JsonPropertyName(PropertyNames.ModuleSettings)] ModuleSettings Settings,
+    [property: JsonPropertyName(PropertyNames.ModuleEnvironment)] ModuleEnvironment? Environment);
 
 public record ModuleEnvironment(
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleEnvironmentUpstreamProtocol)] UpstreamProtocol? UpstreamProtocol);
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleEnvironmentUpstreamProtocol)] UpstreamProtocol? UpstreamProtocol);
 
 public record ModuleSettings(
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleSettingsImage)] string Image);
+    [property: JsonPropertyName(PropertyNames.ModuleSettingsImage)] string Image);
 
 public record Platform(
-    [property: JsonPropertyName(DeviceTwinPropertyNames.PlatformOs)] string OperatingSystem,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.PlatformArchitecture)] string OperatingSystemArchitecture);
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.PlatformOs)] string OperatingSystem,
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.PlatformArchitecture)] string OperatingSystemArchitecture);
 
 public record EdgeAgentReportedProperties(
-    [property: JsonPropertyName(DeviceTwinPropertyNames.Runtime)] Runtime? Runtime,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.LastDesiredStatus)] LastDesiredStatus? LastDesiredStatus,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.SystemModules), JsonConverter(typeof(JsonModulesConverter))] List<Module>? SystemModules,
-    [property: JsonPropertyName(DeviceTwinPropertyNames.Modules), JsonConverter(typeof(JsonModulesConverter))] List<Module>? Modules);
+    [property: JsonPropertyName(PropertyNames.Runtime)] Runtime? Runtime,
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.LastDesiredStatus)] LastDesiredStatus? LastDesiredStatus,
+    [property: JsonPropertyName(PropertyNames.SystemModules), JsonConverter(typeof(JsonModulesConverter))] List<Module>? SystemModules,
+    [property: JsonPropertyName(PropertyNames.Modules), JsonConverter(typeof(JsonModulesConverter))] List<Module>? Modules);
 
 [SuppressMessage("Naming", "CA1724:Type Names Should Not Match Namespaces", Justification = "OK - No Keyword.")]
 public record Runtime(
-    [property: JsonPropertyName(DeviceTwinPropertyNames.Platform)] Platform Platform);
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.Platform)] Platform Platform);
 
 public record UpstreamProtocol(
-    [property: JsonPropertyName(DeviceTwinPropertyNames.ModuleEnvironmentUpstreamProtocolValue)] string Value);
+    [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleEnvironmentUpstreamProtocolValue)] string Value);
