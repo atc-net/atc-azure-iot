@@ -30,13 +30,13 @@ public partial class AzureIoTHubService : IAzureIoTHubService
         {
             rootNode = JsonNode.Parse(templateContent);
 
-            var modulesContent = rootNode!["modulesContent"];
-            var edgeAgentDesired = modulesContent![EdgeAgentConstants.ModuleId]!["properties.desired"];
-            var edgeAgentModulesSection = edgeAgentDesired!["modules"];
+            var modulesContent = rootNode![PropertyNames.Manifest.ModulesContent];
+            var edgeAgentDesired = modulesContent![EdgeAgentConstants.ModuleId]![PropertyNames.Manifest.ModulesContent];
+            var edgeAgentModulesSection = edgeAgentDesired![PropertyNames.Modules];
 
             foreach (var customModule in edgeAgentModulesSection!.AsObject().AsEnumerable())
             {
-                var settings = customModule.Value!["settings"];
+                var settings = customModule.Value![PropertyNames.ModuleSettings];
                 settings!["image"] = "wardsco/sleep:latest";
             }
 
