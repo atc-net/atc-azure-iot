@@ -11,7 +11,7 @@ public sealed partial class PulsJob
     [LoggerMessage(
         EventId = LoggingEventIdConstants.JobStarted,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - '{jobName}' started.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - '{JobName}' started.")]
     private partial void LogJobStarted(
         string jobName,
         [CallerMemberName] string callerMethodName = "",
@@ -20,7 +20,7 @@ public sealed partial class PulsJob
     [LoggerMessage(
         EventId = LoggingEventIdConstants.JobEnded,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - '{jobName}' ended.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - '{JobName}' ended.")]
     private partial void LogJobEnded(
         string jobName,
         [CallerMemberName] string callerMethodName = "",
@@ -29,7 +29,7 @@ public sealed partial class PulsJob
     [LoggerMessage(
         EventId = Atc.Azure.IoTEdge.LoggingEventIdConstants.FailedToAcquireModuleClient,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to acquire ModuleClient for the job '{jobName}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failed to acquire ModuleClient for the job '{JobName}'.")]
     private partial void LogFailedToAcquireModuleClient(
         string jobName,
         [CallerMemberName] string callerMethodName = "",
@@ -38,7 +38,7 @@ public sealed partial class PulsJob
     [LoggerMessage(
         EventId = LoggingEventIdConstants.UnhandledExceptionInJob,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Unhandled exception occurred in job '{jobName}' - '{errorMessage}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Unhandled exception occurred in job '{JobName}' - '{ErrorMessage}'.")]
     private partial void LogUnhandledExceptionInJob(
         string jobName,
         string? errorMessage,

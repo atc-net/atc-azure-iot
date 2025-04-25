@@ -11,7 +11,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerClientCreated,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Successfully created docker client.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Successfully created docker client.")]
     private partial void LogDockerClientCreated(
         [CallerMemberName] string callerMethodName = "",
         [CallerLineNumber] int callerLineNumber = 0);
@@ -19,7 +19,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerImageDownloadStarted,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Started downloading docker image '{imageName}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Started downloading docker image '{ImageName}'.")]
     private partial void LogDockerImageDownloadStarted(
         string imageName,
         [CallerMemberName] string callerMethodName = "",
@@ -28,7 +28,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerImageDownloadSucceeded,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Successfully downloaded docker image '{imageName}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Successfully downloaded docker image '{ImageName}'.")]
     private partial void LogDockerImageDownloadSucceeded(
         string imageName,
         [CallerMemberName] string callerMethodName = "",
@@ -37,7 +37,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerImageDownloadStatus,
         Level = LogLevel.Trace,
-        Message = "{callerMethodName}({callerLineNumber}) - -> {message}")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - -> {Message}")]
     private partial void LogDockerImageDownloadStatus(
         string message,
         [CallerMemberName] string callerMethodName = "",
@@ -46,7 +46,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerImageDownloadFailed,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to download docker image '{imageName}': '{errorMessage}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failed to download docker image '{ImageName}': '{ErrorMessage}'.")]
     private partial void LogDockerImageDownloadFailed(
         string imageName,
         string errorMessage,
@@ -56,7 +56,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerCreationStarted,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Started creating container '{containerName}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Started creating container '{ContainerName}'.")]
     private partial void LogContainerCreationStarted(
         string containerName,
         [CallerMemberName] string callerMethodName = "",
@@ -65,7 +65,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerCreationSucceeded,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Successfully created container '{containerName}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Successfully created container '{ContainerName}'.")]
     private partial void LogContainerCreationSucceeded(
         string containerName,
         [CallerMemberName] string callerMethodName = "",
@@ -74,7 +74,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerCreationFailed,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to create container '{containerName}': '{errorMessage}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failed to create container '{ContainerName}': '{errorMessage}'.")]
     private partial void LogContainerCreationFailed(
         string containerName,
         string errorMessage,
@@ -84,7 +84,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerStarting,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Starting container '{containerName}' with containerId '{containerId}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Starting container '{ContainerName}' with containerId '{ContainerId}'.")]
     private partial void LogContainerStarting(
         string containerName,
         string containerId,
@@ -94,7 +94,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerStartSucceeded,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Successfully started container '{containerName}' with containerId '{containerId}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Successfully started container '{ContainerName}' with containerId '{ContainerId}'.")]
     private partial void LogContainerStartSucceeded(
         string containerName,
         string containerId,
@@ -104,7 +104,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerStartFailed,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to start container '{containerName}' with containerId '{containerId}': '{errorMessage}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failed to start container '{ContainerName}' with containerId '{ContainerId}': '{ErrorMessage}'.")]
     private partial void LogContainerStartFailed(
         string containerName,
         string containerId,
@@ -115,7 +115,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerStopMissingContainerId,
         Level = LogLevel.Warning,
-        Message = "{callerMethodName}({callerLineNumber}) - Can not stop container '{containerName}' due to missing containerId.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Can not stop container '{ContainerName}' due to missing ContainerId.")]
     private partial void LogContainerStopMissingContainerId(
         string containerName,
         [CallerMemberName] string callerMethodName = "",
@@ -124,7 +124,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerStopping,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Stopping container '{containerName}' with containerId '{containerId}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Stopping container '{ContainerName}' with containerId '{ContainerId}'.")]
     private partial void LogContainerStopping(
         string containerName,
         string containerId,
@@ -134,7 +134,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerStopSucceeded,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Successfully stopped container '{containerName}' with containerId '{containerId}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Successfully stopped container '{ContainerName}' with containerId '{ContainerId}'.")]
     private partial void LogContainerStopSucceeded(
         string containerName,
         string containerId,
@@ -144,7 +144,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerRemovalStarting,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Removing container '{containerName}' with containerId '{containerId}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Removing container '{ContainerName}' with containerId '{ContainerId}'.")]
     private partial void LogContainerRemovalStarting(
         string containerName,
         string containerId,
@@ -154,7 +154,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerRemovalSucceeded,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Successfully removed container '{containerName}' with containerId '{containerId}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Successfully removed container '{ContainerName}' with containerId '{ContainerId}'.")]
     private partial void LogContainerRemovalSucceeded(
         string containerName,
         string containerId,
@@ -164,7 +164,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerContainerStopOrRemovalFailed,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to stop/remove container '{containerName}' with containerId '{containerId}': '{errorMessage}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failed to stop/remove container '{ContainerName}' with containerId '{ContainerId}': '{ErrorMessage}'.")]
     private partial void LogContainerStopOrRemovalFailed(
         string containerName,
         string containerId,
@@ -175,7 +175,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IotEdgeEmulatorCheck,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Starting check if IoTEdge module '{moduleName}' is running in container '{containerName}' with containerId '{containerId}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Starting check if IoTEdge module '{ModuleName}' is running in container '{ContainerName}' with containerId '{ContainerId}'.")]
     private partial void LogIotEdgeEmulatorCheck(
         string moduleName,
         string containerName,
@@ -186,7 +186,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IotEdgeEmulatorWaiting,
         Level = LogLevel.Trace,
-        Message = "{callerMethodName}({callerLineNumber}) - Waiting {secondsBetweenRetries} seconds for IoTEdge module '{moduleName}' to become available in container '{containerName}' with containerId '{containerId}' - retry ({currentIteration}/{numberOfRetries}).")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Waiting {SecondsBetweenRetries} seconds for IoTEdge module '{ModuleName}' to become available in container '{ContainerName}' with containerId '{ContainerId}' - retry ({CurrentIteration}/{NumberOfRetries}).")]
     private partial void LogIotEdgeEmulatorWaiting(
         string moduleName,
         string containerName,
@@ -200,7 +200,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IotEdgeEmulatorReady,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - IoTEdge module '{moduleName}' is now running in container '{containerName}' with containerId '{containerId}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - IoTEdge module '{ModuleName}' is now running in container '{ContainerName}' with containerId '{ContainerId}'.")]
     private partial void LogIotEdgeEmulatorReady(
         string moduleName,
         string containerName,
@@ -211,7 +211,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IotEdgeEmulatorFetchingVariables,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Fetching IoT Edge environment variables from module '{moduleName}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Fetching IoT Edge environment variables from module '{ModuleName}'.")]
     private partial void LogIotEdgeEmulatorFetchingVariables(
         string moduleName,
         [CallerMemberName] string callerMethodName = "",
@@ -220,7 +220,7 @@ public partial class DockerService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DockerProcessCommandFailure,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failure running docker command - error: '{message}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failure running docker command - error: '{Message}'.")]
     private partial void LogDockerProcessCommandFailure(
         string message,
         [CallerMemberName] string callerMethodName = "",

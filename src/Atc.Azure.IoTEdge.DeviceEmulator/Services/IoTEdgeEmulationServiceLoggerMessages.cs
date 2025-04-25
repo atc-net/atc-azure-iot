@@ -11,7 +11,7 @@ public partial class IoTEdgeEmulationService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IotEdgeEmulatorStarting,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - IoT Edge Emulator is starting for device '{deviceId}'.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - IoT Edge Emulator is starting for device '{DeviceId}'.")]
     private partial void LogIotEdgeEmulatorStarting(
         string deviceId,
         [CallerMemberName] string callerMethodName = "",
@@ -20,7 +20,7 @@ public partial class IoTEdgeEmulationService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IotEdgeEmulatorGetTemplateContentSucceeded,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Successfully retrieved template content.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Successfully retrieved template content.")]
     private partial void LogIotEdgeEmulatorGetTemplateContentSucceeded(
         [CallerMemberName] string callerMethodName = "",
         [CallerLineNumber] int callerLineNumber = 0);
@@ -28,7 +28,7 @@ public partial class IoTEdgeEmulationService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IotEdgeEmulatorGetTemplateContentFailed,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to retrieve template content: '{errorMessage}'")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failed to retrieve template content: '{ErrorMessage}'")]
     private partial void LogIotEdgeEmulatorGetTemplateContentFailed(
         string errorMessage,
         [CallerMemberName] string callerMethodName = "",
@@ -37,7 +37,7 @@ public partial class IoTEdgeEmulationService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IotEdgeEmulatorEnsuringProperVariables,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - Ensuring proper IoT Edge variables are set locally for emulator.")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Ensuring proper IoT Edge variables are set locally for emulator.")]
     private partial void LogIotEdgeEmulatorEnsuringProperVariables(
         [CallerMemberName] string callerMethodName = "",
         [CallerLineNumber] int callerLineNumber = 0);
@@ -45,7 +45,7 @@ public partial class IoTEdgeEmulationService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.IotEdgeEmulatorStopping,
         Level = LogLevel.Information,
-        Message = "{callerMethodName}({callerLineNumber}) - IoT Edge Emulator is stopping for device '{deviceId}'")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - IoT Edge Emulator is stopping for device '{DeviceId}'")]
     private partial void LogIotEdgeEmulatorStopping(
         string deviceId,
         [CallerMemberName] string callerMethodName = "",

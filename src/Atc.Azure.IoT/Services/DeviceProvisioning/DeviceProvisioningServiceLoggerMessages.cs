@@ -11,7 +11,7 @@ public sealed partial class DeviceProvisioningService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DeviceProvisioningManager.IndividualTpmEnrollmentFailed,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to create individual TPM enrollment for registrationId '{registrationId}': {errorMessage}")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failed to create individual TPM enrollment for registrationId '{RegistrationId}': {ErrorMessage}")]
     private partial void LogIndividualTpmEnrollmentFailed(
         string registrationId,
         string? errorMessage,
@@ -21,7 +21,7 @@ public sealed partial class DeviceProvisioningService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DeviceProvisioningManager.IndividualTpmEnrollmentBadRequest,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to create individual TPM enrollment for registrationId '{registrationId}'. Error: {errorCode} # {errorMessage}")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failed to create individual TPM enrollment for registrationId '{RegistrationId}'. Error: {ErrorCode} # {ErrorMessage}")]
     private partial void LogIndividualTpmEnrollmentBadRequest(
         string registrationId,
         int? errorCode,
@@ -32,7 +32,7 @@ public sealed partial class DeviceProvisioningService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DeviceProvisioningManager.IndividualTpmEnrollmentConflict,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to create individual TPM enrollment for registrationId '{registrationId}'. Error: {errorCode} # {errorMessage}")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failed to create individual TPM enrollment for registrationId '{RegistrationId}'. Error: {ErrorCode} # {ErrorMessage}")]
     private partial void LogIndividualTpmEnrollmentConflict(
         string registrationId,
         int? errorCode,
@@ -43,7 +43,7 @@ public sealed partial class DeviceProvisioningService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DeviceProvisioningManager.IndividualEnrollmentNotFound,
         Level = LogLevel.Warning,
-        Message = "{callerMethodName}({callerLineNumber}) - Individual enrollment with registrationId '{registrationId}' not found. Error: {errorCode} # {errorMessage}")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Individual enrollment with registrationId '{RegistrationId}' not found. Error: {ErrorCode} # {ErrorMessage}")]
     private partial void LogIndividualEnrollmentNotFound(
         string registrationId,
         int? errorCode,
@@ -54,7 +54,7 @@ public sealed partial class DeviceProvisioningService
     [LoggerMessage(
         EventId = LoggingEventIdConstants.DeviceProvisioningManager.DeleteIndividualEnrollmentNotFound,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Failed to delete individual enrollment with registrationId '{registrationId}'. Error: {errorCode} # {errorMessage}")]
+        Message = "{CallerMethodName}({CallerLineNumber}) - Failed to delete individual enrollment with registrationId '{RegistrationId}'. Error: {ErrorCode} # {ErrorMessage}")]
     private partial void LogDeleteIndividualEnrollmentNotFound(
         string registrationId,
         int? errorCode,
