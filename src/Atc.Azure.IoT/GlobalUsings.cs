@@ -3,6 +3,7 @@ global using System.Net;
 global using System.Runtime.CompilerServices;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
+global using Atc.Azure.IoT.Converters;
 global using Atc.Azure.IoT.Exceptions;
 global using Atc.Azure.IoT.Extensions;
 global using Atc.Azure.IoT.Extractors;
