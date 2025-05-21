@@ -183,11 +183,19 @@ public static class ConfigurationContentExtensions
     {
         var module = new Dictionary<string, object>(StringComparer.Ordinal)
         {
-            [PropertyNames.Manifest.Version] = edgeModuleSpecification.Version,
             [PropertyNames.Manifest.Type] = PropertyNames.Manifest.Docker,
-            [PropertyNames.Manifest.Status] = edgeModuleSpecification.Status.ToString().ToLowerInvariant(),
-            [PropertyNames.Manifest.RestartPolicy] = edgeModuleSpecification.RestartPolicy.ToString().ToLowerInvariant(),
         };
+
+        if (!edgeModuleSpecification.Name.Equals(PropertyNames.Manifest.EdgeAgent, StringComparison.Ordinal))
+        {
+            if (!edgeModuleSpecification.Name.Equals(PropertyNames.Manifest.EdgeHub, StringComparison.Ordinal))
+            {
+                module.Add(PropertyNames.Manifest.Version, edgeModuleSpecification.Version);
+            }
+
+            module.Add(PropertyNames.Manifest.Status, edgeModuleSpecification.Status.ToString().ToLowerInvariant());
+            module.Add(PropertyNames.Manifest.RestartPolicy, edgeModuleSpecification.RestartPolicy.ToString().ToLowerInvariant());
+        }
 
         var settings = new Dictionary<string, object>(StringComparer.Ordinal)
         {
