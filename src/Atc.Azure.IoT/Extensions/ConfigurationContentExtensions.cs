@@ -112,7 +112,7 @@ public static class ConfigurationContentExtensions
             },
             StringComparer.Ordinal);
 
-        var modules = edgeAgentDesiredProperties.EdgeModuleSpecifications.ToDictionary(
+        var modules = edgeAgentDesiredProperties.EdgeModuleSpecifications.ToDictionary<EdgeModuleSpecification, string, object>(
             x => x.Name,
             BuildDockerModule,
             StringComparer.Ordinal);
