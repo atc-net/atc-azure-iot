@@ -31,7 +31,7 @@ public sealed class JsonModulesConverter : JsonConverter<List<Models.Module>>
             }
 
             module = module with { Name = element.Name };
-            result.Add(module!);
+            result.Add(module);
         }
 
         return result;

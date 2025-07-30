@@ -15,7 +15,7 @@ public record Module(
     [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleLastStartTimeUtc)] DateTimeOffset? LastStartTimeUtc,
     [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleLastRestartTimeUtc)] DateTimeOffset? LastRestartTimeUtc,
     [property: JsonPropertyName(PropertyNames.DeviceTwin.ModuleRestartCount)] int RestartCount,
-    [property: JsonPropertyName(PropertyNames.ModuleStartupOrder), JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)] int? StartupOrder,
+    [property: JsonPropertyName(PropertyNames.ModuleStartupOrder), JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)] uint? StartupOrder,
     [property: JsonPropertyName(PropertyNames.ModuleSettings)] ModuleSettings Settings,
     [property: JsonPropertyName(PropertyNames.ModuleEnvironment)] ModuleEnvironment? Environment);
 
