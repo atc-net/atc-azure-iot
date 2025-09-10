@@ -504,30 +504,26 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     }
 
     /// <inheritdoc />
-    public async Task<Response<LogResponse>> UploadSupportBundle(
+    public Task<Response<LogResponse>> UploadSupportBundle(
         string deviceId,
         UploadSupportBundleRequest request,
         CancellationToken cancellationToken = default)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(deviceId);
-        ArgumentNullException.ThrowIfNull(request);
-
-        var result = await iotHubModuleService.CallMethod(
+        => CallLogMethod(
             deviceId,
-            EdgeAgentConstants.ModuleId,
-            new MethodParameterModel(
-                EdgeAgentConstants.DirectMethodUploadSupportBundle,
-                JsonSerializer.Serialize(request)),
+            EdgeAgentConstants.DirectMethodUploadSupportBundle,
+            request,
             cancellationToken);
 
-        var payload = string.IsNullOrEmpty(result.JsonPayload)
-            ? new LogResponse(BackgroundTaskRunStatus.Unknown, string.Empty, string.Empty)
-            : JsonSerializer.Deserialize<LogResponse>(
-                result.JsonPayload,
-                options: new() { Converters = { new JsonStringEnumConverter() } });
-
-        return new Response<LogResponse>(result.Status, payload!);
-    }
+    /// <inheritdoc />
+    public Task<Response<LogResponse>> GetTaskStatus(
+        string deviceId,
+        GetTaskStatusRequest request,
+        CancellationToken cancellationToken = default)
+        => CallLogMethod(
+            deviceId,
+            EdgeAgentConstants.DirectMethodGetTaskStatus,
+            request,
+            cancellationToken);
 
     public async Task<(bool Succeeded, string? ErrorMessage)> ApplyConfigurationContentOnDevice(
         string deviceId,
@@ -628,6 +624,32 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     {
         registryManager = RegistryManager.CreateFromConnectionString(connectionString);
         ioTHubHostName = IotHubConnectionStringBuilder.Create(connectionString).HostName;
+    }
+
+    private async Task<Response<LogResponse>> CallLogMethod(
+        string deviceId,
+        string methodName,
+        object request,
+        CancellationToken cancellationToken)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(deviceId);
+        ArgumentNullException.ThrowIfNull(request);
+
+        var result = await iotHubModuleService.CallMethod(
+            deviceId,
+            EdgeAgentConstants.ModuleId,
+            new MethodParameterModel(
+                methodName,
+                JsonSerializer.Serialize(request)),
+            cancellationToken);
+
+        var payload = string.IsNullOrEmpty(result.JsonPayload)
+            ? new LogResponse(BackgroundTaskRunStatus.Unknown, string.Empty, string.Empty)
+            : JsonSerializer.Deserialize<LogResponse>(
+                result.JsonPayload,
+                options: new() { Converters = { new JsonStringEnumConverter() } });
+
+        return new Response<LogResponse>(result.Status, payload!);
     }
 
     private static RestartModuleRequest BuildRestartModuleRequest(

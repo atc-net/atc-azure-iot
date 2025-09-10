@@ -152,6 +152,20 @@ public interface IIoTHubService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Use the GetTaskStatus direct method to check the status of an upload logs request.
+    /// The GetTaskStatus request payload uses the correlationId from the upload logs request to get the task status.
+    /// The correlationId comes from the response to the UploadModuleLogs or UploadSupportBundle direct method call.
+    /// </summary>
+    /// <param name="deviceId">The identifier of the iot edge device on which the task is running on</param>
+    /// <param name="request">The request parameters</param>
+    /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
+    /// <returns>A response containing the state of the task</returns>
+    Task<Response<LogResponse>> GetTaskStatus(
+        string deviceId,
+        GetTaskStatusRequest request,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Asynchronously applies a given configuration content to a specified IoT device.
     /// </summary>
     /// <param name="deviceId">The identifier of the IoT device to which the configuration is to be applied.</param>

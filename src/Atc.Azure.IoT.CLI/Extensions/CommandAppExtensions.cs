@@ -90,9 +90,18 @@ public static class CommandAppExtensions
                 .WithDescription("Delete a device from the device registry in the IoT Hub.")
                 .WithExample("iothub device delete -c <connection-string> -d <device-id>");
 
-            device.AddCommand<IotHubDeviceUploadSupportBundleCommand>("support-bundle")
-                .WithDescription("Bundles troubleshooting information")
-                .WithExample("iothub device support-bundle -c <connection-string> -d <device-id> --sas-url <sas-url>");
+            device.AddBranch("log", log =>
+            {
+                log.SetDescription("Operations related to device and module logs.");
+
+                log.AddCommand<IotHubDeviceUploadSupportBundleCommand>("support-bundle")
+                    .WithDescription("Bundles troubleshooting information")
+                    .WithExample("iothub device log support-bundle -c <connection-string> -d <device-id> --sas-url <sas-url>");
+
+                log.AddCommand<IotHubDeviceGetTaskStatusCommand>("task-status")
+                    .WithDescription("Get the status of a request.")
+                    .WithExample("iothub device log task-status -c <connection-string> -d <device-id> --correlation-id <correlation-id>");
+            });
 
             device.AddBranch("twin", twin =>
             {

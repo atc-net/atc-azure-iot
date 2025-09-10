@@ -37,6 +37,10 @@ public record UploadSupportBundleRequest(
     [property: JsonPropertyName("edgeRuntimeOnly")] bool? EdgeRuntimeOnly)
     : SchemaVersion10;
 
+public record GetTaskStatusRequest(
+    [property: JsonPropertyName("correlationId")] string CorrelationId)
+    : SchemaVersion10;
+
 public record Response<T>(int StatusCode, T Payload);
 
 public record LogResponse(

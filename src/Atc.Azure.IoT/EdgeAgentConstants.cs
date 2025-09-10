@@ -25,4 +25,9 @@ public static class EdgeAgentConstants
     /// and uploads the bundle to a designated Azure Blob Storage container.
     /// </summary>
     public const string DirectMethodUploadSupportBundle = "UploadSupportBundle";
+
+    /// <summary>
+    /// Command used to retrieve the status of an existing request.
+    /// </summary>
+    public const string DirectMethodGetTaskStatus = "GetTaskStatus";
 }
