@@ -503,6 +503,32 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
             : (Succeeded: false, result.Status, result.JsonPayload);
     }
 
+    /// <inheritdoc />
+    public async Task<Response<LogResponse>> UploadSupportBundle(
+        string deviceId,
+        UploadSupportBundleRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(deviceId);
+        ArgumentNullException.ThrowIfNull(request);
+
+        var result = await iotHubModuleService.CallMethod(
+            deviceId,
+            EdgeAgentConstants.ModuleId,
+            new MethodParameterModel(
+                EdgeAgentConstants.DirectMethodUploadSupportBundle,
+                JsonSerializer.Serialize(request)),
+            cancellationToken);
+
+        var payload = string.IsNullOrEmpty(result.JsonPayload)
+            ? new LogResponse(BackgroundTaskRunStatus.Unknown, string.Empty, string.Empty)
+            : JsonSerializer.Deserialize<LogResponse>(
+                result.JsonPayload,
+                options: new() { Converters = { new JsonStringEnumConverter() } });
+
+        return new Response<LogResponse>(result.Status, payload!);
+    }
+
     public async Task<(bool Succeeded, string? ErrorMessage)> ApplyConfigurationContentOnDevice(
         string deviceId,
         ConfigurationContent manifestContent,

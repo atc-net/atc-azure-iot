@@ -15,7 +15,14 @@ public static class EdgeAgentConstants
     public const string ModuleId = "$edgeAgent";
 
     /// <summary>
-    /// The DirectMethodRestartModule constant represents the command used to restart a specific module within the Edge Agent.
+    /// Command used to restart a specific module within the Edge Agent.
     /// </summary>
     public const string DirectMethodRestartModule = "RestartModule";
+
+    /// <summary>
+    /// Command that triggers an IoT Edge support bundle upload.
+    /// Collects module logs, packages them into a ZIP archive,
+    /// and uploads the bundle to a designated Azure Blob Storage container.
+    /// </summary>
+    public const string DirectMethodUploadSupportBundle = "UploadSupportBundle";
 }
