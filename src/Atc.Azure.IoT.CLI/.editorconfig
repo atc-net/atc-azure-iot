@@ -24,3 +24,4 @@ dotnet_diagnostic.S2629.severity = none             # Don't use string interpola
 ##########################################
 # Custom - Code Analyzers Rules
 ##########################################
+dotnet_diagnostic.CA1056.severity = none             # URI-like properties should not be strings.

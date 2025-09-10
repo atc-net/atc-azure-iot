@@ -139,6 +139,19 @@ public interface IIoTHubService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Use the UploadSupportBundle direct method to bundle and upload a zip file of IoT Edge module logs to an available Azure Blob Storage container.
+    /// This direct method runs the `iotedge support-bundle command` on your IoT Edge device to obtain the logs.
+    /// </summary>
+    /// <param name="deviceId">The identifier of the iot edge device on which the logs should be fetched from</param>
+    /// <param name="request">The request parameters</param>
+    /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
+    /// <returns>A response containing status code and correlation ID of the started task</returns>
+    Task<Response<LogResponse>> UploadSupportBundle(
+        string deviceId,
+        UploadSupportBundleRequest request,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Asynchronously applies a given configuration content to a specified IoT device.
     /// </summary>
     /// <param name="deviceId">The identifier of the IoT device to which the configuration is to be applied.</param>
