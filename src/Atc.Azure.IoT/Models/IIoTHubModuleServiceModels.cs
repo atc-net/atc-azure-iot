@@ -32,9 +32,9 @@ public record RestartModuleRequest(
 /// Default: <see langword="false" />.</param>
 public record UploadSupportBundleRequest(
     [property: JsonPropertyName("sasUrl")] Uri SasUrl,
-    [property: JsonPropertyName("since")] string? Since,
-    [property: JsonPropertyName("until")] string? Until,
-    [property: JsonPropertyName("edgeRuntimeOnly")] bool? EdgeRuntimeOnly)
+    [property: JsonPropertyName("since")] string? Since = null,
+    [property: JsonPropertyName("until")] string? Until = null,
+    [property: JsonPropertyName("edgeRuntimeOnly")] bool EdgeRuntimeOnly = false)
     : SchemaVersion10;
 
 public record GetTaskStatusRequest(
