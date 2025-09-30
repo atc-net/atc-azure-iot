@@ -15,11 +15,13 @@ public interface IIoTHubModuleService
     /// <param name="deviceId">The device identifier.</param>
     /// <param name="moduleId">The module identifier.</param>
     /// <param name="parameters">The parameters.</param>
+    /// <param name="requestOptions">IoT Hub API request options, such as retry strategy on transient errors</param>
     /// <param name="cancellationToken">The CancellationToken.</param>
     /// <returns>MethodResultModel, which includes the Status of the Call and the JsonPayload.</returns>
     Task<MethodResultModel> CallMethod(
         string deviceId,
         string moduleId,
         MethodParameterModel parameters,
+        IoTHubRequestOptions? requestOptions = null,
         CancellationToken cancellationToken = default);
 }

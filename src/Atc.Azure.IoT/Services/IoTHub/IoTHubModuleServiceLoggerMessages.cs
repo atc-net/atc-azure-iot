@@ -9,28 +9,27 @@ public sealed partial class IoTHubModuleService
     private readonly ILogger<IoTHubModuleService> logger;
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubModuleService.MethodCallFailedDeviceNotFound,
-        Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Calling method '{methodName}' with jsonPayload '{jsonPayload}' failed - device not found by deviceId '{deviceId}': {errorMessage}")]
-    private partial void LogMethodCallFailedDeviceNotFound(
-        string deviceId,
-        string methodName,
-        [StringSyntax(StringSyntaxAttribute.Json)]
-        string jsonPayload,
-        string? errorMessage,
-        [CallerMemberName] string callerMethodName = "",
-        [CallerLineNumber] int callerLineNumber = 0);
-
-    [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubModuleService.MethodCallFailed,
         Level = LogLevel.Error,
-        Message = "{callerMethodName}({callerLineNumber}) - Calling method '{methodName}' on device with id {deviceId} with jsonPayload '{jsonPayload}' failed: {errorMessage}")]
+        Message = "Failed to call method '{MethodName}' on device with ID {DeviceId}, with payload '{JsonPayload}'")]
     private partial void LogMethodCallFailed(
+        IotHubException exception,
         string deviceId,
         string methodName,
         [StringSyntax(StringSyntaxAttribute.Json)]
-        string jsonPayload,
-        string? errorMessage,
-        [CallerMemberName] string callerMethodName = "",
-        [CallerLineNumber] int callerLineNumber = 0);
+        string jsonPayload);
+
+    [LoggerMessage(
+        EventId = LoggingEventIdConstants.IoTHubModuleService.MethodCallTransientError,
+        Level = LogLevel.Warning,
+        Message = "Transient error {ErrorCode} occurred while calling method '{MethodName}' on device with ID {DeviceId}. " +
+                  "This was attempt {RetryCount} of {TotalRetryCount}. " +
+                  "Waiting {WaitTimeInSeconds} seconds before retrying")]
+    private partial void LogMethodCallTransientError(
+        ErrorCode errorCode,
+        string methodName,
+        string deviceId,
+        int retryCount,
+        int totalRetryCount,
+        double waitTimeInSeconds);
 }

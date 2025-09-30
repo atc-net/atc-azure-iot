@@ -1,6 +1,6 @@
 global using System.Diagnostics.CodeAnalysis;
-global using System.Net;
 global using System.Runtime.CompilerServices;
+global using System.Runtime.Serialization;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
 global using Atc.Azure.IoT.Converters;
@@ -21,3 +21,5 @@ global using Microsoft.Azure.Devices.Provisioning.Service;
 global using Microsoft.Azure.Devices.Shared;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using Microsoft.Extensions.Logging;
+global using Polly;
+global using Polly.Retry;

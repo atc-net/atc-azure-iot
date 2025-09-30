@@ -35,7 +35,7 @@ public sealed class IotHubDeviceGetTaskStatusCommand : AsyncCommand<IotHubDevice
         var result = await iotHubService.GetTaskStatus(
             settings.DeviceId!,
             new GetTaskStatusRequest(settings.CorrelationId!),
-            CancellationToken.None);
+            cancellationToken: CancellationToken.None);
 
         if (result.StatusCode != StatusCodes.Status200OK)
         {

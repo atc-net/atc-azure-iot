@@ -39,7 +39,7 @@ public sealed class IotHubDeviceUploadSupportBundleCommand : AsyncCommand<IotHub
                 settings.Since is { IsSet: true } ? settings.Since.Value : string.Empty,
                 settings.Until is { IsSet: true } ? settings.Until.Value : string.Empty,
                 settings.IncludeEdgeRuntimeOnly),
-            CancellationToken.None);
+            cancellationToken: CancellationToken.None);
 
         if (result.StatusCode != StatusCodes.Status200OK)
         {
