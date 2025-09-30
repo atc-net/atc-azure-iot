@@ -20,6 +20,13 @@ public static class EdgeAgentConstants
     public const string DirectMethodRestartModule = "RestartModule";
 
     /// <summary>
+    /// Command that triggers IoT Edge module logs upload.
+    /// Collects module logs, packages them into a ZIP archive,
+    /// and uploads the bundle to a designated Azure Blob Storage container.
+    /// </summary>
+    public const string DirectMethodUploadModuleLogs = "UploadModuleLogs";
+
+    /// <summary>
     /// Command that triggers an IoT Edge support bundle upload.
     /// Collects module logs, packages them into a ZIP archive,
     /// and uploads the bundle to a designated Azure Blob Storage container.

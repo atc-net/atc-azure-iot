@@ -48,6 +48,7 @@ internal static class LoggingEventIdConstants
     {
         public const int MethodCallFailedDeviceNotFound = 11_000;
         public const int MethodCallFailed = 11_001;
+        public const int MethodCallTransientError = 11_002;
     }
 
     internal static class DeviceProvisioningManager

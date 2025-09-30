@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.Azure.Devices" Version="1.40.0" />
     <PackageReference Include="Microsoft.Azure.Devices.Provisioning.Security.Tpm" Version="1.14.4" />
     <PackageReference Include="Microsoft.Azure.Devices.Provisioning.Service" Version="1.18.4" />
+    <PackageReference Include="Polly.Core" Version="8.6.3" />
   </ItemGroup>
 
 </Project>

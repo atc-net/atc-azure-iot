@@ -21,50 +21,58 @@ public sealed partial class IoTHubModuleService : ServiceBase, IIoTHubModuleServ
         string deviceId,
         string moduleId,
         MethodParameterModel parameters,
+        IoTHubRequestOptions? requestOptions = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
         ArgumentException.ThrowIfNullOrEmpty(moduleId);
         ArgumentNullException.ThrowIfNull(parameters);
 
+        requestOptions ??= new IoTHubRequestOptions();
+        var pipeline = new ResiliencePipelineBuilder<CloudToDeviceMethodResult>()
+            .AddIoTHubRequestOptions(
+                requestOptions,
+                shouldHandle: args => ValueTask.FromResult(args.Outcome.Exception is IotHubException { IsTransient: true }),
+                onRetry: args =>
+                {
+                    LogMethodCallTransientError(
+                        ((IotHubException)args.Outcome.Exception!).Code,
+                        parameters.Name,
+                        deviceId,
+                        args.AttemptNumber,
+                        requestOptions.MaxRetryAttempts,
+                        args.RetryDelay.TotalSeconds);
+
+                    return ValueTask.CompletedTask;
+                })
+            .Build();
+
         try
         {
-            var methodInfo = new CloudToDeviceMethod(parameters.Name);
+            var methodInfo = new CloudToDeviceMethod(parameters.Name, requestOptions.Timeout);
             methodInfo.SetPayloadJson(parameters.JsonPayload);
-            var result = await (string.IsNullOrEmpty(moduleId)
-                ? serviceClient!.InvokeDeviceMethodAsync(deviceId, methodInfo, cancellationToken)
-                : serviceClient!.InvokeDeviceMethodAsync(deviceId, moduleId, methodInfo, cancellationToken));
+
+            var result = await pipeline.ExecuteAsync(
+                async ct => await (string.IsNullOrEmpty(moduleId)
+                    ? serviceClient!.InvokeDeviceMethodAsync(deviceId, methodInfo, ct)
+                    : serviceClient!.InvokeDeviceMethodAsync(deviceId, moduleId, methodInfo, ct)),
+                cancellationToken);
 
             return new MethodResultModel(
                 Status: result.Status,
                 JsonPayload: result.GetPayloadAsJson());
         }
-        catch (DeviceNotFoundException ex)
-        {
-            LogMethodCallFailedDeviceNotFound(
-                deviceId,
-                parameters.Name,
-                parameters.JsonPayload,
-                ex.GetLastInnerMessage());
-
-            return new MethodResultModel(
-                Status: StatusCodes.Status404NotFound,
-                JsonPayload: $"{{\"message\":\"Device not found by id '{deviceId}'\"}}");
-        }
-        catch (Exception ex)
+        catch (IotHubException ex)
         {
             LogMethodCallFailed(
+                ex,
                 deviceId,
                 parameters.Name,
-                parameters.JsonPayload,
-                ex.GetLastInnerMessage());
+                parameters.JsonPayload);
 
             return new MethodResultModel(
-                Status: StatusCodes.Status500InternalServerError,
-                JsonPayload: JsonSerializer.Serialize(new MethodResultErrorModel(
-                    Status: StatusCodes.Status500InternalServerError,
-                    Title: nameof(HttpStatusCode.InternalServerError),
-                    Detail: ex.GetLastInnerMessage())));
+                Status: ex.Code.ToHttpStatusCode(),
+                JsonPayload: ex.ToJsonPayload());
         }
     }
 

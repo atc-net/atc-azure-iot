@@ -139,16 +139,32 @@ public interface IIoTHubService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Use the UploadModuleLogs direct method to bundle and upload a zip file of IoT Edge module logs to an available Azure Blob Storage container.
+    /// </summary>
+    /// <param name="deviceId">The identifier of the iot edge device on which the logs should be fetched from</param>
+    /// <param name="request">The request parameters</param>
+    /// <param name="requestOptions">IoT Hub API request options, such as retry strategy on transient errors</param>
+    /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
+    /// <returns>A response containing status code and correlation ID of the started task</returns>
+    Task<Response<LogResponse>> UploadModuleLogs(
+        string deviceId,
+        UploadModuleLogsRequest request,
+        IoTHubRequestOptions? requestOptions = null,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Use the UploadSupportBundle direct method to bundle and upload a zip file of IoT Edge module logs to an available Azure Blob Storage container.
     /// This direct method runs the `iotedge support-bundle command` on your IoT Edge device to obtain the logs.
     /// </summary>
     /// <param name="deviceId">The identifier of the iot edge device on which the logs should be fetched from</param>
     /// <param name="request">The request parameters</param>
+    /// <param name="requestOptions">IoT Hub API request options, such as retry strategy on transient errors</param>
     /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
     /// <returns>A response containing status code and correlation ID of the started task</returns>
     Task<Response<LogResponse>> UploadSupportBundle(
         string deviceId,
         UploadSupportBundleRequest request,
+        IoTHubRequestOptions? requestOptions = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -158,11 +174,13 @@ public interface IIoTHubService
     /// </summary>
     /// <param name="deviceId">The identifier of the iot edge device on which the task is running on</param>
     /// <param name="request">The request parameters</param>
+    /// <param name="requestOptions">IoT Hub API request options, such as retry strategy on transient errors</param>
     /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
     /// <returns>A response containing the state of the task</returns>
     Task<Response<LogResponse>> GetTaskStatus(
         string deviceId,
         GetTaskStatusRequest request,
+        IoTHubRequestOptions? requestOptions = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>
