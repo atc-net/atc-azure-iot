@@ -21,5 +21,6 @@ global using Microsoft.Azure.Devices.Provisioning.Service;
 global using Microsoft.Azure.Devices.Shared;
 global using Microsoft.Extensions.DependencyInjection.Extensions;
 global using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Logging.Abstractions;
 global using Polly;
 global using Polly.Retry;

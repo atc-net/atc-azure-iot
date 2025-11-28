@@ -3,31 +3,29 @@ namespace Atc.Azure.IoT.CLI.Factories;
 public static class IotHubServiceFactory
 {
     public static IoTHubService Create(
-        ILoggerFactory loggerFactory,
-        string connectionString)
+        string connectionString,
+        ILoggerFactory? loggerFactory = null)
     {
-        ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
-        var iothubOptions = new IotHubOptions { ConnectionString = connectionString };
+        var iotHubOptions = new IotHubOptions { ConnectionString = connectionString };
 
-        return Create(loggerFactory, iothubOptions);
+        return Create(iotHubOptions, loggerFactory);
     }
 
     public static IoTHubService Create(
-        ILoggerFactory loggerFactory,
-        IotHubOptions options)
+        IotHubOptions options,
+        ILoggerFactory? loggerFactory = null)
     {
-        ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(options);
 
         var iotHubModuleService = new IoTHubModuleService(
-            loggerFactory,
-            options);
+            options,
+            loggerFactory);
 
         return new IoTHubService(
-            loggerFactory,
             iotHubModuleService,
-            options);
+            options,
+            loggerFactory);
     }
 }

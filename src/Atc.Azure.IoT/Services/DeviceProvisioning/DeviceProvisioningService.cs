@@ -14,12 +14,14 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
     private ProvisioningServiceClient? client;
 
     public DeviceProvisioningService(
-        ILoggerFactory loggerFactory,
-        DeviceProvisioningServiceOptions options)
+        DeviceProvisioningServiceOptions options,
+        ILoggerFactory? loggerFactory = null)
     {
-        logger = loggerFactory.CreateLogger<DeviceProvisioningService>();
         jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
         ValidateAndAssign(options.ConnectionString, Assign);
+        logger = loggerFactory is not null
+            ? loggerFactory.CreateLogger<DeviceProvisioningService>()
+            : NullLogger<DeviceProvisioningService>.Instance;
     }
 
     /// <summary>

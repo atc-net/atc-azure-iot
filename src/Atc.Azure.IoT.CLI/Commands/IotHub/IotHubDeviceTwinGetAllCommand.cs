@@ -5,11 +5,10 @@ public sealed class IotHubDeviceTwinGetAllCommand : AsyncCommand<IotHubDeviceTwi
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceTwinGetAllCommand> logger;
 
-    public IotHubDeviceTwinGetAllCommand(
-        ILoggerFactory loggerFactory)
+    public IotHubDeviceTwinGetAllCommand(ILoggerFactory? loggerFactory = null)
     {
-        this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<IotHubDeviceTwinGetAllCommand>();
+        this.loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
+        logger = this.loggerFactory.CreateLogger<IotHubDeviceTwinGetAllCommand>();
     }
 
     public override Task<int> ExecuteAsync(
@@ -21,14 +20,13 @@ public sealed class IotHubDeviceTwinGetAllCommand : AsyncCommand<IotHubDeviceTwi
         return ExecuteInternalAsync(settings);
     }
 
-    private async Task<int> ExecuteInternalAsync(
-        IotHubDeviceTwinGetAllCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(IotHubDeviceTwinGetAllCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
         var iotHubService = IotHubServiceFactory.Create(
-            loggerFactory,
-            settings.ConnectionString!);
+            settings.ConnectionString!,
+            loggerFactory);
 
         var sw = Stopwatch.StartNew();
 

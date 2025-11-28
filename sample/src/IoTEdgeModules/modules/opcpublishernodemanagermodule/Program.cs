@@ -78,13 +78,13 @@ public static class Program
         AppDomain.CurrentDomain.UnhandledException += (_, e) => OnEmulatorUnhandledException(e);
 
         var emulatorOptions = serviceProvider.GetRequiredService<EmulatorOptions>();
-        var systemEnvironmentService = new SystemEnvironmentService(loggerFactory!);
+        var systemEnvironmentService = new SystemEnvironmentService(loggerFactory);
 
-        var dockerService = new DockerService(loggerFactory!, systemEnvironmentService);
+        var dockerService = new DockerService(systemEnvironmentService, loggerFactory);
         emulationService = IoTEdgeEmulationServiceFactory.BuildIoTEdgeEmulationService(
-            loggerFactory!,
             dockerService,
-            serviceProvider.GetRequiredService<IIoTHubService>());
+            serviceProvider.GetRequiredService<IIoTHubService>(),
+            loggerFactory);
 
         var isEmulatorStarted = await emulationService
             .StartEmulator(

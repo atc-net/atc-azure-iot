@@ -16,17 +16,19 @@ public partial class IoTEdgeEmulationService : IIoTEdgeEmulationService
     private readonly IAzureIoTHubService azureIoTHubService;
 
     public IoTEdgeEmulationService(
-        ILoggerFactory loggerFactory,
         IFileService fileService,
         IDockerService dockerService,
         IIoTHubService iotHubService,
-        IAzureIoTHubService azureIoTHubService)
+        IAzureIoTHubService azureIoTHubService,
+        ILoggerFactory? loggerFactory = null)
     {
-        this.logger = loggerFactory.CreateLogger<IoTEdgeEmulationService>();
         this.fileService = fileService;
         this.dockerService = dockerService;
         this.iotHubService = iotHubService;
         this.azureIoTHubService = azureIoTHubService;
+        this.logger = loggerFactory is not null
+            ? loggerFactory.CreateLogger<IoTEdgeEmulationService>()
+            : NullLogger<IoTEdgeEmulationService>.Instance;
     }
 
     public string? IotHubConnectionString { get; set; }

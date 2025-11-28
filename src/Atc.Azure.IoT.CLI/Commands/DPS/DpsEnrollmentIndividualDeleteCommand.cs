@@ -5,11 +5,10 @@ public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DpsComma
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<DpsEnrollmentIndividualDeleteCommand> logger;
 
-    public DpsEnrollmentIndividualDeleteCommand(
-        ILoggerFactory loggerFactory)
+    public DpsEnrollmentIndividualDeleteCommand(ILoggerFactory? loggerFactory = null)
     {
-        this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<DpsEnrollmentIndividualDeleteCommand>();
+        this.loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
+        logger = this.loggerFactory.CreateLogger<DpsEnrollmentIndividualDeleteCommand>();
     }
 
     public override Task<int> ExecuteAsync(
@@ -21,14 +20,13 @@ public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DpsComma
         return ExecuteInternalAsync(settings);
     }
 
-    private async Task<int> ExecuteInternalAsync(
-        DpsCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(DpsCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
         var dpsService = DeviceProvisioningServiceFactory.Create(
-            loggerFactory,
-            settings.ConnectionString!);
+            settings.ConnectionString!,
+            loggerFactory);
 
         var sw = Stopwatch.StartNew();
 

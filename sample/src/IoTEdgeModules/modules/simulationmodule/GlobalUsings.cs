@@ -13,6 +13,7 @@ global using Microsoft.Azure.Devices.Client;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Logging;
+global using Microsoft.Extensions.Logging.Abstractions;
 global using Quartz;
 global using SimulationModule.DataGenerator;
 global using SimulationModule.Jobs;

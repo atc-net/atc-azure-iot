@@ -5,11 +5,10 @@ public sealed class IotHubDeviceUploadSupportBundleCommand : AsyncCommand<IotHub
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceUploadSupportBundleCommand> logger;
 
-    public IotHubDeviceUploadSupportBundleCommand(
-        ILoggerFactory loggerFactory)
+    public IotHubDeviceUploadSupportBundleCommand(ILoggerFactory? loggerFactory = null)
     {
-        this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<IotHubDeviceUploadSupportBundleCommand>();
+        this.loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
+        logger = this.loggerFactory.CreateLogger<IotHubDeviceUploadSupportBundleCommand>();
     }
 
     public override Task<int> ExecuteAsync(
@@ -21,14 +20,13 @@ public sealed class IotHubDeviceUploadSupportBundleCommand : AsyncCommand<IotHub
         return ExecuteInternalAsync(settings);
     }
 
-    private async Task<int> ExecuteInternalAsync(
-        IotHubDeviceUploadSupportBundleCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(IotHubDeviceUploadSupportBundleCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
         var iotHubService = IotHubServiceFactory.Create(
-            loggerFactory,
-            settings.ConnectionString!);
+            settings.ConnectionString!,
+            loggerFactory);
 
         var sw = Stopwatch.StartNew();
 

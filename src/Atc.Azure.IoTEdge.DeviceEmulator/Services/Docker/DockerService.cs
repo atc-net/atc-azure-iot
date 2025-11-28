@@ -22,12 +22,14 @@ public partial class DockerService : IDockerService
     public static readonly int[] ExposedPorts = [ManagementApiPort, WorkloadApiPort, HttpsPort, MqttPort, AmqpPort];
 
     public DockerService(
-        ILoggerFactory loggerFactory,
-        ISystemEnvironmentService systemEnvironmentService)
+        ISystemEnvironmentService systemEnvironmentService,
+        ILoggerFactory? loggerFactory = null)
     {
-        logger = loggerFactory.CreateLogger<DockerService>();
         this.systemEnvironmentService = systemEnvironmentService;
         dockerClient = CreateDockerClient();
+        logger = loggerFactory is not null
+            ? loggerFactory.CreateLogger<DockerService>()
+            : NullLogger<DockerService>.Instance;
     }
 
     public async Task<bool> StartContainer(

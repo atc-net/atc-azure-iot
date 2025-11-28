@@ -12,12 +12,15 @@ public sealed partial class OpcPublisherNodeManagerModuleService : IHostedServic
     private readonly JsonSerializerOptions fileSerializerOptions;
 
     public OpcPublisherNodeManagerModuleService(
-        ILoggerFactory loggerFactory,
         IHostApplicationLifetime hostApplication,
         IModuleClientWrapper moduleClientWrapper,
-        IMethodResponseFactory methodResponseFactory)
+        IMethodResponseFactory methodResponseFactory,
+        ILoggerFactory? loggerFactory = null)
     {
-        this.logger = loggerFactory.CreateLogger<OpcPublisherNodeManagerModuleService>();
+        logger = loggerFactory is not null
+            ? loggerFactory.CreateLogger<OpcPublisherNodeManagerModuleService>()
+            : NullLogger<OpcPublisherNodeManagerModuleService>.Instance;
+
         this.hostApplication = hostApplication;
         this.moduleClientWrapper = moduleClientWrapper;
         this.methodResponseFactory = methodResponseFactory;
@@ -34,8 +37,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService : IHostedServic
         };
     }
 
-    public async Task StartAsync(
-        CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         hostApplication.ApplicationStarted.Register(OnStarted);
         hostApplication.ApplicationStopping.Register(OnStopping);
@@ -60,8 +62,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService : IHostedServic
         await moduleClientWrapper.SetMethodHandlerAsync(OpcPublisherNodeManagerModuleConstants.DirectMethodRemoveEndpoint, RemoveEndpoint, string.Empty, cancellationToken);
     }
 
-    public async Task StopAsync(
-        CancellationToken cancellationToken)
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
         try
         {
