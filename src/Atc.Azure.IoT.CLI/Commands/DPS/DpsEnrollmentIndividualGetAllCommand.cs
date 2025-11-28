@@ -5,11 +5,10 @@ public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<Connecti
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<DpsEnrollmentIndividualGetAllCommand> logger;
 
-    public DpsEnrollmentIndividualGetAllCommand(
-        ILoggerFactory loggerFactory)
+    public DpsEnrollmentIndividualGetAllCommand(ILoggerFactory? loggerFactory = null)
     {
-        this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<DpsEnrollmentIndividualGetAllCommand>();
+        this.loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
+        logger = this.loggerFactory.CreateLogger<DpsEnrollmentIndividualGetAllCommand>();
     }
 
     public override Task<int> ExecuteAsync(
@@ -21,14 +20,13 @@ public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<Connecti
         return ExecuteInternalAsync(settings);
     }
 
-    private async Task<int> ExecuteInternalAsync(
-        ConnectionBaseCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(ConnectionBaseCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
         var dpsService = DeviceProvisioningServiceFactory.Create(
-            loggerFactory,
-            settings.ConnectionString!);
+            settings.ConnectionString!,
+            loggerFactory);
 
         var sw = Stopwatch.StartNew();
 

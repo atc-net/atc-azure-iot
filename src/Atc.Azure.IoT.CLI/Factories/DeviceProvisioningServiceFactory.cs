@@ -3,26 +3,24 @@ namespace Atc.Azure.IoT.CLI.Factories;
 public static class DeviceProvisioningServiceFactory
 {
     public static DeviceProvisioningService Create(
-        ILoggerFactory loggerFactory,
-        string connectionString)
+        string connectionString,
+        ILoggerFactory? loggerFactory = null)
     {
-        ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         var dpsOptions = new DeviceProvisioningServiceOptions { ConnectionString = connectionString };
 
-        return Create(loggerFactory, dpsOptions);
+        return Create(dpsOptions, loggerFactory);
     }
 
     public static DeviceProvisioningService Create(
-        ILoggerFactory loggerFactory,
-        DeviceProvisioningServiceOptions options)
+        DeviceProvisioningServiceOptions options,
+        ILoggerFactory? loggerFactory = null)
     {
-        ArgumentNullException.ThrowIfNull(loggerFactory);
         ArgumentNullException.ThrowIfNull(options);
 
         return new DeviceProvisioningService(
-            loggerFactory,
-            options);
+            options,
+            loggerFactory);
     }
 }

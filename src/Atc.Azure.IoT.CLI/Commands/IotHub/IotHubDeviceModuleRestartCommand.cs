@@ -5,11 +5,10 @@ public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubModule
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceModuleRestartCommand> logger;
 
-    public IotHubDeviceModuleRestartCommand(
-        ILoggerFactory loggerFactory)
+    public IotHubDeviceModuleRestartCommand(ILoggerFactory? loggerFactory = null)
     {
-        this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<IotHubDeviceModuleRestartCommand>();
+        this.loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
+        logger = this.loggerFactory.CreateLogger<IotHubDeviceModuleRestartCommand>();
     }
 
     public override Task<int> ExecuteAsync(
@@ -21,14 +20,13 @@ public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubModule
         return ExecuteInternalAsync(settings);
     }
 
-    private async Task<int> ExecuteInternalAsync(
-        IotHubModuleCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(IotHubModuleCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
         var iotHubService = IotHubServiceFactory.Create(
-            loggerFactory,
-            settings.ConnectionString!);
+            settings.ConnectionString!,
+            loggerFactory);
 
         var sw = Stopwatch.StartNew();
 

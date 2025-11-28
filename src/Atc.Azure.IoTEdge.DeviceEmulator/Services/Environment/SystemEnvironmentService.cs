@@ -5,10 +5,11 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Services.Environment;
 /// </summary>
 public partial class SystemEnvironmentService : ISystemEnvironmentService
 {
-    public SystemEnvironmentService(
-        ILoggerFactory loggerFactory)
+    public SystemEnvironmentService(ILoggerFactory? loggerFactory = null)
     {
-        logger = loggerFactory.CreateLogger<SystemEnvironmentService>();
+        logger = loggerFactory is not null
+            ? loggerFactory.CreateLogger<SystemEnvironmentService>()
+            : NullLogger<SystemEnvironmentService>.Instance;
     }
 
     public FileInfo GetCommandFilePath()
@@ -28,8 +29,7 @@ public partial class SystemEnvironmentService : ISystemEnvironmentService
         throw new NotSupportedException(notSupportedMessage);
     }
 
-    public void SetEnvironmentVariables(
-        IDictionary<string, string> variables)
+    public void SetEnvironmentVariables(IDictionary<string, string> variables)
     {
         ArgumentNullException.ThrowIfNull(variables);
 

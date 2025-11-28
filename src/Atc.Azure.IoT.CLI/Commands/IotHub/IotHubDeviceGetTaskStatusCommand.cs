@@ -5,11 +5,10 @@ public sealed class IotHubDeviceGetTaskStatusCommand : AsyncCommand<IotHubDevice
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceGetTaskStatusCommand> logger;
 
-    public IotHubDeviceGetTaskStatusCommand(
-        ILoggerFactory loggerFactory)
+    public IotHubDeviceGetTaskStatusCommand(ILoggerFactory? loggerFactory = null)
     {
-        this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<IotHubDeviceGetTaskStatusCommand>();
+        this.loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
+        logger = this.loggerFactory.CreateLogger<IotHubDeviceGetTaskStatusCommand>();
     }
 
     public override Task<int> ExecuteAsync(
@@ -21,14 +20,13 @@ public sealed class IotHubDeviceGetTaskStatusCommand : AsyncCommand<IotHubDevice
         return ExecuteInternalAsync(settings);
     }
 
-    private async Task<int> ExecuteInternalAsync(
-        IotHubDeviceGetTaskStatusCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(IotHubDeviceGetTaskStatusCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
         var iotHubService = IotHubServiceFactory.Create(
-            loggerFactory,
-            settings.ConnectionString!);
+            settings.ConnectionString!,
+            loggerFactory);
 
         var sw = Stopwatch.StartNew();
 

@@ -5,11 +5,10 @@ public sealed class IotHubDeviceDeleteCommand : AsyncCommand<IotHubDeviceCommand
     private readonly ILoggerFactory loggerFactory;
     private readonly ILogger<IotHubDeviceDeleteCommand> logger;
 
-    public IotHubDeviceDeleteCommand(
-        ILoggerFactory loggerFactory)
+    public IotHubDeviceDeleteCommand(ILoggerFactory? loggerFactory = null)
     {
-        this.loggerFactory = loggerFactory;
-        logger = loggerFactory.CreateLogger<IotHubDeviceDeleteCommand>();
+        this.loggerFactory = loggerFactory ?? NullLoggerFactory.Instance;
+        logger = this.loggerFactory.CreateLogger<IotHubDeviceDeleteCommand>();
     }
 
     public override Task<int> ExecuteAsync(
@@ -21,15 +20,14 @@ public sealed class IotHubDeviceDeleteCommand : AsyncCommand<IotHubDeviceCommand
         return ExecuteInternalAsync(settings);
     }
 
-    private async Task<int> ExecuteInternalAsync(
-        IotHubDeviceCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(IotHubDeviceCommandSettings settings)
     {
         ConsoleHelper.WriteHeader();
 
         var deviceId = settings.DeviceId!;
         var iotHubService = IotHubServiceFactory.Create(
-            loggerFactory,
-            settings.ConnectionString!);
+            settings.ConnectionString!,
+            loggerFactory);
 
         var sw = Stopwatch.StartNew();
 

@@ -11,12 +11,14 @@ public partial class AzureIoTHubService : IAzureIoTHubService
     private readonly IIoTHubService iotHubService;
 
     public AzureIoTHubService(
-        ILoggerFactory loggerFactory,
-        IIoTHubService iotHubService)
+        IIoTHubService iotHubService,
+        ILoggerFactory? loggerFactory = null)
     {
-        logger = loggerFactory.CreateLogger<AzureIoTHubService>();
         jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
         this.iotHubService = iotHubService;
+        logger = loggerFactory is not null
+            ? loggerFactory.CreateLogger<AzureIoTHubService>()
+            : NullLogger<AzureIoTHubService>.Instance;
     }
 
     public (bool Succeeded, string EmulationManifest) TransformTemplateToEmulationManifest(

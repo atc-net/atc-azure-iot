@@ -10,19 +10,20 @@ public sealed partial class SimulationModuleService : IHostedService
     private readonly IScheduler scheduler;
 
     public SimulationModuleService(
-        ILoggerFactory loggerFactory,
         IHostApplicationLifetime hostApplication,
         IModuleClientWrapper moduleClientWrapper,
-        ISchedulerFactory schedulerFactory)
+        ISchedulerFactory schedulerFactory,
+        ILoggerFactory? loggerFactory = null)
     {
-        this.logger = loggerFactory.CreateLogger<SimulationModuleService>();
         this.hostApplication = hostApplication;
         this.moduleClientWrapper = moduleClientWrapper;
         this.scheduler = schedulerFactory.GetScheduler(hostApplication.ApplicationStopping).Result;
+        this.logger = loggerFactory is not null
+            ? loggerFactory.CreateLogger<SimulationModuleService>()
+            : NullLogger<SimulationModuleService>.Instance;
     }
 
-    public async Task StartAsync(
-        CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         hostApplication.ApplicationStarted.Register(OnStarted);
         hostApplication.ApplicationStopping.Register(OnStopping);
@@ -57,8 +58,7 @@ public sealed partial class SimulationModuleService : IHostedService
         await scheduler.ScheduleJob(job, trigger, cancellationToken);
     }
 
-    public async Task StopAsync(
-        CancellationToken cancellationToken)
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
         try
         {

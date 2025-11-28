@@ -27,14 +27,14 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IIoTHubModuleService, IoTHubModuleService>(s =>
             new IoTHubModuleService(
-                s.GetRequiredService<ILoggerFactory>(),
-                iotHubOptions));
+                iotHubOptions,
+                s.GetRequiredService<ILoggerFactory>()));
 
         services.AddSingleton<IIoTHubService, IoTHubService>(s =>
             new IoTHubService(
-                s.GetRequiredService<ILoggerFactory>(),
                 s.GetRequiredService<IIoTHubModuleService>(),
-                iotHubOptions));
+                iotHubOptions,
+                s.GetRequiredService<ILoggerFactory>()));
 
         return services;
     }
@@ -59,8 +59,8 @@ public static class ServiceCollectionExtensions
         services.TryAddSingleton<IConfigurationContentProvider, ConfigurationContentProvider>();
 
         services.AddSingleton<IDeviceProvisioningService, DeviceProvisioningService>(s => new DeviceProvisioningService(
-            s.GetRequiredService<ILoggerFactory>(),
-            deviceProvisioningServiceOptions));
+            deviceProvisioningServiceOptions,
+            s.GetRequiredService<ILoggerFactory>()));
 
         return services;
     }

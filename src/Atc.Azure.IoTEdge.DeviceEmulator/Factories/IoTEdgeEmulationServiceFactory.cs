@@ -3,15 +3,15 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Factories;
 public static class IoTEdgeEmulationServiceFactory
 {
     public static IoTEdgeEmulationService BuildIoTEdgeEmulationService(
-        ILoggerFactory loggerFactory,
         IDockerService dockerService,
-        IIoTHubService iotHubService)
+        IIoTHubService iotHubService,
+        ILoggerFactory? loggerFactory = null)
         => new(
-            loggerFactory,
             new FileService(),
             dockerService,
             iotHubService,
             new AzureIoTHubService(
-                loggerFactory,
-                iotHubService));
+                iotHubService,
+                loggerFactory),
+            loggerFactory);
 }
