@@ -37,8 +37,7 @@ public class MockModuleClientWrapper : IModuleClientWrapper
 
     private IRetryPolicy? policy;
 
-    public MockModuleClientWrapper(
-        ILogger<MockModuleClientWrapper> logger)
+    public MockModuleClientWrapper(ILogger<MockModuleClientWrapper> logger)
     {
         this.logger = logger;
     }
@@ -233,8 +232,7 @@ public class MockModuleClientWrapper : IModuleClientWrapper
         CancellationToken cancellationToken)
         => SendEventBatchAsync(outputName, messages);
 
-    public void SetConnectionStatusChangesHandler(
-        ConnectionStatusChangesHandler statusChangesHandler)
+    public void SetConnectionStatusChangesHandler(ConnectionStatusChangesHandler statusChangesHandler)
     {
         connectionStatusChangesHandler = statusChangesHandler;
         logger.LogInformation("Connection status changes handler set.");
@@ -321,8 +319,7 @@ public class MockModuleClientWrapper : IModuleClientWrapper
         CancellationToken cancellationToken)
         => SetMethodHandlerAsync(methodName, methodHandler, userContext);
 
-    public void SetRetryPolicy(
-        IRetryPolicy retryPolicy)
+    public void SetRetryPolicy(IRetryPolicy retryPolicy)
     {
         policy = retryPolicy;
         logger.LogInformation($"Retry policy set: {retryPolicy}");

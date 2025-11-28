@@ -5,8 +5,7 @@ namespace Atc.Azure.IoT.Wpf.App;
 /// </summary>
 public partial class MainWindow
 {
-    public MainWindow(
-        IMainWindowViewModelBase viewModel)
+    public MainWindow(IMainWindowViewModelBase viewModel)
     {
         InitializeComponent();
         DataContext = viewModel;

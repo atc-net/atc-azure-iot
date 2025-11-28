@@ -12,5 +12,4 @@ public record GetEndpointWithNodesResponse(
     Endpoint Endpoint,
     bool HasMoreData);
 
-public record GetEndpointsWithEmptyOpcNodesListResponse(
-    List<string> Endpoints);
+public record GetEndpointsWithEmptyOpcNodesListResponse(List<string> Endpoints);

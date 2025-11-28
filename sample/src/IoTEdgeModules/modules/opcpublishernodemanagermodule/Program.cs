@@ -71,8 +71,7 @@ public static class Program
         await host.RunAsync();
     }
 
-    private static async Task SetupEmulator(
-        IServiceProvider serviceProvider)
+    private static async Task SetupEmulator(IServiceProvider serviceProvider)
     {
         Console.CancelKeyPress += OnEmulatorCancelKeyPress;
         AppDomain.CurrentDomain.UnhandledException += (_, e) => OnEmulatorUnhandledException(e);
@@ -126,8 +125,7 @@ public static class Program
         }
     }
 
-    private static void OnEmulatorUnhandledException(
-        UnhandledExceptionEventArgs args)
+    private static void OnEmulatorUnhandledException(UnhandledExceptionEventArgs args)
     {
         if (logger is null)
         {

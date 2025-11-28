@@ -76,8 +76,7 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
     /// </summary>
     /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
     /// <returns>A collection of all IndividualEnrollments.</returns>
-    public async Task<IEnumerable<IndividualEnrollment>> GetIndividualEnrollments(
-        CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<IndividualEnrollment>> GetIndividualEnrollments(CancellationToken cancellationToken = default)
     {
         var enrollments = new List<IndividualEnrollment>();
         var querySpecification = new QuerySpecification("SELECT * FROM enrollments");
