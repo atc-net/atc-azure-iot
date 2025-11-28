@@ -29,8 +29,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         ValidateAndAssign(options.ConnectionString, Assign);
     }
 
-    public async Task<RegistryStatistics?> GetDeviceRegistryStatistics(
-        CancellationToken cancellationToken = default)
+    public async Task<RegistryStatistics?> GetDeviceRegistryStatistics(CancellationToken cancellationToken = default)
     {
         try
         {
@@ -164,8 +163,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         }
     }
 
-    public async Task<IReadOnlyCollection<Twin>> GetDeviceTwins(
-        bool onlyIncludeEdgeDevices)
+    public async Task<IReadOnlyCollection<Twin>> GetDeviceTwins(bool onlyIncludeEdgeDevices)
     {
         var result = new List<Twin>();
 
@@ -640,8 +638,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         }
     }
 
-    protected override void Assign(
-        string connectionString)
+    protected override void Assign(string connectionString)
     {
         registryManager = RegistryManager.CreateFromConnectionString(connectionString);
         ioTHubHostName = IotHubConnectionStringBuilder.Create(connectionString).HostName;
@@ -678,8 +675,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         return new Response<LogResponse>(result.Status, payload!);
     }
 
-    private static RestartModuleRequest BuildRestartModuleRequest(
-        string moduleId)
+    private static RestartModuleRequest BuildRestartModuleRequest(string moduleId)
         => new(Id: moduleId);
 
     private static MethodParameterModel GetMethodParameterModel(
@@ -695,8 +691,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         GC.SuppressFinalize(this);
     }
 
-    private void Dispose(
-        bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!disposing)
         {

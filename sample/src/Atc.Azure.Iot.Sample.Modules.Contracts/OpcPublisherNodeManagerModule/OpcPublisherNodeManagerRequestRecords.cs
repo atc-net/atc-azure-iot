@@ -1,7 +1,6 @@
 namespace Atc.Azure.Iot.Sample.Modules.Contracts.OpcPublisherNodeManagerModule;
 
-public record ConfigurationFileEntry(
-    Uri? EndpointUrl)
+public record ConfigurationFileEntry(Uri? EndpointUrl)
 {
     public bool? UseSecurity { get; set; }
 
@@ -19,8 +18,7 @@ public record NodeToUpdate(
     int OpcSamplingInterval,
     int OpcPublishingInterval);
 
-public record NodeToRemove(
-    string NodeId);
+public record NodeToRemove(string NodeId);
 
 public record OpcNodeOnEndpoint(
     string Id,
@@ -45,8 +43,7 @@ public record AddNodesToEndpointRequest(
     string EndpointUrl,
     IList<OpcNodeOnEndpoint> Nodes);
 
-public record GetEndpointsRequest(
-    int PageIndex);
+public record GetEndpointsRequest(int PageIndex);
 
 public record GetEndpointWithNodesRequest(
     string EndpointUrl,
@@ -64,12 +61,10 @@ public record RemoveNodeFromEndpointRequest(
     string EndpointUrl,
     string NodeId);
 
-public record RemoveAllNodesFromEndpointRequest(
-    string EndpointUrl);
+public record RemoveAllNodesFromEndpointRequest(string EndpointUrl);
 
 public record RemoveNodesFromEndpointRequest(
     string EndpointUrl,
     IList<NodeToRemove> Nodes);
 
-public record RemoveEndpointRequest(
-    string EndpointUrl);
+public record RemoveEndpointRequest(string EndpointUrl);

@@ -16,8 +16,7 @@ public sealed partial class PulsJob : IJob
         this.numberGenerator = numberGenerator;
     }
 
-    public async Task Execute(
-        IJobExecutionContext context)
+    public async Task Execute(IJobExecutionContext context)
     {
         LogJobStarted(nameof(PulsJob));
 

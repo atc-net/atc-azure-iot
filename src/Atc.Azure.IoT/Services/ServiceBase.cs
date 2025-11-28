@@ -26,6 +26,5 @@ public abstract class ServiceBase
         }
     }
 
-    protected abstract void Assign(
-        string connectionString);
+    protected abstract void Assign(string connectionString);
 }

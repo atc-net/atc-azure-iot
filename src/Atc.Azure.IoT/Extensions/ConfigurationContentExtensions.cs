@@ -99,8 +99,7 @@ public static class ConfigurationContentExtensions
         return configurationContent;
     }
 
-    private static Dictionary<string, object> GetEdgeAgentConfiguration(
-        EdgeAgentDesiredProperties edgeAgentDesiredProperties)
+    private static Dictionary<string, object> GetEdgeAgentConfiguration(EdgeAgentDesiredProperties edgeAgentDesiredProperties)
     {
         var manifestRegistryCredentials = edgeAgentDesiredProperties.RegistryCredentials.ToDictionary(
             x => x.Name,
@@ -141,8 +140,7 @@ public static class ConfigurationContentExtensions
         return config;
     }
 
-    private static Dictionary<string, object> GetSystemModuleSpecification(
-        EdgeAgentDesiredProperties edgeAgentDesiredProperties)
+    private static Dictionary<string, object> GetSystemModuleSpecification(EdgeAgentDesiredProperties edgeAgentDesiredProperties)
     {
         if (edgeAgentDesiredProperties.EdgeSystemModuleSpecifications.Count == 0)
         {
@@ -178,8 +176,7 @@ public static class ConfigurationContentExtensions
             StringComparer.Ordinal);
     }
 
-    private static Dictionary<string, object> BuildDockerModule(
-        EdgeModuleSpecification edgeModuleSpecification)
+    private static Dictionary<string, object> BuildDockerModule(EdgeModuleSpecification edgeModuleSpecification)
     {
         var module = new Dictionary<string, object>(StringComparer.Ordinal)
         {

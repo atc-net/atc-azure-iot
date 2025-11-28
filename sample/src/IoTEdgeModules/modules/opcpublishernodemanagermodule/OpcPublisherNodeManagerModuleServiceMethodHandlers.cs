@@ -839,8 +839,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
         return response;
     }
 
-    private static GetEndpointsWithEmptyOpcNodesListResponse CreateGetEndpointsWithEmptyOpcNodesListResponse(
-        IEnumerable<ConfigurationFileEntry> configurationFileEntries)
+    private static GetEndpointsWithEmptyOpcNodesListResponse CreateGetEndpointsWithEmptyOpcNodesListResponse(IEnumerable<ConfigurationFileEntry> configurationFileEntries)
     {
         var endpointList = new List<string>();
 
@@ -861,8 +860,7 @@ public sealed partial class OpcPublisherNodeManagerModuleService
         return new GetEndpointsWithEmptyOpcNodesListResponse(endpointList);
     }
 
-    private async Task<(bool Succeeded, List<ConfigurationFileEntry>? ConfigurationFileEntries, string? ErrorMessage)> ReadConfig(
-        CancellationToken cancellationToken)
+    private async Task<(bool Succeeded, List<ConfigurationFileEntry>? ConfigurationFileEntries, string? ErrorMessage)> ReadConfig(CancellationToken cancellationToken)
     {
         List<ConfigurationFileEntry>? configurationFileEntries = null;
 
@@ -917,7 +915,6 @@ public sealed partial class OpcPublisherNodeManagerModuleService
         return (true, null);
     }
 
-    private static bool IsEndpointUrlValid(
-        string endpointUrl)
+    private static bool IsEndpointUrlValid(string endpointUrl)
         => Uri.TryCreate(endpointUrl, UriKind.Absolute, out _);
 }
