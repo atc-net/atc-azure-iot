@@ -136,7 +136,14 @@ public void ConfigureServices(IServiceCollection services)
         ConnectionString = "your_iot_hub_connection_string"
     };
 
+    // Default: Uses DI's ILoggerFactory if registered, otherwise no logging
     services.ConfigureIotHubServices(iotHubOptions);
+
+    // Explicitly disable logging
+    services.ConfigureIotHubServices(iotHubOptions, _ => null);
+
+    // Require logging (throws if ILoggerFactory is not registered)
+    services.ConfigureIotHubServices(iotHubOptions, sp => sp.GetRequiredService<ILoggerFactory>());
 }
 ```
 
@@ -246,7 +253,14 @@ public void ConfigureServices(IServiceCollection services)
         ConnectionString = "your_device_provisioning_service_connection_string"
     };
 
+    // Default: Uses DI's ILoggerFactory if registered, otherwise no logging
     services.ConfigureDeviceProvisioningServices(deviceProvisioningServiceOptions);
+
+    // Explicitly disable logging
+    services.ConfigureDeviceProvisioningServices(deviceProvisioningServiceOptions, _ => null);
+
+    // Require logging (throws if ILoggerFactory is not registered)
+    services.ConfigureDeviceProvisioningServices(deviceProvisioningServiceOptions, sp => sp.GetRequiredService<ILoggerFactory>());
 }
 ```
 

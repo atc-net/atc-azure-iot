@@ -11,11 +11,16 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The IServiceCollection to add the services to.</param>
     /// <param name="iotHubOptions">The iotHubOptions.</param>
+    /// <param name="loggerFactoryResolver">
+    /// Optional resolver for <see cref="ILoggerFactory"/>. If not provided, uses DI's ILoggerFactory if registered.
+    /// Use <c>_ => null</c> to explicitly disable logging.
+    /// </param>
     /// <returns>The same service collection so that multiple calls can be chained.</returns>
     /// <exception cref="InvalidOperationException">Thrown when <see cref="IotHubOptions"/> service is not registered or the connection string is missing.</exception>
     public static IServiceCollection ConfigureIotHubServices(
         this IServiceCollection services,
-        IotHubOptions iotHubOptions)
+        IotHubOptions iotHubOptions,
+        Func<IServiceProvider, ILoggerFactory?>? loggerFactoryResolver = null)
     {
         if (iotHubOptions is null ||
             string.IsNullOrEmpty(iotHubOptions.ConnectionString))
@@ -25,16 +30,16 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IDeviceTwinModuleExtractor, DeviceTwinModuleExtractor>();
 
-        services.AddSingleton<IIoTHubModuleService, IoTHubModuleService>(s =>
+        services.AddSingleton<IIoTHubModuleService, IoTHubModuleService>(sp =>
             new IoTHubModuleService(
                 iotHubOptions,
-                s.GetRequiredService<ILoggerFactory>()));
+                ResolveLoggerFactory(sp, loggerFactoryResolver)));
 
-        services.AddSingleton<IIoTHubService, IoTHubService>(s =>
+        services.AddSingleton<IIoTHubService, IoTHubService>(sp =>
             new IoTHubService(
-                s.GetRequiredService<IIoTHubModuleService>(),
+                sp.GetRequiredService<IIoTHubModuleService>(),
                 iotHubOptions,
-                s.GetRequiredService<ILoggerFactory>()));
+                ResolveLoggerFactory(sp, loggerFactoryResolver)));
 
         return services;
     }
@@ -44,11 +49,16 @@ public static class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The IServiceCollection to add the services to.</param>
     /// <param name="deviceProvisioningServiceOptions">The deviceProvisioningServiceOptions.</param>
+    /// <param name="loggerFactoryResolver">
+    /// Optional resolver for <see cref="ILoggerFactory"/>. If not provided, uses DI's ILoggerFactory if registered.
+    /// Use <c>_ => null</c> to explicitly disable logging.
+    /// </param>
     /// <returns>The same service collection so that multiple calls can be chained.</returns>
     /// <exception cref="InvalidOperationException">Thrown when <see cref="DeviceProvisioningServiceOptions"/> service is not registered or the connection string is missing.</exception>
     public static IServiceCollection ConfigureDeviceProvisioningServices(
         this IServiceCollection services,
-        DeviceProvisioningServiceOptions deviceProvisioningServiceOptions)
+        DeviceProvisioningServiceOptions deviceProvisioningServiceOptions,
+        Func<IServiceProvider, ILoggerFactory?>? loggerFactoryResolver = null)
     {
         if (deviceProvisioningServiceOptions is null ||
             string.IsNullOrEmpty(deviceProvisioningServiceOptions.ConnectionString))
@@ -58,10 +68,18 @@ public static class ServiceCollectionExtensions
 
         services.TryAddSingleton<IConfigurationContentProvider, ConfigurationContentProvider>();
 
-        services.AddSingleton<IDeviceProvisioningService, DeviceProvisioningService>(s => new DeviceProvisioningService(
-            deviceProvisioningServiceOptions,
-            s.GetRequiredService<ILoggerFactory>()));
+        services.AddSingleton<IDeviceProvisioningService, DeviceProvisioningService>(sp =>
+            new DeviceProvisioningService(
+                deviceProvisioningServiceOptions,
+                ResolveLoggerFactory(sp, loggerFactoryResolver)));
 
         return services;
     }
+
+    private static ILoggerFactory? ResolveLoggerFactory(
+        IServiceProvider serviceProvider,
+        Func<IServiceProvider, ILoggerFactory?>? loggerFactoryResolver)
+        => loggerFactoryResolver is not null
+            ? loggerFactoryResolver(serviceProvider)
+            : serviceProvider.GetService<ILoggerFactory>();
 }
