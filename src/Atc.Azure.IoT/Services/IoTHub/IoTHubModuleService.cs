@@ -50,33 +50,18 @@ public sealed partial class IoTHubModuleService : ServiceBase, IIoTHubModuleServ
                 })
             .Build();
 
-        try
-        {
-            var methodInfo = new CloudToDeviceMethod(parameters.Name, requestOptions.Timeout);
-            methodInfo.SetPayloadJson(parameters.JsonPayload);
+        var methodInfo = new CloudToDeviceMethod(parameters.Name, requestOptions.Timeout);
+        methodInfo.SetPayloadJson(parameters.JsonPayload);
 
-            var result = await pipeline.ExecuteAsync(
-                async ct => await (string.IsNullOrEmpty(moduleId)
-                    ? serviceClient!.InvokeDeviceMethodAsync(deviceId, methodInfo, ct)
-                    : serviceClient!.InvokeDeviceMethodAsync(deviceId, moduleId, methodInfo, ct)),
-                cancellationToken);
+        var result = await pipeline.ExecuteAsync(
+            async ct => await (string.IsNullOrEmpty(moduleId)
+                ? serviceClient!.InvokeDeviceMethodAsync(deviceId, methodInfo, ct)
+                : serviceClient!.InvokeDeviceMethodAsync(deviceId, moduleId, methodInfo, ct)),
+            cancellationToken);
 
-            return new MethodResultModel(
-                Status: result.Status,
-                JsonPayload: result.GetPayloadAsJson());
-        }
-        catch (IotHubException ex)
-        {
-            LogMethodCallFailed(
-                ex,
-                deviceId,
-                parameters.Name,
-                parameters.JsonPayload);
-
-            return new MethodResultModel(
-                Status: ex.Code.ToHttpStatusCode(),
-                JsonPayload: ex.ToJsonPayload());
-        }
+        return new MethodResultModel(
+            Status: result.Status,
+            JsonPayload: result.GetPayloadAsJson());
     }
 
     protected override void Assign(
