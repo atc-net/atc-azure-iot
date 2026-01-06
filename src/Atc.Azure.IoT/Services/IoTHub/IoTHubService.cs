@@ -659,14 +659,28 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
             Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) },
         };
 
-        var result = await iotHubModuleService.CallMethod(
-            deviceId,
-            EdgeAgentConstants.ModuleId,
-            new MethodParameterModel(
-                methodName,
-                JsonSerializer.Serialize(request, serializerOptions)),
-            requestOptions,
-            cancellationToken);
+        MethodResultModel result;
+        try
+        {
+            result = await iotHubModuleService.CallMethod(
+                deviceId,
+                EdgeAgentConstants.ModuleId,
+                new MethodParameterModel(
+                    methodName,
+                    JsonSerializer.Serialize(request, serializerOptions)),
+                requestOptions,
+                cancellationToken);
+        }
+        catch (IotHubException ex)
+        {
+            return new Response<LogResponse>(
+                ex.Code.ToHttpStatusCode(),
+                new LogResponse(
+                    BackgroundTaskRunStatus.Unknown,
+                    ex.Message,
+                    ex.TrackingId,
+                    ex.Code.ToString()));
+        }
 
         var payload = string.IsNullOrEmpty(result.JsonPayload)
             ? new LogResponse(BackgroundTaskRunStatus.Unknown, string.Empty, string.Empty, ErrorCode: null)
