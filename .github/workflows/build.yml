@@ -1,0 +1,68 @@
+name: "Build and test"
+
+on:
+  push:
+    branches:
+      - main
+    tags-ignore:
+      - '**'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dotnet-build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: ⚙️ Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '10.0.x'
+
+      # The WPF app only builds on Windows.
+      - name: 🔁 Restore packages non-wpf solution
+        if: runner.os != 'Windows'
+        run: dotnet restore Atc.Azure.IoT-WithoutWpf.slnx
+
+      - name: 🔁 Restore packages all
+        if: runner.os == 'Windows'
+        run: dotnet restore Atc.Azure.IoT.slnx
+
+      - name: 🛠️ Build non-wpf solution
+        if: runner.os != 'Windows'
+        run: dotnet build Atc.Azure.IoT-WithoutWpf.slnx -c Release --no-restore
+
+      - name: 🛠️ Build all
+        if: runner.os == 'Windows'
+        run: dotnet build Atc.Azure.IoT.slnx -c Release --no-restore
+
+  dotnet-test:
+    runs-on: windows-latest
+    needs: dotnet-build
+    steps:
+      - name: 🛒 Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: ⚙️ Setup .NET
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: 🔁 Restore packages
+        run: dotnet restore Atc.Azure.IoT.slnx
+
+      - name: 🛠️ Build solution
+        run: dotnet build Atc.Azure.IoT.slnx -c Release --no-restore /p:UseSourceLink=true
+
+      - name: 🧪 Run unit tests
+        run: dotnet test Atc.Azure.IoT.slnx -c Release --no-build --filter "Category!=Integration"
