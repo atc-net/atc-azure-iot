@@ -3,6 +3,7 @@ namespace Atc.Azure.IoTEdge.TestMocks;
 [SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "OK - By Design")]
 [SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "OK - By Design")]
 [SuppressMessage("Performance", "CA1848:Use the LoggerMessage delegates", Justification = "OK - By Design")]
+[SuppressMessage("Performance", "CA1873:Avoid potentially expensive logging", Justification = "OK - By Design")]
 [SuppressMessage("Major Code Smell", "S3881:\"IDisposable\" should be implemented correctly", Justification = "OK - By Design")]
 [SuppressMessage("Usage", "CA2254:Template should be a static expression", Justification = "OK - By Design")]
 [SuppressMessage("Performance", "CA1851:Possible multiple enumeration", Justification = "OK - By Design")]

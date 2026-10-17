@@ -11,16 +11,19 @@ public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DpsComma
         logger = this.loggerFactory.CreateLogger<DpsEnrollmentIndividualDeleteCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        DpsCommandSettings settings)
+        DpsCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(DpsCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        DpsCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -32,7 +35,7 @@ public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DpsComma
 
         var succeeded = await dpsService.DeleteIndividualEnrollment(
             settings.RegistrationId!,
-            CancellationToken.None);
+            cancellationToken);
 
         if (!succeeded)
         {

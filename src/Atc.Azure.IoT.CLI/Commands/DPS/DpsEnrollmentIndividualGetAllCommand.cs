@@ -11,16 +11,19 @@ public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<Connecti
         logger = this.loggerFactory.CreateLogger<DpsEnrollmentIndividualGetAllCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        ConnectionBaseCommandSettings settings)
+        ConnectionBaseCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(ConnectionBaseCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        ConnectionBaseCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -30,7 +33,7 @@ public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<Connecti
 
         var sw = Stopwatch.StartNew();
 
-        var individualEnrollments = await dpsService.GetIndividualEnrollments(CancellationToken.None);
+        var individualEnrollments = await dpsService.GetIndividualEnrollments(cancellationToken);
 
         foreach (var individualEnrollment in individualEnrollments)
         {

@@ -11,16 +11,19 @@ public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubModule
         logger = this.loggerFactory.CreateLogger<IotHubDeviceModuleRestartCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubModuleCommandSettings settings)
+        IotHubModuleCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(IotHubModuleCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        IotHubModuleCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -33,7 +36,7 @@ public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubModule
         var (succeeded, statusCode, jsonPayload) = await iotHubService.RestartModuleOnDevice(
             settings.DeviceId!,
             settings.ModuleId!,
-            CancellationToken.None);
+            cancellationToken);
 
         if (!succeeded)
         {

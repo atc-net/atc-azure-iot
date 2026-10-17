@@ -42,7 +42,7 @@ public sealed class JsonModulesConverterTests
         // Assert
         Assert.NotNull(modules);
         Assert.Single(modules);
-        Assert.Equal(1u, modules![0].StartupOrder);
+        Assert.Equal(1u, modules[0].StartupOrder);
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public sealed class JsonModulesConverterTests
         // Assert
         Assert.NotNull(modules);
         Assert.Single(modules);
-        Assert.Equal(1u, modules![0].StartupOrder);
+        Assert.Equal(1u, modules[0].StartupOrder);
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public sealed class JsonModulesConverterTests
         // Assert
         Assert.NotNull(modules);
         Assert.Single(modules);
-        Assert.Null(modules![0].StartupOrder);
+        Assert.Null(modules[0].StartupOrder);
     }
 
     [Fact]
@@ -131,6 +131,6 @@ public sealed class JsonModulesConverterTests
         // Assert
         Assert.NotNull(modules);
         Assert.Single(modules);
-        Assert.Equal(uint.MaxValue, modules![0].StartupOrder);
+        Assert.Equal(uint.MaxValue, modules[0].StartupOrder);
     }
 }
