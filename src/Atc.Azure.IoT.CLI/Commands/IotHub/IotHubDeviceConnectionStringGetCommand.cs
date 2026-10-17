@@ -11,16 +11,19 @@ public sealed class IotHubDeviceConnectionStringGetCommand : AsyncCommand<IotHub
         logger = this.loggerFactory.CreateLogger<IotHubDeviceConnectionStringGetCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubDeviceCommandSettings settings)
+        IotHubDeviceCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(IotHubDeviceCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        IotHubDeviceCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -34,7 +37,7 @@ public sealed class IotHubDeviceConnectionStringGetCommand : AsyncCommand<IotHub
 
         var deviceConnectionString = await iotHubService.GetDeviceConnectionString(
             deviceId,
-            CancellationToken.None);
+            cancellationToken);
 
         if (string.IsNullOrEmpty(deviceConnectionString))
         {

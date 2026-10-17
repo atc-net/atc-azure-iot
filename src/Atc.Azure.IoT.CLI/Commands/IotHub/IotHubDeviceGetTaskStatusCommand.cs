@@ -11,16 +11,19 @@ public sealed class IotHubDeviceGetTaskStatusCommand : AsyncCommand<IotHubDevice
         logger = this.loggerFactory.CreateLogger<IotHubDeviceGetTaskStatusCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubDeviceGetTaskStatusCommandSettings settings)
+        IotHubDeviceGetTaskStatusCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(IotHubDeviceGetTaskStatusCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        IotHubDeviceGetTaskStatusCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -33,7 +36,7 @@ public sealed class IotHubDeviceGetTaskStatusCommand : AsyncCommand<IotHubDevice
         var result = await iotHubService.GetTaskStatus(
             settings.DeviceId!,
             new GetTaskStatusRequest(settings.CorrelationId!),
-            cancellationToken: CancellationToken.None);
+            cancellationToken: cancellationToken);
 
         if (result.StatusCode != StatusCodes.Status200OK)
         {

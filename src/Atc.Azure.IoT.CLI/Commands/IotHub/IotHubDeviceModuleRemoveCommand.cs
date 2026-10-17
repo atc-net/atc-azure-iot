@@ -11,16 +11,19 @@ public sealed class IotHubDeviceModuleRemoveCommand : AsyncCommand<IotHubModuleC
         logger = this.loggerFactory.CreateLogger<IotHubDeviceModuleRemoveCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubModuleCommandSettings settings)
+        IotHubModuleCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(IotHubModuleCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        IotHubModuleCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -36,7 +39,7 @@ public sealed class IotHubDeviceModuleRemoveCommand : AsyncCommand<IotHubModuleC
         var succeeded = await iotHubService.RemoveModuleFromDevice(
             deviceId,
             moduleId,
-            CancellationToken.None);
+            cancellationToken);
 
         if (!succeeded)
         {

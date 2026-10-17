@@ -11,16 +11,19 @@ public sealed class IotHubDeviceModuleGetTwinCommand : AsyncCommand<IotHubModule
         logger = this.loggerFactory.CreateLogger<IotHubDeviceModuleGetTwinCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubModuleCommandSettings settings)
+        IotHubModuleCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(IotHubModuleCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        IotHubModuleCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -33,7 +36,7 @@ public sealed class IotHubDeviceModuleGetTwinCommand : AsyncCommand<IotHubModule
         var moduleTwin = await iotHubService.GetModuleTwin(
             settings.DeviceId!,
             settings.ModuleId!,
-            CancellationToken.None);
+            cancellationToken);
 
         if (moduleTwin is null)
         {
