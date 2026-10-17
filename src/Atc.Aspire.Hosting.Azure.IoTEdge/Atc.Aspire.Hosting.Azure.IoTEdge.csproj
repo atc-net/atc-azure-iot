@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Atc.Aspire.Hosting.Azure.IoTEdge</PackageId>
+    <PackageTags>aspire;hosting;azure;iot;iotedge;edgehub</PackageTags>
+    <Description>An Aspire hosting integration for running Azure IoT Edge modules locally against a real Azure IoT Hub, either through a local edgeHub container or directly.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="13.6.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Atc.Azure.IoT\Atc.Azure.IoT.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Atc.Aspire.Hosting.Azure.IoTEdge.Tests" />
+  </ItemGroup>
+
+</Project>

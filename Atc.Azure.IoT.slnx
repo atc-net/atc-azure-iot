@@ -16,11 +16,13 @@
     <Project Path="sample/src/IoTEdgeModules/modules/simulationmodule/SimulationModule.csproj" />
   </Folder>
   <Folder Name="/src/">
+    <Project Path="src/Atc.Aspire.Hosting.Azure.IoTEdge/Atc.Aspire.Hosting.Azure.IoTEdge.csproj" />
     <Project Path="src/Atc.Azure.IoT.CLI/Atc.Azure.IoT.CLI.csproj" />
     <Project Path="src/Atc.Azure.IoT/Atc.Azure.IoT.csproj" />
     <Project Path="src/Atc.Azure.IoTEdge/Atc.Azure.IoTEdge.csproj" />
   </Folder>
   <Folder Name="/test/">
+    <Project Path="test/Atc.Aspire.Hosting.Azure.IoTEdge.Tests/Atc.Aspire.Hosting.Azure.IoTEdge.Tests.csproj" />
     <Project Path="test/Atc.Azure.IoT.Tests/Atc.Azure.IoT.Tests.csproj" />
     <Project Path="test/Atc.Azure.IoTEdge.Tests/Atc.Azure.IoTEdge.Tests.csproj" />
   </Folder>
