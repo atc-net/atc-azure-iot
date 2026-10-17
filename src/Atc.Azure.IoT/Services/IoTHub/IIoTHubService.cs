@@ -89,6 +89,18 @@ public interface IIoTHubService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Asynchronously adds a module identity to a device in the IoT Hub.
+    /// </summary>
+    /// <param name="deviceId">The identifier of the device to which the module is added.</param>
+    /// <param name="moduleId">The identifier of the module to add.</param>
+    /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
+    /// <returns>A tuple indicating whether the module was added and the created module (including its keys) if it was; otherwise, null.</returns>
+    Task<(bool Succeeded, Microsoft.Azure.Devices.Module? Module)> AddModuleToDevice(
+        string deviceId,
+        string moduleId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Asynchronously updates desired properties on a module twin in the IoT Hub.
     /// </summary>
     /// <param name="deviceId">The deviceId of the device to update its twin.</param>

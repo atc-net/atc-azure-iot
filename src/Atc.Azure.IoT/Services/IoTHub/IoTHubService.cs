@@ -450,6 +450,33 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         }
     }
 
+    public async Task<(bool Succeeded, Microsoft.Azure.Devices.Module? Module)> AddModuleToDevice(
+        string deviceId,
+        string moduleId,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(deviceId);
+        ArgumentException.ThrowIfNullOrEmpty(moduleId);
+
+        try
+        {
+            var module = await registryManager!.AddModuleAsync(
+                new Microsoft.Azure.Devices.Module(deviceId, moduleId),
+                cancellationToken);
+
+            return (true, module);
+        }
+        catch (Exception ex)
+        {
+            LogFailure(
+                ioTHubHostName!,
+                ex.GetType().ToString(),
+                ex.GetLastInnerMessage());
+
+            return (false, null);
+        }
+    }
+
     public async Task<bool> RemoveModuleFromDevice(
         string deviceId,
         string moduleId,

@@ -4,6 +4,12 @@ public static class OpcPublisherNodeManagerModuleConstants
 {
     public const string ModuleId = "PublishedNodeManager";
 
+    /// <summary>
+    /// The environment variable holding the directory of the OPC Publisher node configuration file (pn.json).
+    /// Defaults to opc/opcpublisher under the working directory.
+    /// </summary>
+    public const string NodeConfigurationDirectoryEnvironmentVariable = "OpcPublisherNodeConfigurationDirectory";
+
     public const string DirectMethodGetEndpoints = "GetEndpoints";
 
     public const string DirectMethodGetEndpointWithNodes = "GetEndpointWithNodes";

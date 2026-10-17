@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Atc.Azure.IoTEdge.DeviceEmulator\Atc.Azure.IoTEdge.DeviceEmulator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\sample\src\IoTEdgeModules\deployment.template.json" Link="TestData\deployment.template.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

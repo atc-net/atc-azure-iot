@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>Atc.Aspire.Hosting.Azure.IoTEdge</PackageId>
+    <PackageTags>aspire;hosting;azure;iot;iotedge;edgehub;emulator</PackageTags>
+    <Description>An Aspire hosting integration for running Azure IoT Edge modules locally against a real Azure IoT Hub, either through a local edgeHub container or directly.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="13.6.1" />
+    <!-- Aspire.Hosting 13.6.1 brings in MessagePack 2.5.302, which has a known vulnerability (GHSA-qhrr-8q5h-9q3h). -->
+    <PackageReference Include="MessagePack" Version="2.5.307" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Atc.Azure.IoTEdge.DeviceEmulator\Atc.Azure.IoTEdge.DeviceEmulator.csproj" />
+  </ItemGroup>
+
+</Project>

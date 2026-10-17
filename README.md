@@ -1,6 +1,6 @@
 # Introduction
 
-IoT library, which contains common services for Azure IotHub, DeviceProvisioningService (DPS), Iot edge devices, modules, and device twins, including an Iot edge module emulator and examples for setting up Microsoft OPC publisher module and related projects.
+IoT library, which contains common services for Azure IotHub, DeviceProvisioningService (DPS), Iot edge devices, modules, and device twins, including an Aspire based Iot edge device emulator and examples for setting up Microsoft OPC publisher module and related projects.
 
 # Table of Content
 
@@ -52,8 +52,8 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
   - [Usage Examples](#usage-examples)
     - [Setup for Different Execution Modes](#setup-for-different-execution-modes)
 - [Atc.Azure.IoTEdge.DeviceEmulator](#atcazureiotedgedeviceemulator)
-  - [Local Debugging](#local-debugging)
-  - [Local Development / Testing](#local-development--testing)
+- [Atc.Aspire.Hosting.Azure.IoTEdge](#atcaspirehostingazureiotedge)
+  - [Running the samples locally](#running-the-samples-locally)
 - [Sample Project](#sample-project)
   - [Atc.Azure.Iot.Sample.Modules.Contracts](#atcazureiotsamplemodulescontracts)
   - [IoT Edge Modules](#iot-edge-modules)
@@ -426,7 +426,7 @@ The `Atc.Azure.IoTEdge` package is specifically designed to enhance Azure IoT Ed
 ## Usage Examples
 
 ### Setup for Different Execution Modes
-Here is how you can use `Atc.Azure.IoTEdge` in an IoT Edge module, considering different execution modes such as standalone or emulator:
+Here is how you can use `Atc.Azure.IoTEdge` in an IoT Edge module, considering different execution modes such as standalone:
 
 ```csharp
 using var host = Host.CreateDefaultBuilder(args)
@@ -442,15 +442,9 @@ using var host = Host.CreateDefaultBuilder(args)
         {
             services.AddSingleton<IModuleClientWrapper, MockModuleClientWrapper>();
         }
-        else if (hostContext.IsEmulatorMode())
-        {
-            // Setup for emulator mode
-            services.AddModuleClientWrapper(TransportSettingsFactory.BuildAmqpTransportSettings());
-            // Additional setup for emulator
-        }
         else
         {
-            // Regular operational mode
+            // On an IoT Edge device, or emulated by Atc.Aspire.Hosting.Azure.IoTEdge
             services.AddModuleClientWrapper(TransportSettingsFactory.BuildMqttTransportSettings());
         }
 
@@ -472,115 +466,54 @@ await host.RunAsync();
 
 [![NuGet Version](https://img.shields.io/nuget/v/atc.azure.iotedge.deviceemulator.svg?logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/atc.azure.iotedge.deviceemulator)
 
-The `Atc.Azure.IoTEdge.DeviceEmulator` package is specifically designed for adding to IoTEdge module projects, when developing and testing IoTEdge modules locally. This package does so, by providing an emulator.
+The `Atc.Azure.IoTEdge.DeviceEmulator` package holds the building blocks for emulating an IoT Edge device against a real Azure IoT Hub. It has no Docker or Aspire dependency, and [Atc.Aspire.Hosting.Azure.IoTEdge](#atcaspirehostingazureiotedge) builds on it.
 
-## Local Debugging
+- **IoTEdgeDeviceProvisioner**: creates (or reuses) an edge-enabled device and its module identities in IoT Hub, applies module twin desired properties, and returns the module connection strings.
+- **DeploymentManifest**: reads the edgeHub routes, module ids and module twin desired properties from a deployment manifest or deployment template.
+- **EdgeHubCertificateGenerator**: generates the test CA chain and server certificate edgeHub needs to run outside the IoT Edge runtime.
+- **EdgeHubEnvironmentVariableNames**: the environment variables edgeHub and the IoT device SDK read.
 
-An example of setting up the emulator in an iotedge module can be found in the sample module [opcpublishernodemanagermodule](sample/src/IoTEdgeModules/modules/opcpublishernodemanagermodule/Program.cs)
+> The previous Docker-based emulator (which ran the IoT Edge runtime in a Docker-in-Docker container) has been replaced by the Aspire integration below.
 
-## Local Development / Testing
+# Atc.Aspire.Hosting.Azure.IoTEdge
 
-If e.g. we want to locally debug the `OpcPublisherNodeManagerModule`, the following pre-requisites should be met.
+[![NuGet Version](https://img.shields.io/nuget/v/atc.aspire.hosting.azure.iotedge.svg?logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/atc.aspire.hosting.azure.iotedge)
 
-1. Ensure the file [launchsettings.json](/sample/src/IoTEdgeModules/modules/opcpublishernodemanagermodule/Properties/launchSettings.json) is created with the following content
+An [Aspire](https://aspire.dev) hosting integration for running IoT Edge modules locally against a real Azure IoT Hub, either through a local edgeHub 1.6 container or directly. Modules can be .NET projects or containers, and get dashboard commands to invoke direct methods, update desired properties and show the module twin.
 
-> ```json
-> {
->   "profiles": {
->     "OpcPublisherNodeManagerModule": {
->       "commandName": "Project",
->       "environmentVariables": {
->         "DOTNET_ENVIRONMENT": "Emulator" | "Standalone"
->       }
->     },
->     "Docker": {
->       "commandName": "Docker"
->     }
->   }
-> }
-> ```
+```csharp
+var iotHub = builder.AddParameter("iothub-connection-string", secret: true);
 
-The `DOTNET_ENVIRONMENT` variable can be configured with two possible values: `Emulator` or `Standalone`. When set to `Standalone`, the system initializes only the module, verifying its startup and the correct configuration of its dependencies. Conversely, setting `DOTNET_ENVIRONMENT` to `Emulator` launches the emulator, allowing for debugging of the specified module.
+var device = builder
+    .AddIoTEdgeDevice("edge-device", iotHub)
+    .WithDeploymentManifest("../IoTEdgeModules/deployment.template.json")
+    .WithEdgeHub();
 
-2. Ensure a copy of `appsettings.example.json` is created with the name `appsettings.emulator.json` with the following content inside of the module in question
-    >```json
-    >{
-    >  "EmulatorOptions": {
-    >    "TemplateFilePath": ".[INSERT_LOCAL_PATH]\\sample\\src\\IoTEdgeModules\\deployment.template.emulation.manifest.json",
-    >    "IotHubConnectionString": "[INSERT_IOTHUB_SAS_POLICY_CONNECTION_STRING]"
-    >  }
-    >}
-    >```
-
-Once the previous pre-requisites are in place, the module can be locally debugged/tested, by the following flow:
-
-```mermaid
-sequenceDiagram
-    actor D as Developer
-    participant V AS Visual Studio
-    participant E AS Emulator
-    participant F AS File System
-    participant A AS Azure IoT Hub
-    participant DD AS Docker Desktop
-    participant DE AS Docker Hub
-    participant S AS System Environment
-    D->>V: Set the IoTEdge module as the Startup-Project from within Visual Studio, <br />and hit F5 to begin debugging
-    V->>E: Start the emulator
-    E->>+F: Load device emulation template
-    F-->>-E: Return Emulation template
-    E->>E: Transform template to manifest (sleep images)
-    E->>E: Transform manifest to ConfigurationContent
-    E->>A: Ensure temporary device is registered
-    A->>A: Remove old modules
-    A->>A: Add new modules
-    A->>A: Apply ConfigurationContent on device
-    A->>E: Return device ConnectionString
-    E->>DD: Start IoT Edge Development Container
-    DD->>+DE: Pull docker image https://hub.docker.com/r/toolboc/azure-iot-edge-device-container/dockerfile
-    DE->>-DD: Store image in Docker Desktop
-    DD->>DD: Stop and remove existing containers
-    DD->>DD: Create new container
-    DD->>DD: Start new container
-    DD->>E: EmulationStarted (true/false)
-    loop Retry Up to 15 Times
-        E->>DD: Check if the IoTEdge module to emulate has started
-        DD->>+S: Get Command File Path
-        S->>-DD: Return Command File Path
-        alt Module Started Successfully
-            DD->>E: Module Started
-        else Module Not Started
-            E->>DD: Check again
-        end
-    end
-    E->>DD: Get IOTEDGE_ specific variables from running container
-    DD->>+S: Get Command File Path
-    S->>-DD: Return Command File Path
-    DD->>E: Return IOTEDGE_ variables
-    E->>E: Replace variables IOTEDGE_WORKLOADURI and IOTEDGE_GATEWAYHOSTNAME to point to local development environment
-    E->>S: Set environment variables
-    S->>E: Variables set as ENVIRONMENT_VARIABLES
-    E->>V: Emulation fully started
-    V->>D: Module started and ready to accept e.g. a Direct Method Call from Azure,<br/> which will hit any break-point in the code locally
+builder
+    .AddProject<Projects.SimulationModule>("simulationmodule")
+    .AsIoTEdgeModule(device);
 ```
 
-When debugging concludes, the emulator is then stopped according to this sequence:
+See the [package README](src/Atc.Aspire.Hosting.Azure.IoTEdge/README.md) for the full API and how it works.
 
-```mermaid
-sequenceDiagram
-    actor D as Developer
-    participant V AS Visual Studio
-    participant E AS Emulator
-    participant DD AS Docker Desktop
-    participant A AS Azure IoT Hub
-    D->>V: Hit CTRL-C, which sends a SIGTERM to end the console application
-    V->>E: Stop the emulator
-    E->>+DD: Tear down IoT Edge development container and clean up
-    DD->>-E: Container stopped
-    E->>+A: Remove IoT Edge Device
-    A->>-E: Device removed
-    E->>V: Emulation stopped
-    V->>D: Module execution stops
-```
+## Running the samples locally
+
+The [sample AppHost](sample/src/Atc.Azure.Iot.Sample.AppHost/Program.cs) runs an OPC PLC simulator, Microsoft OPC Publisher, the simulation module and the OPC Publisher node manager module on one emulated device with a local edgeHub.
+
+1. Install Docker and the [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0).
+2. Set an IoT Hub connection string with registry read/write and service connect permissions (e.g. the `iothubowner` policy):
+   ```powershell
+   cd sample/src/Atc.Azure.Iot.Sample.AppHost
+   dotnet user-secrets set "Parameters:iothub-connection-string" "HostName=<hub>.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=<key>"
+   ```
+3. Run the AppHost and open the dashboard link it prints:
+   ```powershell
+   dotnet run --project sample/src/Atc.Azure.Iot.Sample.AppHost
+   ```
+4. The device `edge-device-<machine name>` appears in the IoT Hub with its modules. Telemetry counts against the IoT Hub daily quota, so `opc-plc` and `simulationmodule` don't start on their own. Start them from the dashboard, and stop them again when you're done. OPC Publisher waits for `opc-plc`. Telemetry from OPC Publisher and the simulation module is routed to `$upstream` by the routes in the [deployment template](sample/src/IoTEdgeModules/deployment.template.json). Watch it with e.g. `az iot hub monitor-events -n <hub> -d edge-device-<machine name>`.
+5. Use the module commands in the dashboard to call direct methods, e.g. `GetEndpoints` with payload `{ "pageIndex": 0 }` on `opcpublishernodemanagermodule`, or to change desired properties.
+
+The edgeHub container needs host ports 8883, 5671 and 443.
 
 # Sample Project
 
@@ -594,11 +527,11 @@ In the [sample modules](/sample/src/IoTEdgeModules/modules/) folder, a few IoT E
 
 ### SimulationModule
 
-The module is not configured to use an emulator. Instead, it relies on Quartz.Net for scheduling tasks. The module features a [`PulsJob`](/sample/src/IoTEdgeModules/modules/simulationmodule/Jobs/PulsJob.cs), which is responsible for emitting temperature telemetry at 5-second intervals. This telemetry simulates temperature readings by following a sinusoidal curve.
+The module relies on Quartz.Net for scheduling tasks. The module features a [`PulsJob`](/sample/src/IoTEdgeModules/modules/simulationmodule/Jobs/PulsJob.cs), which is responsible for emitting temperature telemetry at 5-second intervals. This telemetry simulates temperature readings by following a sinusoidal curve.
 
 ### OpcPublisherNodeManager
 
-This module is configured to use the emulator due to its extensive use of Direct Method calls. It is designed to manage the configuration file for the Microsoft OpcPublisher module, providing methods to manipulate it.
+This module manages the published nodes file (`pn.json`) of the Microsoft OpcPublisher module through direct methods. The file is read from `opc/opcpublisher` under the working directory, or from the directory in the `OpcPublisherNodeConfigurationDirectory` environment variable.
 
 Direct Methods supported:
 
@@ -665,7 +598,8 @@ Once you are ready to deploy the OpcPublisher module, there are several requirem
 
 # Requirements
 
-* [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+* [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+* Docker, for the Aspire sample
 
 # How to contribute
 

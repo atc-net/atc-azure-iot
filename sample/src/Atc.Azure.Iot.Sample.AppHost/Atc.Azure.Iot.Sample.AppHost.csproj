@@ -1,0 +1,21 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.6.1">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <UserSecretsId>c88f3907-e473-462b-8674-84683f06eebf</UserSecretsId>
+    <!--
+      Aspire 13.6 warns (ASPIRE010) when an AppHost doesn't use the Aspire CLI bundle, which fails the Release build.
+      This AppHost runs on the dashboard and DCP packages, so it starts with dotnet run or F5 and the Aspire CLI stays optional.
+    -->
+    <NoWarn>$(NoWarn);ASPIRE010</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Atc.Aspire.Hosting.Azure.IoTEdge\Atc.Aspire.Hosting.Azure.IoTEdge.csproj" IsAspireProjectResource="false" />
+    <ProjectReference Include="..\IoTEdgeModules\modules\simulationmodule\SimulationModule.csproj" />
+    <ProjectReference Include="..\IoTEdgeModules\modules\opcpublishernodemanagermodule\OpcPublisherNodeManagerModule.csproj" />
+  </ItemGroup>
+
+</Project>

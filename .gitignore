@@ -399,5 +399,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 # Project specifics
-/sample/src/IoTEdgeModules/modules/opcpublishernodemanagermodule/appsettings.emulator.json
 /src/Atc.Azure.IoT.Wpf.App/appsettings.development.json
