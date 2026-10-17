@@ -11,9 +11,10 @@ public sealed class IotHubDeviceTwinGetAllCommand : AsyncCommand<IotHubDeviceTwi
         logger = this.loggerFactory.CreateLogger<IotHubDeviceTwinGetAllCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubDeviceTwinGetAllCommandSettings settings)
+        IotHubDeviceTwinGetAllCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 

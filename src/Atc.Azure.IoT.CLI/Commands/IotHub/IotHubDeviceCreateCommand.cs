@@ -11,16 +11,19 @@ public sealed class IotHubDeviceCreateCommand : AsyncCommand<IotHubDeviceCreateC
         logger = this.loggerFactory.CreateLogger<IotHubDeviceCreateCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubDeviceCreateCommandSettings settings)
+        IotHubDeviceCreateCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(IotHubDeviceCreateCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        IotHubDeviceCreateCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -34,7 +37,7 @@ public sealed class IotHubDeviceCreateCommand : AsyncCommand<IotHubDeviceCreateC
         var (succeeded, device) = await iotHubService.CreateDevice(
             deviceId,
             settings.EdgeEnabled,
-            CancellationToken.None);
+            cancellationToken);
 
         if (!succeeded ||
             device is null)

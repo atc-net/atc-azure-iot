@@ -32,7 +32,7 @@ public sealed class ConfigurationContentProvider : IConfigurationContentProvider
             return (null, "Deployment Manifest was not in proper format.");
         }
 
-        var configurationContent = GetConfigurationContentFromManifest(templateContent!);
+        var configurationContent = GetConfigurationContentFromManifest(templateContent);
         if (configurationContent is null)
         {
             return (null, "Could not get ConfigurationContent from Deployment Manifest.");

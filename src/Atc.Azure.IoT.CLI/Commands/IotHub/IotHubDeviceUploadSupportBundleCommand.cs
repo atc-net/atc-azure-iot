@@ -11,16 +11,19 @@ public sealed class IotHubDeviceUploadSupportBundleCommand : AsyncCommand<IotHub
         logger = this.loggerFactory.CreateLogger<IotHubDeviceUploadSupportBundleCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        IotHubDeviceUploadSupportBundleCommandSettings settings)
+        IotHubDeviceUploadSupportBundleCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(IotHubDeviceUploadSupportBundleCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        IotHubDeviceUploadSupportBundleCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -37,7 +40,7 @@ public sealed class IotHubDeviceUploadSupportBundleCommand : AsyncCommand<IotHub
                 settings.Since is { IsSet: true } ? settings.Since.Value : string.Empty,
                 settings.Until is { IsSet: true } ? settings.Until.Value : string.Empty,
                 settings.IncludeEdgeRuntimeOnly),
-            cancellationToken: CancellationToken.None);
+            cancellationToken: cancellationToken);
 
         if (result.StatusCode != StatusCodes.Status200OK)
         {

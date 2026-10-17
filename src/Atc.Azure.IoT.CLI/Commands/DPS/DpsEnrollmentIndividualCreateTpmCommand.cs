@@ -11,16 +11,19 @@ public sealed class DpsEnrollmentIndividualCreateTpmCommand : AsyncCommand<DpsEn
         logger = this.loggerFactory.CreateLogger<DpsEnrollmentIndividualCreateTpmCommand>();
     }
 
-    public override Task<int> ExecuteAsync(
+    protected override Task<int> ExecuteAsync(
         CommandContext context,
-        DpsEnrollmentIndividualCreateTpmCommandSettings settings)
+        DpsEnrollmentIndividualCreateTpmCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(DpsEnrollmentIndividualCreateTpmCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        DpsEnrollmentIndividualCreateTpmCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -36,7 +39,7 @@ public sealed class DpsEnrollmentIndividualCreateTpmCommand : AsyncCommand<DpsEn
             settings.DeviceId!,
             settings.Tags?.Value.ParseToDictionary() ?? null,
             settings.DesiredProperties?.Value.ParseToDictionary() ?? null,
-            CancellationToken.None);
+            cancellationToken);
 
         if (enrollment is null)
         {
