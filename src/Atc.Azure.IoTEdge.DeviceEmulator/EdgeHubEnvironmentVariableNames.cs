@@ -48,6 +48,17 @@ public static class EdgeHubEnvironmentVariableNames
     public const string RoutePrefix = "routes__";
 
     /// <summary>
+    /// The name of the default route in the edgeHub image (<c>FROM /* INTO $upstream</c>), which sends every message upstream
+    /// on top of the configured routes.
+    /// </summary>
+    public const string DefaultRouteName = "r1";
+
+    /// <summary>
+    /// A route that never matches, used to switch off the default route. edgeHub does not accept an empty route.
+    /// </summary>
+    public const string DisabledRoute = "FROM /messages/* WHERE $connectionModuleId = '__disabled__' INTO $upstream";
+
+    /// <summary>
     /// The protocol edgeHub uses towards IoT Hub (Amqp, AmqpWs, Mqtt or MqttWs).
     /// </summary>
     public const string UpstreamProtocol = "UpstreamProtocol";

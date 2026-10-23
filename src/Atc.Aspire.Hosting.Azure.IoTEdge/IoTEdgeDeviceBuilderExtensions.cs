@@ -167,6 +167,11 @@ public static class IoTEdgeDeviceBuilderExtensions
                 var identity = await device.WaitForProvisioningAsync(context.CancellationToken);
                 context.EnvironmentVariables[EdgeHubEnvironmentVariableNames.IotHubConnectionString] = identity.GetEdgeHubConnectionString();
 
+                // The edgeHub image ships a default route that sends everything upstream, and environment variables
+                // can only add to it. An empty value crashes edgeHub, so it is replaced with a route that never matches.
+                context.EnvironmentVariables[$"{EdgeHubEnvironmentVariableNames.RoutePrefix}{EdgeHubEnvironmentVariableNames.DefaultRouteName}"] =
+                    EdgeHubEnvironmentVariableNames.DisabledRoute;
+
                 var routes = device.DeploymentManifest?.Routes;
                 if (routes is null || routes.Count == 0)
                 {
