@@ -3,7 +3,6 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Services;
 /// <summary>
 /// IoTEdgeEmulationService LoggerMessages.
 /// </summary>
-[SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - By Design")]
 public partial class IoTEdgeEmulationService
 {
     private readonly ILogger logger;

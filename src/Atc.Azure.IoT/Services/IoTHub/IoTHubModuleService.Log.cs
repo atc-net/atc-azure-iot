@@ -3,7 +3,6 @@ namespace Atc.Azure.IoT.Services.IoTHub;
 /// <summary>
 /// IoTHubModuleService LoggerMessages.
 /// </summary>
-[SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - By Design")]
 public sealed partial class IoTHubModuleService
 {
     private readonly ILogger<IoTHubModuleService> logger;
