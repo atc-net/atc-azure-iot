@@ -30,6 +30,17 @@ public sealed partial class IoTEdgeDeviceProvisioner
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
+        EventId = LoggingEventIdConstants.ModuleKeysAssigned,
+        Level = LogLevel.Information,
+        Message = "{CallerMethodName}({CallerLineNumber}) - Assigned symmetric keys to module identity '{ModuleId}' on IoT Edge device '{DeviceId}' in IoT Hub '{IotHubHostName}'.")]
+    private partial void LogModuleKeysAssigned(
+        string iotHubHostName,
+        string deviceId,
+        string moduleId,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
+
+    [LoggerMessage(
         EventId = LoggingEventIdConstants.ModuleDesiredPropertiesApplied,
         Level = LogLevel.Information,
         Message = "{CallerMethodName}({CallerLineNumber}) - Applied desired properties from the deployment manifest to module '{ModuleId}' on IoT Edge device '{DeviceId}' in IoT Hub '{IotHubHostName}'.")]

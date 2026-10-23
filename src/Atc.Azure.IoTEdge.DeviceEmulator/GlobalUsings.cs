@@ -7,6 +7,7 @@ global using System.Text.Json.Nodes;
 global using Atc.Azure.IoT;
 global using Atc.Azure.IoT.Services.IoTHub;
 global using Atc.Azure.IoTEdge.DeviceEmulator.Manifest;
+global using Microsoft.Azure.Devices;
 global using Microsoft.Azure.Devices.Shared;
 global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Logging.Abstractions;

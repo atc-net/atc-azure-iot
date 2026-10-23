@@ -101,6 +101,16 @@ public interface IIoTHubService
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Asynchronously updates a module identity in the IoT Hub, e.g. its authentication.
+    /// </summary>
+    /// <param name="moduleIdentity">The module identity to update, as retrieved from the IoT Hub (including its ETag).</param>
+    /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
+    /// <returns>A tuple indicating whether the module was updated and the updated module (including its keys) if it was; otherwise, null.</returns>
+    Task<(bool Succeeded, Microsoft.Azure.Devices.Module? Module)> UpdateModule(
+        Microsoft.Azure.Devices.Module moduleIdentity,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Asynchronously updates desired properties on a module twin in the IoT Hub.
     /// </summary>
     /// <param name="deviceId">The deviceId of the device to update its twin.</param>

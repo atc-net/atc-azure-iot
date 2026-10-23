@@ -8,4 +8,5 @@ internal static class LoggingEventIdConstants
     public const int ModuleDesiredPropertiesNotApplied = 103;
     public const int DeviceProvisioned = 104;
     public const int DeviceDeprovisioned = 105;
+    public const int ModuleKeysAssigned = 106;
 }

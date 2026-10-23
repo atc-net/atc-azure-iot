@@ -115,10 +115,18 @@ public sealed partial class IoTEdgeDeviceProvisioner : IIoTEdgeDeviceProvisioner
         var moduleKeys = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var moduleId in moduleIds.Append(EdgeHubConstants.ModuleId))
         {
-            if (!existingModules.TryGetValue(moduleId, out var module) ||
-                module.Authentication?.SymmetricKey?.PrimaryKey is not { Length: > 0 } primaryKey)
+            if (!existingModules.TryGetValue(moduleId, out var module))
             {
-                throw new InvalidOperationException($"Module identity '{moduleId}' on IoT Edge device '{deviceId}' has no symmetric key.");
+                throw new InvalidOperationException($"Module identity '{moduleId}' does not exist on IoT Edge device '{deviceId}'.");
+            }
+
+            // IoT Hub creates $edgeAgent and $edgeHub without credentials; the IoT Edge identity service assigns them.
+            // There is no identity service here, so the keys are assigned the same way.
+            if (GetPrimaryKey(module) is not { } primaryKey)
+            {
+                module = await AssignSymmetricKeys(deviceId, module, cancellationToken);
+                primaryKey = GetPrimaryKey(module)
+                             ?? throw new InvalidOperationException($"Module identity '{moduleId}' on IoT Edge device '{deviceId}' has no symmetric key.");
             }
 
             moduleKeys[moduleId] = primaryKey;
@@ -126,6 +134,39 @@ public sealed partial class IoTEdgeDeviceProvisioner : IIoTEdgeDeviceProvisioner
 
         return moduleKeys;
     }
+
+    private async Task<Module> AssignSymmetricKeys(
+        string deviceId,
+        Module module,
+        CancellationToken cancellationToken)
+    {
+        module.Authentication = new AuthenticationMechanism
+        {
+            Type = AuthenticationType.Sas,
+            SymmetricKey = new SymmetricKey
+            {
+                PrimaryKey = GenerateSymmetricKey(),
+                SecondaryKey = GenerateSymmetricKey(),
+            },
+        };
+
+        var (succeeded, updatedModule) = await iotHubService.UpdateModule(module, cancellationToken);
+        if (!succeeded || updatedModule is null)
+        {
+            throw new InvalidOperationException($"Could not assign symmetric keys to module identity '{module.Id}' on IoT Edge device '{deviceId}'. Check that the connection string has registry write permissions.");
+        }
+
+        LogModuleKeysAssigned(iotHubHostName, deviceId, module.Id);
+        return updatedModule;
+    }
+
+    private static string? GetPrimaryKey(Module module)
+        => module.Authentication?.SymmetricKey?.PrimaryKey is { Length: > 0 } primaryKey
+            ? primaryKey
+            : null;
+
+    private static string GenerateSymmetricKey()
+        => Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
 
     private async Task ApplyModuleDesiredProperties(
         string deviceId,
