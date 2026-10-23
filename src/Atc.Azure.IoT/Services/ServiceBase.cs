@@ -20,8 +20,9 @@ public abstract class ServiceBase
         }
         catch (FormatException formatException)
         {
+            // The connection string holds the shared access key, so it must not end up in the message.
             throw new InvalidConfigurationException(
-                $"Invalid service configuration for ConnectionString: {connectionString}",
+                "Invalid service configuration for ConnectionString. Expected the format 'HostName=<hub>.azure-devices.net;SharedAccessKeyName=<policy>;SharedAccessKey=<key>'.",
                 formatException);
         }
     }
