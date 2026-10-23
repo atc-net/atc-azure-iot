@@ -9,6 +9,12 @@ public sealed partial class IoTEdgeDeviceProvisioner : IIoTEdgeDeviceProvisioner
     private readonly IIoTHubService iotHubService;
     private readonly string iotHubHostName;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IoTEdgeDeviceProvisioner"/> class.
+    /// </summary>
+    /// <param name="iotHubService">The IoT Hub service, created from a connection string with registry read/write permissions.</param>
+    /// <param name="iotHubHostName">The IoT Hub host name, e.g. <c>myhub.azure-devices.net</c>.</param>
+    /// <param name="loggerFactory">An optional logger factory.</param>
     public IoTEdgeDeviceProvisioner(
         IIoTHubService iotHubService,
         string iotHubHostName,

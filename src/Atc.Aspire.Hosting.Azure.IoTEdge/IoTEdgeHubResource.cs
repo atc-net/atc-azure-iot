@@ -5,16 +5,49 @@ namespace Atc.Aspire.Hosting.Azure.IoTEdge;
 /// </summary>
 public sealed class IoTEdgeHubResource : ContainerResource
 {
+    /// <summary>
+    /// The container registry of the edgeHub image.
+    /// </summary>
     public const string DefaultRegistry = "mcr.microsoft.com";
+
+    /// <summary>
+    /// The edgeHub image.
+    /// </summary>
     public const string DefaultImage = "azureiotedge-hub";
+
+    /// <summary>
+    /// The edgeHub image tag (IoT Edge 1.6 LTS).
+    /// </summary>
     public const string DefaultTag = "1.6";
 
+    /// <summary>
+    /// The name of the MQTT endpoint.
+    /// </summary>
     public const string MqttEndpointName = "mqtt";
+
+    /// <summary>
+    /// The name of the AMQP endpoint.
+    /// </summary>
     public const string AmqpEndpointName = "amqp";
+
+    /// <summary>
+    /// The name of the endpoint for MQTT and AMQP over WebSockets.
+    /// </summary>
     public const string HttpsEndpointName = "https";
 
+    /// <summary>
+    /// The MQTT port edgeHub listens on.
+    /// </summary>
     public const int MqttPort = 8883;
+
+    /// <summary>
+    /// The AMQP port edgeHub listens on.
+    /// </summary>
     public const int AmqpPort = 5671;
+
+    /// <summary>
+    /// The port edgeHub listens on for MQTT and AMQP over WebSockets.
+    /// </summary>
     public const int HttpsPort = 443;
 
     /// <summary>
@@ -22,6 +55,12 @@ public sealed class IoTEdgeHubResource : ContainerResource
     /// </summary>
     public const string ContainerCertificateDirectory = "/iotedge/certs";
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IoTEdgeHubResource"/> class.
+    /// </summary>
+    /// <param name="name">The resource name, which is also the host name containers use to reach edgeHub.</param>
+    /// <param name="device">The device this edgeHub belongs to.</param>
+    /// <param name="certificates">The edgeHub test certificates on the host.</param>
     public IoTEdgeHubResource(
         string name,
         IoTEdgeDeviceResource device,

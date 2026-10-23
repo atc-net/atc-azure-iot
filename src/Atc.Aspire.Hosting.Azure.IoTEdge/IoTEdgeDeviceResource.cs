@@ -9,6 +9,13 @@ public sealed class IoTEdgeDeviceResource : Resource, IResourceWithWaitSupport
     private readonly TaskCompletionSource<IoTEdgeDeviceIdentity> provisioning = new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly List<IoTEdgeModuleAnnotation> modules = [];
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IoTEdgeDeviceResource"/> class.
+    /// </summary>
+    /// <param name="name">The resource name.</param>
+    /// <param name="iotHubConnectionString">The parameter holding the IoT Hub service connection string.</param>
+    /// <param name="deviceId">The id of the edge device in IoT Hub.</param>
+    /// <param name="certificateDirectory">The directory holding the edgeHub test certificates.</param>
     public IoTEdgeDeviceResource(
         string name,
         ParameterResource iotHubConnectionString,
