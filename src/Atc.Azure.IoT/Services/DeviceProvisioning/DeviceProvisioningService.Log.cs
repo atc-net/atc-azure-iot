@@ -3,7 +3,6 @@ namespace Atc.Azure.IoT.Services.DeviceProvisioning;
 /// <summary>
 /// DeviceProvisioningManager LoggerMessages.
 /// </summary>
-[SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - By Design")]
 public sealed partial class DeviceProvisioningService
 {
     private readonly ILogger<DeviceProvisioningService> logger;
