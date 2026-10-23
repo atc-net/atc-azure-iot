@@ -3,7 +3,6 @@ namespace SimulationModule.Jobs;
 /// <summary>
 /// PulsJob LoggerMessages.
 /// </summary>
-[SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - By Design")]
 public sealed partial class PulsJob
 {
     private readonly ILogger<PulsJob> logger;

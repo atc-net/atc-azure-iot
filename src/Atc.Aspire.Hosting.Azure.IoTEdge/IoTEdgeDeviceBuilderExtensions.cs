@@ -4,7 +4,7 @@ namespace Aspire.Hosting;
 /// <summary>
 /// Extension methods for adding an emulated IoT Edge device to an Aspire application.
 /// </summary>
-public static class IoTEdgeDeviceBuilderExtensions
+public static partial class IoTEdgeDeviceBuilderExtensions
 {
     private const string DeviceResourceType = "IoTEdgeDevice";
 

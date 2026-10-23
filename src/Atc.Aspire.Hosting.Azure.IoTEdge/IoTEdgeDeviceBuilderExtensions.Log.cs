@@ -1,15 +1,13 @@
-namespace Atc.Aspire.Hosting.Azure.IoTEdge;
+// ReSharper disable once CheckNamespace
+namespace Aspire.Hosting;
 
-/// <summary>
-/// LoggerMessages for the IoT Edge resources.
-/// </summary>
-internal static partial class IoTEdgeLoggerMessages
+public static partial class IoTEdgeDeviceBuilderExtensions
 {
     [LoggerMessage(
         EventId = 200,
         Level = LogLevel.Information,
         Message = "Loaded deployment manifest '{Path}' with {RouteCount} routes and desired properties for {ModuleCount} modules.")]
-    internal static partial void LogDeploymentManifestLoaded(
+    private static partial void LogDeploymentManifestLoaded(
         this ILogger logger,
         string path,
         int routeCount,
@@ -19,7 +17,7 @@ internal static partial class IoTEdgeLoggerMessages
         EventId = 201,
         Level = LogLevel.Information,
         Message = "Provisioning IoT Edge device '{DeviceId}' in IoT Hub '{IotHubHostName}'.")]
-    internal static partial void LogProvisioningDevice(
+    private static partial void LogProvisioningDevice(
         this ILogger logger,
         string deviceId,
         string iotHubHostName);
@@ -28,7 +26,7 @@ internal static partial class IoTEdgeLoggerMessages
         EventId = 202,
         Level = LogLevel.Information,
         Message = "IoT Edge device '{DeviceId}' is ready with modules {Modules}. Modules connect: {Mode}.")]
-    internal static partial void LogDeviceReady(
+    private static partial void LogDeviceReady(
         this ILogger logger,
         string deviceId,
         string modules,
@@ -38,7 +36,7 @@ internal static partial class IoTEdgeLoggerMessages
         EventId = 203,
         Level = LogLevel.Error,
         Message = "Provisioning IoT Edge device '{DeviceId}' failed: {ErrorMessage}")]
-    internal static partial void LogProvisioningFailed(
+    private static partial void LogProvisioningFailed(
         this ILogger logger,
         Exception exception,
         string deviceId,

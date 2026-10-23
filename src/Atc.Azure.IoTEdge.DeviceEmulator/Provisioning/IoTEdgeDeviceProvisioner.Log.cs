@@ -3,7 +3,6 @@ namespace Atc.Azure.IoTEdge.DeviceEmulator.Provisioning;
 /// <summary>
 /// IoTEdgeDeviceProvisioner LoggerMessages.
 /// </summary>
-[SuppressMessage("Design", "MA0048:File name must match type name", Justification = "OK - By Design")]
 public sealed partial class IoTEdgeDeviceProvisioner
 {
     private readonly ILogger<IoTEdgeDeviceProvisioner> logger;
