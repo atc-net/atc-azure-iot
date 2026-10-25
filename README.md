@@ -102,6 +102,8 @@ The `IIoTHubService` is designed to facilitate communication with Azure IoT Hub,
 #### Module Management
 
 - `GetModuleTwin(string deviceId, string moduleId, CancellationToken cancellationToken)`: Retrieve a specific module twin.
+- `AddModuleToDevice(string deviceId, string moduleId, CancellationToken cancellationToken)`: Add a module identity to a device, and return it with the keys IoT Hub generated.
+- `UpdateModule(Module moduleIdentity, CancellationToken cancellationToken)`: Update a module identity, e.g. its authentication, and return the updated module.
 - `UpdateDesiredProperties(string deviceId, string moduleId, TwinCollection twinCollection, CancellationToken cancellationToken)`: Update desired properties on a module twin.
 - `RemoveModuleFromDevice(string deviceId, string moduleId, CancellationToken cancellationToken)`: Remove a module from an IoT device.
 - `AddNewModules(string deviceId, ConfigurationContent manifestContent, CancellationToken cancellationToken)`: Add new modules to an IoT device.
@@ -146,6 +148,16 @@ public void ConfigureServices(IServiceCollection services)
     services.ConfigureIotHubServices(iotHubOptions, sp => sp.GetRequiredService<ILoggerFactory>());
 }
 ```
+
+The options can also be bound from configuration. `IotHubOptions.SectionName` is `IotHub`, so the connection string can come from `IotHub:ConnectionString` in `appsettings.json` or from the `IotHub__ConnectionString` environment variable:
+
+```csharp
+var iotHubOptions = configuration
+    .GetRequiredSection(IotHubOptions.SectionName)
+    .Get<IotHubOptions>()!;
+```
+
+`IotHubOptions.ToString()` redacts the shared access key, so the options can be logged safely.
 
 ## IoTHubModuleService
 
@@ -264,6 +276,8 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
+As with `IotHubOptions`, the options can be bound from the `DeviceProvisioningServiceOptions.SectionName` section (`DeviceProvisioningService`), and `ToString()` redacts the shared access key.
+
 ## IDeviceTwinModuleExtractor
 
 The `IDeviceTwinModuleExtractor` is designed to aid in extracting module information from the Edge Agent Twin in Azure IoT solutions. This interface provides targeted functionality for retrieving specific modules from the complex structure of an Edge Agent twin, simplifying the access to module-specific details crucial for operations and monitoring.
@@ -357,7 +371,7 @@ A successful installation will output something like
 
 ```powershell
 The tool can be invoked by the following command: atc-azure-iot
-Tool 'atc-azure-iot' (version '1.0.xxx') was successfully installed.`
+Tool 'atc-azure-iot' (version 'x.y.z') was successfully installed.`
 ```
 
 ## Update
@@ -667,7 +681,7 @@ Once you are ready to deploy the OpcPublisher module, there are several requirem
 
 # Requirements
 
-* [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+* [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 
 # How to contribute
 
