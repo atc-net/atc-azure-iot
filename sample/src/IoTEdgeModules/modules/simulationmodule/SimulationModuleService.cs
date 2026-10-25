@@ -12,12 +12,12 @@ public sealed partial class SimulationModuleService : IHostedService
     public SimulationModuleService(
         IHostApplicationLifetime hostApplication,
         IModuleClientWrapper moduleClientWrapper,
-        ISchedulerFactory schedulerFactory,
+        IScheduler scheduler,
         ILoggerFactory? loggerFactory = null)
     {
         this.hostApplication = hostApplication;
         this.moduleClientWrapper = moduleClientWrapper;
-        this.scheduler = schedulerFactory.GetScheduler(hostApplication.ApplicationStopping).Result;
+        this.scheduler = scheduler;
         this.logger = loggerFactory is not null
             ? loggerFactory.CreateLogger<SimulationModuleService>()
             : NullLogger<SimulationModuleService>.Instance;
@@ -36,7 +36,7 @@ public sealed partial class SimulationModuleService : IHostedService
 
         await scheduler.Start(cancellationToken);
 
-        var jobKey = JobKey.Create(nameof(PulsJob));
+        var jobKey = new JobKey(nameof(PulsJob));
 
         var job = JobBuilder.Create<PulsJob>()
             .WithIdentity(jobKey)
@@ -50,19 +50,19 @@ public sealed partial class SimulationModuleService : IHostedService
             .WithSimpleSchedule(schedule =>
             {
                 schedule
-                    .WithIntervalInSeconds(5)
+                    .WithInterval(TimeSpan.FromSeconds(5))
                     .RepeatForever();
             })
             .Build();
 
-        await scheduler.ScheduleJob(job, trigger, cancellationToken);
+        await scheduler.ScheduleJob(job, trigger, cancellationToken: cancellationToken);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
         try
         {
-            await scheduler.Shutdown(waitForJobsToComplete: true, cancellationToken);
+            await scheduler.Shutdown(waitForJobsToComplete: true, cancellationToken: cancellationToken);
 
             await moduleClientWrapper.CloseAsync(cancellationToken);
         }
