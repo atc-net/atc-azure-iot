@@ -5,6 +5,7 @@
     <PackageTags>azure;iot;iotedge;emulation;emulator</PackageTags>
     <Description>Atc.Azure.IoTEdge.DeviceEmulator contains a device emulator which can be used to test e.g Direct Method invocations and local debugging</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

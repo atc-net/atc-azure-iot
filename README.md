@@ -472,6 +472,8 @@ await host.RunAsync();
 
 [![NuGet Version](https://img.shields.io/nuget/v/atc.azure.iotedge.deviceemulator.svg?logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/atc.azure.iotedge.deviceemulator)
 
+> **No longer published.** Version 1.0.182 is the last release of this package. Its Docker-based emulator will be replaced by an Aspire hosting integration.
+
 The `Atc.Azure.IoTEdge.DeviceEmulator` package is specifically designed for adding to IoTEdge module projects, when developing and testing IoTEdge modules locally. This package does so, by providing an emulator.
 
 ## Local Debugging
