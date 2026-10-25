@@ -11,7 +11,7 @@ public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DpsComma
         logger = this.loggerFactory.CreateLogger<DpsEnrollmentIndividualDeleteCommand>();
     }
 
-    protected override Task<int> ExecuteAsync(
+    public override Task<int> ExecuteAsync(
         CommandContext context,
         DpsCommandSettings settings,
         CancellationToken cancellationToken)

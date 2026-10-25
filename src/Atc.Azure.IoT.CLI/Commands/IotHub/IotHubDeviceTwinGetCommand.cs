@@ -11,7 +11,7 @@ public sealed class IotHubDeviceTwinGetCommand : AsyncCommand<IotHubDeviceComman
         logger = this.loggerFactory.CreateLogger<IotHubDeviceTwinGetCommand>();
     }
 
-    protected override Task<int> ExecuteAsync(
+    public override Task<int> ExecuteAsync(
         CommandContext context,
         IotHubDeviceCommandSettings settings,
         CancellationToken cancellationToken)

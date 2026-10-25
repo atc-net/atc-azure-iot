@@ -11,7 +11,7 @@ public sealed class IotHubDeviceModuleRestartCommand : AsyncCommand<IotHubModule
         logger = this.loggerFactory.CreateLogger<IotHubDeviceModuleRestartCommand>();
     }
 
-    protected override Task<int> ExecuteAsync(
+    public override Task<int> ExecuteAsync(
         CommandContext context,
         IotHubModuleCommandSettings settings,
         CancellationToken cancellationToken)

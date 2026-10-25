@@ -11,7 +11,7 @@ public sealed class IotHubDeviceUploadSupportBundleCommand : AsyncCommand<IotHub
         logger = this.loggerFactory.CreateLogger<IotHubDeviceUploadSupportBundleCommand>();
     }
 
-    protected override Task<int> ExecuteAsync(
+    public override Task<int> ExecuteAsync(
         CommandContext context,
         IotHubDeviceUploadSupportBundleCommandSettings settings,
         CancellationToken cancellationToken)
