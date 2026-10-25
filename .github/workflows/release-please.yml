@@ -32,25 +32,24 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      # The WPF app is not packable, so the solution without it can be packed on Linux.
       - name: 🧹 Clean
         if: ${{ steps.release.outputs.release_created }}
-        run: dotnet clean Atc.Azure.IoT-WithoutWpf.slnx -c Release && dotnet nuget locals all --clear
+        run: dotnet clean Atc.Azure.IoT.slnx -c Release && dotnet nuget locals all --clear
 
       - name: 🔁 Restore packages
         if: ${{ steps.release.outputs.release_created }}
-        run: dotnet restore Atc.Azure.IoT-WithoutWpf.slnx
+        run: dotnet restore Atc.Azure.IoT.slnx
 
       - name: 🛠️ Build solution
         if: ${{ steps.release.outputs.release_created }}
-        run: dotnet build Atc.Azure.IoT-WithoutWpf.slnx -c Release --no-restore /p:UseSourceLink=true
+        run: dotnet build Atc.Azure.IoT.slnx -c Release --no-restore /p:UseSourceLink=true
 
       # All packages share a single <Version> in Directory.Build.props, so they are
       # always packed and published together from one release-please tag.
       # Only projects with IsPackable=true (the src libraries and the CLI tool) produce a package.
       - name: 🗳️ Creating library packages for release
         if: ${{ steps.release.outputs.release_created }}
-        run: dotnet pack Atc.Azure.IoT-WithoutWpf.slnx -c Release --no-restore -o "${{ github.workspace }}/packages"
+        run: dotnet pack Atc.Azure.IoT.slnx -c Release --no-restore -o "${{ github.workspace }}/packages"
 
       - name: 🔑 NuGet login (OIDC → short-lived API key)
         if: ${{ steps.release.outputs.release_created }}

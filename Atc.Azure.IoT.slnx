@@ -18,7 +18,6 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Atc.Azure.IoT.CLI/Atc.Azure.IoT.CLI.csproj" />
-    <Project Path="src/Atc.Azure.IoT.Wpf.App/Atc.Azure.IoT.Wpf.App.csproj" />
     <Project Path="src/Atc.Azure.IoT/Atc.Azure.IoT.csproj" />
     <Project Path="src/Atc.Azure.IoTEdge.DeviceEmulator/Atc.Azure.IoTEdge.DeviceEmulator.csproj" />
     <Project Path="src/Atc.Azure.IoTEdge/Atc.Azure.IoTEdge.csproj" />
