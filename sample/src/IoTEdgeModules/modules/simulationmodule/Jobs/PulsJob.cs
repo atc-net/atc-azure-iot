@@ -16,7 +16,9 @@ public sealed partial class PulsJob : IJob
         this.numberGenerator = numberGenerator;
     }
 
-    public async Task Execute(IJobExecutionContext context)
+    public async ValueTask Execute(
+        IJobExecutionContext context,
+        CancellationToken cancellationToken = default)
     {
         LogJobStarted(nameof(PulsJob));
 
@@ -36,7 +38,7 @@ public sealed partial class PulsJob : IJob
             message.ContentEncoding = Encoding.UTF8.WebName;
             message.ContentType = MediaTypeNames.Application.Json;
 
-            await moduleClient.SendEventAsync("temperature", message, context.CancellationToken);
+            await moduleClient.SendEventAsync("temperature", message, cancellationToken);
         }
         catch (Exception ex)
         {
