@@ -11,7 +11,7 @@ public sealed class DpsEnrollmentIndividualCreateTpmCommand : AsyncCommand<DpsEn
         logger = this.loggerFactory.CreateLogger<DpsEnrollmentIndividualCreateTpmCommand>();
     }
 
-    protected override Task<int> ExecuteAsync(
+    public override Task<int> ExecuteAsync(
         CommandContext context,
         DpsEnrollmentIndividualCreateTpmCommandSettings settings,
         CancellationToken cancellationToken)

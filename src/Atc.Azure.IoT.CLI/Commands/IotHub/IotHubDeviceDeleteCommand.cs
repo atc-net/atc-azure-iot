@@ -11,7 +11,7 @@ public sealed class IotHubDeviceDeleteCommand : AsyncCommand<IotHubDeviceCommand
         logger = this.loggerFactory.CreateLogger<IotHubDeviceDeleteCommand>();
     }
 
-    protected override Task<int> ExecuteAsync(
+    public override Task<int> ExecuteAsync(
         CommandContext context,
         IotHubDeviceCommandSettings settings,
         CancellationToken cancellationToken)

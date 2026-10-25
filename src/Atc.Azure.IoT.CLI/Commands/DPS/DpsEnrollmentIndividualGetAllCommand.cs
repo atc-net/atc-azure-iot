@@ -11,7 +11,7 @@ public sealed class DpsEnrollmentIndividualGetAllCommand : AsyncCommand<Connecti
         logger = this.loggerFactory.CreateLogger<DpsEnrollmentIndividualGetAllCommand>();
     }
 
-    protected override Task<int> ExecuteAsync(
+    public override Task<int> ExecuteAsync(
         CommandContext context,
         ConnectionBaseCommandSettings settings,
         CancellationToken cancellationToken)

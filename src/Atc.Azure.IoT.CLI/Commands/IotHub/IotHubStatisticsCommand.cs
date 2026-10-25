@@ -11,7 +11,7 @@ public sealed class IotHubStatisticsCommand : AsyncCommand<ConnectionBaseCommand
         logger = this.loggerFactory.CreateLogger<IotHubStatisticsCommand>();
     }
 
-    protected override Task<int> ExecuteAsync(
+    public override Task<int> ExecuteAsync(
         CommandContext context,
         ConnectionBaseCommandSettings settings,
         CancellationToken cancellationToken)
