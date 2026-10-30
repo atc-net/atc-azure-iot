@@ -3,7 +3,7 @@ namespace Atc.Azure.IoT.Tests.Extensions;
 public sealed class ServiceCollectionExtensionsTests
 {
     [Fact]
-    public void ConfigureIotHubServices_RegistersTheIoTHubServicesAndTheTwinModuleExtractor()
+    public void ConfigureIotHubServices_RegistersTheIoTHubServicesTheTwinModuleExtractorAndTheManifestProvider()
     {
         // Arrange
         var services = new ServiceCollection();
@@ -16,6 +16,7 @@ public sealed class ServiceCollectionExtensionsTests
         serviceProvider.GetRequiredService<IIoTHubService>().Should().BeOfType<IoTHubService>();
         serviceProvider.GetRequiredService<IIoTHubModuleService>().Should().BeOfType<IoTHubModuleService>();
         serviceProvider.GetRequiredService<IDeviceTwinModuleExtractor>().Should().BeOfType<DeviceTwinModuleExtractor>();
+        serviceProvider.GetRequiredService<IConfigurationContentProvider>().Should().BeOfType<ConfigurationContentProvider>();
     }
 
     [Fact]
@@ -25,7 +26,7 @@ public sealed class ServiceCollectionExtensionsTests
         var act = () => new ServiceCollection().ConfigureIotHubServices(new IotHubOptions());
 
         // Assert
-        act.Should().Throw<InvalidOperationException>();
+        act.Should().Throw<InvalidOperationException>().WithMessage("IotHubOptions.ConnectionString is missing.");
     }
 
     [Fact]
@@ -54,6 +55,21 @@ public sealed class ServiceCollectionExtensionsTests
     }
 
     [Fact]
+    public void ConfigureIotHubServicesAndConfigureDeviceProvisioningServices_RegisterTheManifestProviderOnce()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+
+        // Act
+        services
+            .ConfigureIotHubServices(new IotHubOptions { ConnectionString = TestConnectionStrings.IotHub })
+            .ConfigureDeviceProvisioningServices(new DeviceProvisioningServiceOptions { ConnectionString = TestConnectionStrings.DeviceProvisioningService });
+
+        // Assert
+        services.Count(x => x.ServiceType == typeof(IConfigurationContentProvider)).Should().Be(1);
+    }
+
+    [Fact]
     public void ConfigureDeviceProvisioningServices_RegistersTheDpsServiceAndTheManifestProvider()
     {
         // Arrange
@@ -75,6 +91,6 @@ public sealed class ServiceCollectionExtensionsTests
         var act = () => new ServiceCollection().ConfigureDeviceProvisioningServices(new DeviceProvisioningServiceOptions());
 
         // Assert
-        act.Should().Throw<InvalidOperationException>();
+        act.Should().Throw<InvalidOperationException>().WithMessage("DeviceProvisioningServiceOptions.ConnectionString is missing.");
     }
 }
