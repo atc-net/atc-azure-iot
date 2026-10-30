@@ -134,11 +134,59 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
             return null;
         }
 
+        var primaryKey = GetPrimaryKey(
+            device.Authentication,
+            $"Device '{deviceId}'");
+
         LogRetrieveIotEdgeDeviceConnectionStringSucceeded(
             ioTHubHostName!,
             deviceId);
 
-        return $"HostName={ioTHubHostName!};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}";
+        return $"HostName={ioTHubHostName!};DeviceId={deviceId};SharedAccessKey={primaryKey}";
+    }
+
+    public async Task<string?> GetModuleConnectionString(
+        string deviceId,
+        string moduleId,
+        string? gatewayHostName = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(deviceId);
+        ArgumentException.ThrowIfNullOrEmpty(moduleId);
+
+        LogRetrievingModuleConnectionString(
+            ioTHubHostName!,
+            deviceId,
+            moduleId);
+
+        var module = await registryManager!.GetModuleAsync(
+            deviceId,
+            moduleId,
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
+
+        if (module is null)
+        {
+            LogIotEdgeDeviceModuleNotFound(
+                ioTHubHostName!,
+                deviceId,
+                moduleId);
+
+            return null;
+        }
+
+        var primaryKey = GetPrimaryKey(
+            module.Authentication,
+            $"Module '{moduleId}' on device '{deviceId}'");
+
+        LogRetrieveModuleConnectionStringSucceeded(
+            ioTHubHostName!,
+            deviceId,
+            moduleId);
+
+        return string.IsNullOrEmpty(gatewayHostName)
+            ? $"HostName={ioTHubHostName!};DeviceId={deviceId};ModuleId={moduleId};SharedAccessKey={primaryKey}"
+            : $"HostName={ioTHubHostName!};GatewayHostName={gatewayHostName};DeviceId={deviceId};ModuleId={moduleId};SharedAccessKey={primaryKey}";
     }
 
     public async Task<IReadOnlyCollection<Twin>> GetDeviceTwins(
@@ -584,6 +632,17 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
 
         return new Response<LogResponse>(result.Status, payload!);
     }
+
+    /// <summary>
+    /// Gets the primary symmetric key of a device or module identity.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The identity authenticates with X.509 certificates, so it has no key.</exception>
+    private static string GetPrimaryKey(
+        AuthenticationMechanism? authentication,
+        string identityDescription)
+        => authentication?.SymmetricKey?.PrimaryKey
+           ?? throw new InvalidOperationException(
+               $"{identityDescription} has no symmetric key, because it doesn't use shared access key authentication, so it has no connection string with a key.");
 
     private static RestartModuleRequest BuildRestartModuleRequest(string moduleId)
         => new(Id: moduleId);

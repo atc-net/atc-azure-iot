@@ -61,8 +61,27 @@ public interface IIoTHubService
     /// <param name="deviceId">The identifier of the device to retrieve.</param>
     /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
     /// <returns>The device connection-string with its primary key, or <see langword="null"/> if the device doesn't exist.</returns>
+    /// <exception cref="InvalidOperationException">The device authenticates with X.509 certificates, so it has no key.</exception>
     Task<string?> GetDeviceConnectionString(
         string deviceId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Asynchronously retrieves a module's connection-string from the IoT Hub, with the module's primary key.
+    /// </summary>
+    /// <param name="deviceId">The identifier of the device the module belongs to.</param>
+    /// <param name="moduleId">The identifier of the module.</param>
+    /// <param name="gatewayHostName">
+    /// Optional. The host name of the edgeHub the module connects through, as an IoT Edge module does; it is added as
+    /// <c>GatewayHostName</c>. Without it, the module connects to the IoT Hub directly.
+    /// </param>
+    /// <param name="cancellationToken">Propagates notification that operations should be canceled.</param>
+    /// <returns>The module connection-string, or <see langword="null"/> if the device or the module doesn't exist.</returns>
+    /// <exception cref="InvalidOperationException">The module authenticates with X.509 certificates, so it has no key.</exception>
+    Task<string?> GetModuleConnectionString(
+        string deviceId,
+        string moduleId,
+        string? gatewayHostName = null,
         CancellationToken cancellationToken = default);
 
     /// <summary>

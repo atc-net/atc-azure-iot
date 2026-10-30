@@ -67,6 +67,39 @@ public sealed partial class IoTHubService
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
+        EventId = LoggingEventIdConstants.IoTHubService.RetrievingModuleConnectionString,
+        Level = LogLevel.Trace,
+        Message = "{CallerMethodName}({CallerLineNumber}) - Starting to retrieve module connection-string for deviceId '{DeviceId}' and moduleId '{ModuleId}' on iot hub '{IotHubHostName}'")]
+    private partial void LogRetrievingModuleConnectionString(
+        string iotHubHostName,
+        string deviceId,
+        string moduleId,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
+
+    [LoggerMessage(
+        EventId = LoggingEventIdConstants.IoTHubService.IotEdgeDeviceModuleNotFound,
+        Level = LogLevel.Warning,
+        Message = "{CallerMethodName}({CallerLineNumber}) - Could not find module '{ModuleId}' on iot device '{DeviceId}' on iot hub '{IotHubHostName}'")]
+    private partial void LogIotEdgeDeviceModuleNotFound(
+        string iotHubHostName,
+        string deviceId,
+        string moduleId,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
+
+    [LoggerMessage(
+        EventId = LoggingEventIdConstants.IoTHubService.RetrieveModuleConnectionStringSucceeded,
+        Level = LogLevel.Trace,
+        Message = "{CallerMethodName}({CallerLineNumber}) - Retrieved module connection-string for deviceId '{DeviceId}' and moduleId '{ModuleId}' on iot hub '{IotHubHostName}'")]
+    private partial void LogRetrieveModuleConnectionStringSucceeded(
+        string iotHubHostName,
+        string deviceId,
+        string moduleId,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
+
+    [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubService.RetrievingIotDeviceTwins,
         Level = LogLevel.Trace,
         Message = "{CallerMethodName}({CallerLineNumber}) - Starting to retrieve iot device twins on iot hub '{IotHubHostName}'")]
