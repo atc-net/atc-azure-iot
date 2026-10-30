@@ -15,9 +15,16 @@ public sealed partial class OpcPublisherNodeManagerModuleService
     /// </summary>
     private static readonly SemaphoreSlim OpcPublisherNodeConfigurationFileSemaphore = new(1, 1);
 
-    private static string OpcPublisherNodeConfigurationFilename { get; } = $"{Directory.GetCurrentDirectory()}/opc/opcpublisher/pn.json";
+    /// <summary>
+    /// The directory holding the OPC Publisher node configuration file, shared with the OPC Publisher module.
+    /// </summary>
+    private static string OpcPublisherNodeConfigurationDirectory { get; } =
+        Environment.GetEnvironmentVariable(OpcPublisherNodeManagerModuleConstants.NodeConfigurationDirectoryEnvironmentVariable)
+        ?? Path.Combine(Directory.GetCurrentDirectory(), "opc", "opcpublisher");
 
-    private static string OpcPublisherNodeConfigurationFilenameTemp { get; } = $"{Directory.GetCurrentDirectory()}/opc/opcpublisher/pn.tmp";
+    private static string OpcPublisherNodeConfigurationFilename { get; } = Path.Combine(OpcPublisherNodeConfigurationDirectory, "pn.json");
+
+    private static string OpcPublisherNodeConfigurationFilenameTemp { get; } = Path.Combine(OpcPublisherNodeConfigurationDirectory, "pn.tmp");
 
     /// <summary>
     /// Max allowed payload of an IoTHub direct method call response.
