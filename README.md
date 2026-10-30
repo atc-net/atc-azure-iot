@@ -708,6 +708,7 @@ Then move to TCP and to `Validate` one device at a time.
 - Building a deployment throws for a module whose `RestartPolicy` or `Status` is `Unknown`, instead of writing `"unknown"`. `RestartPolicy` gains `OnFailure` and `OnUnhealthy`; use `RestartPolicyExtensions.FromManifestValue("on-failure")` to read them.
 - `IsStandaloneMode()` ignores the case of the environment name, as `IsEnvironment` does.
 - `GetConfigurationContent(Stream)` leaves the stream open.
+- `MethodResponseFactory` writes compact JSON (no indentation) by default, because a direct method response is limited to 128 KB. Pass your own `JsonSerializerOptions` to change it.
 - `ConfigureIotHubServices` also registers `IConfigurationContentProvider`.
 - The IoT Hub log event `Failure` (10000) and the DPS failure events are removed, because the caller gets the exception; the connection string events moved to 10110/10111.
 
