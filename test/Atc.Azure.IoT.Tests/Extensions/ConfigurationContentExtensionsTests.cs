@@ -141,6 +141,49 @@ public sealed class ConfigurationContentExtensionsTests
         Newtonsoft.Json.JsonConvert.SerializeObject(Section(simulation, "env")).Should().Be("""{"Interval":{"value":"5"}}""");
     }
 
+    [Theory]
+    [InlineData(RestartPolicy.OnFailure, "on-failure")]
+    [InlineData(RestartPolicy.OnUnhealthy, "on-unhealthy")]
+    public void SetEdgeAgent_ModuleRestartPolicyWithAHyphenInTheManifest_WritesTheValueIoTEdgeUses(
+        RestartPolicy restartPolicy,
+        string expected)
+    {
+        // Arrange
+        var module = new EdgeModuleSpecification("simulation", "simulation:1.0", StartupOrder: null, [], RestartPolicy: restartPolicy);
+
+        // Act
+        var desired = EdgeAgentDesired(new ConfigurationContent().SetEdgeAgent(CreateEdgeAgent(modules: [module])));
+
+        // Assert
+        Section(Section(desired, "modules"), "simulation")["restartPolicy"].Should().Be(expected);
+    }
+
+    [Fact]
+    public void SetEdgeAgent_ModuleRestartPolicyIsUnknown_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var module = new EdgeModuleSpecification("simulation", "simulation:1.0", StartupOrder: null, [], RestartPolicy: RestartPolicy.Unknown);
+
+        // Act
+        var act = () => new ConfigurationContent().SetEdgeAgent(CreateEdgeAgent(modules: [module]));
+
+        // Assert
+        act.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
+    [Fact]
+    public void SetEdgeAgent_ModuleStatusIsUnknown_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var module = new EdgeModuleSpecification("simulation", "simulation:1.0", StartupOrder: null, [], Status: ModuleStatus.Unknown);
+
+        // Act
+        var act = () => new ConfigurationContent().SetEdgeAgent(CreateEdgeAgent(modules: [module]));
+
+        // Assert
+        act.Should().Throw<ArgumentOutOfRangeException>();
+    }
+
     [Fact]
     public void SetEdgeAgent_ModuleCreateOptionsAreJson_KeepsThemAsJson()
     {
