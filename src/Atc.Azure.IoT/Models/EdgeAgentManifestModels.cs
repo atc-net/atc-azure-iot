@@ -54,6 +54,7 @@ public record PropertiesDesiredEdgeHub(
     [property: JsonPropertyName(PropertyNames.Manifest.StoreAndForwardConfiguration)] StoreAndForwardConfiguration StoreAndForwardConfiguration);
 
 [Newtonsoft.Json.JsonConverter(typeof(EdgeHubRouteConverter))]
+[JsonConverter(typeof(JsonEdgeHubRouteConverter))]
 public record EdgeHubRoute(
     [property: JsonPropertyName(PropertyNames.Manifest.Route)] string Route,
     [property: JsonPropertyName(PropertyNames.Manifest.Priority)] int? Priority,
