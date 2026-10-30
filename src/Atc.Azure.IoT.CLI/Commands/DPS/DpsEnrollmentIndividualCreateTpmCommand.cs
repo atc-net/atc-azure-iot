@@ -33,18 +33,13 @@ public sealed class DpsEnrollmentIndividualCreateTpmCommand : AsyncCommand<DpsEn
 
         var sw = Stopwatch.StartNew();
 
-        var (enrollment, _) = await dpsService.CreateIndividualTpmEnrollment(
+        var enrollment = await dpsService.CreateIndividualTpmEnrollment(
             settings.EndorsementKey!,
             settings.RegistrationId!,
             settings.DeviceId!,
             settings.Tags?.Value.ParseToDictionary() ?? null,
             settings.DesiredProperties?.Value.ParseToDictionary() ?? null,
             cancellationToken);
-
-        if (enrollment is null)
-        {
-            return ConsoleExitStatusCodes.Failure;
-        }
 
         logger.LogInformation($"Individual TPM Enrollment created with registration id: {enrollment.RegistrationId}");
 

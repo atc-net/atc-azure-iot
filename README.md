@@ -28,6 +28,7 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
     - [Features](#features-2)
     - [Methods](#methods-1)
       - [Individual Enrollment Management](#individual-enrollment-management)
+      - [Enrollment Errors](#enrollment-errors)
     - [Usage Example](#usage-example-2)
     - [Configuring IDeviceProvisioningService](#configuring-ideviceprovisioningservice)
       - [Example Usage](#example-usage-1)
@@ -240,10 +241,16 @@ The `IDeviceProvisioningService` is designed to manage device enrollments within
 
 #### Individual Enrollment Management
 
-- `GetIndividualEnrollment(string registrationId, CancellationToken cancellationToken)`: Retrieves a specific enrollment using the registration ID.
+- `GetIndividualEnrollment(string registrationId, CancellationToken cancellationToken)`: Retrieves a specific enrollment using the registration ID, or `null` if it doesn't exist.
 - `GetIndividualEnrollments(CancellationToken cancellationToken)`: Fetches all registered individual enrollments.
-- `CreateIndividualTpmEnrollment(string endorsementKey, string registrationId, string deviceId, Dictionary<string, string>? tags, Dictionary<string, string>? desiredProperties, CancellationToken cancellationToken)`: Creates or updates a TPM enrollment with specified parameters.
-- `DeleteIndividualEnrollment(string registrationId, CancellationToken cancellationToken)`: Deletes an individual enrollment based on the registration ID.
+- `CreateIndividualTpmEnrollment(string endorsementKey, string registrationId, string deviceId, Dictionary<string, string>? tags, Dictionary<string, string>? desiredProperties, CancellationToken cancellationToken)`: Creates or updates a TPM enrollment for an IoT Edge device with specified parameters, and returns it.
+- `DeleteIndividualEnrollment(string registrationId, CancellationToken cancellationToken)`: Deletes an individual enrollment based on the registration ID. Returns `false` if it doesn't exist.
+
+#### Enrollment Errors
+
+`null` (or `false` for the delete) only means that the enrollment doesn't exist. Every other failure is thrown as the DPS SDK's exception, usually a `ProvisioningServiceClientHttpException` whose `StatusCode` and `Body` say what DPS rejected.
+
+A cancelled token throws `OperationCanceledException`. The DPS SDK reports a cancelled request as a `ProvisioningServiceClientException`, which becomes the `InnerException`.
 
 ### Usage Example
 
@@ -260,22 +267,21 @@ var desiredProperties = new Dictionary<string, string>
     { "configVersion", "v1" }
 };
 
-var result = await deviceProvisioningService.CreateIndividualTpmEnrollment(
-    "TPM_ENDORSEMENT_KEY_HERE",
-    "registration123",
-    "device123",
-    tags,
-    desiredProperties,
-    CancellationToken.None
-);
+try
+{
+    var enrollment = await deviceProvisioningService.CreateIndividualTpmEnrollment(
+        "TPM_ENDORSEMENT_KEY_HERE",
+        "registration123",
+        "device123",
+        tags,
+        desiredProperties,
+        cancellationToken);
 
-if (result.Enrollment != null)
-{
-    Console.WriteLine($"Enrollment created: {result.Enrollment.RegistrationId}");
+    Console.WriteLine($"Enrollment created: {enrollment.RegistrationId}");
 }
-else
+catch (ProvisioningServiceClientHttpException ex)
 {
-    Console.WriteLine($"Failed to create enrollment: {result.ErrorMessage}");
+    Console.WriteLine($"DPS rejected the enrollment ({ex.StatusCode}): {ex.Body}");
 }
 ```
 

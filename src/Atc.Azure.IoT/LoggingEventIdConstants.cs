@@ -53,9 +53,6 @@ internal static class LoggingEventIdConstants
 
     internal static class DeviceProvisioningManager
     {
-        public const int IndividualTpmEnrollmentFailed = 12_000;
-        public const int IndividualTpmEnrollmentBadRequest = 12_010;
-        public const int IndividualTpmEnrollmentConflict = 12_020;
         public const int IndividualEnrollmentNotFound = 12_030;
         public const int DeleteIndividualEnrollmentNotFound = 12_040;
     }

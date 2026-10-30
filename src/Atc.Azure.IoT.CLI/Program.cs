@@ -33,7 +33,6 @@ public static class Program
             return [CommandConstants.ArgumentShortHelp];
         }
 
-        // TODO: Add multiple command help commands
         return args;
     }
 }
