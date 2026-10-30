@@ -19,17 +19,30 @@ public sealed class ConfigurationContentExtensionsTests
     }
 
     [Fact]
-    public void SetEdgeAgent_NoSystemModulesGiven_AddsEdgeAgentAndEdgeHubImagesOfTheSystemModuleVersion()
+    public void SetEdgeAgent_NoSystemModulesGiven_AddsEdgeAgentAndEdgeHubImagesOfTheGivenSystemModuleVersion()
     {
         // Act
-        var desired = EdgeAgentDesired(new ConfigurationContent().SetEdgeAgent(CreateEdgeAgent(systemModuleVersion: "1.6")));
+        // 1.5 differs from the default (1.6), so the test shows that the given version is used.
+        var desired = EdgeAgentDesired(new ConfigurationContent().SetEdgeAgent(CreateEdgeAgent(systemModuleVersion: "1.5")));
+
+        // Assert
+        var systemModules = Section(desired, "systemModules");
+        Section(Section(systemModules, "edgeAgent"), "settings")["image"].Should().Be("mcr.microsoft.com/azureiotedge-agent:1.5");
+        Section(Section(systemModules, "edgeHub"), "settings")["image"].Should().Be("mcr.microsoft.com/azureiotedge-hub:1.5");
+        Section(systemModules, "edgeHub")["status"].Should().Be("running");
+        Section(systemModules, "edgeHub")["restartPolicy"].Should().Be("always");
+    }
+
+    [Fact]
+    public void SetEdgeAgent_NoSystemModulesOrVersionGiven_UsesIoTEdge16Images()
+    {
+        // Act
+        var desired = EdgeAgentDesired(new ConfigurationContent().SetEdgeAgent(CreateEdgeAgent()));
 
         // Assert
         var systemModules = Section(desired, "systemModules");
         Section(Section(systemModules, "edgeAgent"), "settings")["image"].Should().Be("mcr.microsoft.com/azureiotedge-agent:1.6");
         Section(Section(systemModules, "edgeHub"), "settings")["image"].Should().Be("mcr.microsoft.com/azureiotedge-hub:1.6");
-        Section(systemModules, "edgeHub")["status"].Should().Be("running");
-        Section(systemModules, "edgeHub")["restartPolicy"].Should().Be("always");
     }
 
     [Fact]
@@ -249,12 +262,17 @@ public sealed class ConfigurationContentExtensionsTests
         List<RegistryCredential>? registryCredentials = null,
         List<EdgeModuleSpecification>? systemModules = null,
         List<EdgeModuleSpecification>? modules = null,
-        string systemModuleVersion = "1.5")
-        => new(
+        string? systemModuleVersion = null)
+    {
+        var edgeAgent = new EdgeAgentDesiredProperties(
             registryCredentials ?? [],
             systemModules ?? [],
-            modules ?? [],
-            SystemModuleVersion: systemModuleVersion);
+            modules ?? []);
+
+        return systemModuleVersion is null
+            ? edgeAgent
+            : edgeAgent with { SystemModuleVersion = systemModuleVersion };
+    }
 
     private static Dictionary<string, object> EdgeAgentDesired(ConfigurationContent configurationContent)
         => (Dictionary<string, object>)configurationContent.ModulesContent["$edgeAgent"]["properties.desired"];

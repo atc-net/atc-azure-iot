@@ -40,7 +40,7 @@ public record EdgeAgentDesiredProperties(
     List<EdgeModuleSpecification> EdgeSystemModuleSpecifications,
     List<EdgeModuleSpecification> EdgeModuleSpecifications,
     string SchemaVersion = "1.1",
-    string SystemModuleVersion = "1.5",
+    string SystemModuleVersion = "1.6",
     string MinDockerVersion = "v1.25",
     string EdgeAgentCreateOptions = "",
     string EdgeHubCreateOptions = "{\"HostConfig\":{\"PortBindings\":{\"443/tcp\":[{\"HostPort\":\"443\"}],\"5671/tcp\":[{\"HostPort\":\"5671\"}],\"8883/tcp\":[{\"HostPort\":\"8883\"}]}}}");
