@@ -13,6 +13,8 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
       - [Device Management](#device-management)
       - [Device Twin Management](#device-twin-management)
       - [Module Management](#module-management)
+      - [IoT Edge Logs](#iot-edge-logs)
+    - [Errors](#errors)
     - [Usage Example](#usage-example)
     - [Configuring IIoTHubService](#configuring-iiothubservice)
       - [Example Usage](#example-usage)
@@ -86,37 +88,53 @@ The `IIoTHubService` is designed to facilitate communication with Azure IoT Hub,
 #### Device Management
 
 - `CreateDevice(string deviceId, bool edgeEnabled, CancellationToken cancellationToken)`: Create a new device with the option to enable as an edge device.
-- `DeleteDevice(string deviceId, CancellationToken cancellationToken)`: Delete a device from the IoT Hub.
-- `GetDevice(string deviceId, CancellationToken cancellationToken)`: Retrieve a specific device using its device ID.
-- `GetDeviceConnectionString(string deviceId, CancellationToken cancellationToken)`: Get the connection string for a specific device.
-- `ApplyConfigurationContentOnDevice(string deviceId, ConfigurationContent manifestContent, CancellationToken cancellationToken)`: Apply configuration settings to a device.
+- `DeleteDevice(string deviceId, CancellationToken cancellationToken)`: Delete a device from the IoT Hub. Returns `false` if the device doesn't exist.
+- `GetDevice(string deviceId, CancellationToken cancellationToken)`: Retrieve a specific device using its device ID, or `null` if it doesn't exist.
+- `GetDeviceConnectionString(string deviceId, CancellationToken cancellationToken)`: Get the connection string for a specific device, or `null` if it doesn't exist.
+- `ApplyConfigurationContentOnDevice(string deviceId, ConfigurationContent manifestContent, CancellationToken cancellationToken)`: Apply a deployment manifest to a device, as a single-device deployment.
+- `GetDeviceRegistryStatistics(CancellationToken cancellationToken)`: Get the number of devices in the IoT Hub, and how many are enabled and disabled.
 
 #### Device Twin Management
-- `GetDeviceTwin(string deviceId, CancellationToken cancellationToken)`: Fetch the device twin for a specific device.
-- `UpdateDeviceTwin(string deviceId, Twin twin, CancellationToken cancellationToken)`: Update the device twin data.
-- `GetDeviceTwins(bool onlyIncludeEdgeDevices)`: Retrieve all device twins, with an option to filter for only edge devices.
+- `GetDeviceTwin(string deviceId, CancellationToken cancellationToken)`: Fetch the device twin for a specific device, or `null` if the device doesn't exist.
+- `UpdateDeviceTwin(string deviceId, Twin twin, CancellationToken cancellationToken)`: Update the device twin data. The twin's ETag must match the current twin, so read the twin, change it and pass it back.
+- `GetDeviceTwins(bool onlyIncludeEdgeDevices, CancellationToken cancellationToken)`: Retrieve all device twins, with an option to filter for only edge devices.
 
 #### Module Management
 
-- `GetModuleTwin(string deviceId, string moduleId, CancellationToken cancellationToken)`: Retrieve a specific module twin.
+- `GetModulesOnIotEdgeDevice(string deviceId, CancellationToken cancellationToken)`: Retrieve the module identities on an IoT Edge device, including their keys.
+- `GetModuleTwin(string deviceId, string moduleId, CancellationToken cancellationToken)`: Retrieve a specific module twin, or `null` if the module doesn't exist.
 - `AddModuleToDevice(string deviceId, string moduleId, CancellationToken cancellationToken)`: Add a module identity to a device, and return it with the keys IoT Hub generated.
 - `UpdateModule(Module moduleIdentity, CancellationToken cancellationToken)`: Update a module identity, e.g. its authentication, and return the updated module.
-- `UpdateDesiredProperties(string deviceId, string moduleId, TwinCollection twinCollection, CancellationToken cancellationToken)`: Update desired properties on a module twin.
-- `RemoveModuleFromDevice(string deviceId, string moduleId, CancellationToken cancellationToken)`: Remove a module from an IoT device.
-- `AddNewModules(string deviceId, ConfigurationContent manifestContent, CancellationToken cancellationToken)`: Add new modules to an IoT device.
+- `UpdateDesiredProperties(string deviceId, string moduleId, TwinCollection twinCollection, CancellationToken cancellationToken)`: Merge desired properties into a module twin. Properties that aren't given keep their value, and a property set to `null` is removed.
+- `RemoveModuleFromDevice(string deviceId, string moduleId, CancellationToken cancellationToken)`: Remove a module from an IoT device. Returns `false` if the module doesn't exist.
+- `AddNewModules(string deviceId, ConfigurationContent manifestContent, CancellationToken cancellationToken)`: Add a module identity to an IoT device for each module in a deployment manifest, except the system modules.
 - `RestartModuleOnDevice(string deviceId, string moduleId, CancellationToken cancellationToken)`: Restart a specific module on a device.
+
+#### IoT Edge Logs
+
+- `UploadModuleLogs(string deviceId, UploadModuleLogsRequest request, IoTHubRequestOptions? requestOptions, CancellationToken cancellationToken)`: Ask edgeAgent to upload module logs to a blob storage container.
+- `UploadSupportBundle(string deviceId, UploadSupportBundleRequest request, IoTHubRequestOptions? requestOptions, CancellationToken cancellationToken)`: Ask edgeAgent to upload a support bundle to a blob storage container.
+- `GetTaskStatus(string deviceId, GetTaskStatusRequest request, IoTHubRequestOptions? requestOptions, CancellationToken cancellationToken)`: Get the status of an upload started by one of the two methods above.
+
+### Errors
+
+`null` (or `false` for the deletes) only means that the device, module or twin doesn't exist. Every other failure is thrown as the IoT Hub SDK's exception, for example `UnauthorizedException` for a wrong key or `ThrottlingException` when IoT Hub throttles.
+
+A cancelled token throws `OperationCanceledException`. The IoT Hub SDK itself reports a cancelled request as an `IotHubException`, so a cancelled call would look like a failed one; the service rethrows it as `OperationCanceledException`, with the SDK's exception as `InnerException`.
+
+The IoT Edge log methods are the exception: they return an IoT Hub error, such as an offline device, as the response's status code. A cancelled token still throws `OperationCanceledException`.
 
 ### Usage Example
 
-Below is a sample usage of `IIoTHubService` to create a new device:
+Below is a sample usage of `IIoTHubService` to create a new device, unless it already exists:
 
 ```csharp
 var iotHubService = serviceProvider.GetRequiredService<IIoTHubService>();
-var result = await iotHubService.CreateDevice("myDeviceId", true, CancellationToken.None);
-if (result.Succeeded)
-{
-    Console.WriteLine($"Device created with ID: {result.Device?.Id}");
-}
+
+var device = await iotHubService.GetDevice("myDeviceId", cancellationToken)
+             ?? await iotHubService.CreateDevice("myDeviceId", edgeEnabled: true, cancellationToken);
+
+Console.WriteLine($"Device ID: {device.Id}");
 ```
 
 ### Configuring IIoTHubService

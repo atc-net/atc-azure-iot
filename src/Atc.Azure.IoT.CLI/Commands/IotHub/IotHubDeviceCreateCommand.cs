@@ -34,16 +34,10 @@ public sealed class IotHubDeviceCreateCommand : AsyncCommand<IotHubDeviceCreateC
 
         var sw = Stopwatch.StartNew();
 
-        var (succeeded, device) = await iotHubService.CreateDevice(
+        await iotHubService.CreateDevice(
             deviceId,
             settings.EdgeEnabled,
             cancellationToken);
-
-        if (!succeeded ||
-            device is null)
-        {
-            return ConsoleExitStatusCodes.Failure;
-        }
 
         logger.LogInformation($"Device with id '{deviceId}' was created successfully.");
 

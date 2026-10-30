@@ -34,12 +34,13 @@ public sealed class IotHubDeviceDeleteCommand : AsyncCommand<IotHubDeviceCommand
 
         var sw = Stopwatch.StartNew();
 
-        var succeeded = await iotHubService.DeleteDevice(
+        var deleted = await iotHubService.DeleteDevice(
             deviceId,
             cancellationToken);
 
-        if (!succeeded)
+        if (!deleted)
         {
+            logger.LogError($"Device with id '{deviceId}' does not exist.");
             return ConsoleExitStatusCodes.Failure;
         }
 

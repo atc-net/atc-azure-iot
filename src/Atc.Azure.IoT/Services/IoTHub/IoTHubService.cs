@@ -29,54 +29,54 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         ValidateAndAssign(options.ConnectionString, Assign);
     }
 
-    public async Task<RegistryStatistics?> GetDeviceRegistryStatistics(CancellationToken cancellationToken = default)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IoTHubService"/> class with a given registry manager, for tests.
+    /// </summary>
+    /// <param name="iotHubModuleService">The service that invokes direct methods.</param>
+    /// <param name="registryManager">The registry manager to use.</param>
+    /// <param name="iotHubHostName">The IoT Hub host name, used in connection strings and logs.</param>
+    /// <param name="loggerFactory">The logger factory, or <see langword="null"/> for no logging.</param>
+    internal IoTHubService(
+        IIoTHubModuleService iotHubModuleService,
+        RegistryManager registryManager,
+        string iotHubHostName,
+        ILoggerFactory? loggerFactory = null)
     {
-        try
-        {
-            LogRetrievingRegistryStatistics(ioTHubHostName!);
-            return await registryManager!.GetRegistryStatisticsAsync(cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
+        logger = loggerFactory is not null
+            ? loggerFactory.CreateLogger<IoTHubService>()
+            : NullLogger<IoTHubService>.Instance;
 
-            return null;
-        }
+        this.iotHubModuleService = iotHubModuleService;
+        this.registryManager = registryManager;
+        ioTHubHostName = iotHubHostName;
     }
 
-    public async Task<(bool Succeeded, Device? Device)> CreateDevice(
+    public Task<RegistryStatistics> GetDeviceRegistryStatistics(
+        CancellationToken cancellationToken = default)
+    {
+        LogRetrievingRegistryStatistics(ioTHubHostName!);
+
+        return registryManager!.GetRegistryStatisticsAsync(cancellationToken)
+            .NormalizeCancellation(cancellationToken);
+    }
+
+    public Task<Device> CreateDevice(
         string deviceId,
         bool edgeEnabled,
         CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
 
-        try
-        {
-            var device = await registryManager!.AddDeviceAsync(
-                new Device(deviceId)
+        return registryManager!.AddDeviceAsync(
+            new Device(deviceId)
+            {
+                Capabilities = new DeviceCapabilities
                 {
-                    Capabilities = new DeviceCapabilities
-                    {
-                        IotEdge = edgeEnabled,
-                    },
+                    IotEdge = edgeEnabled,
                 },
-                cancellationToken);
-
-            return (true, device);
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
-
-            return (false, null);
-        }
+            },
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
     }
 
     public async Task<Device?> GetDevice(
@@ -85,40 +85,29 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
 
-        try
+        LogRetrievingDevice(
+            ioTHubHostName!,
+            deviceId);
+
+        var device = await registryManager!.GetDeviceAsync(
+            deviceId,
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
+
+        if (device is null)
         {
-            LogRetrievingDevice(
+            LogIotEdgeDeviceNotFound(
                 ioTHubHostName!,
                 deviceId);
-
-            var device = await registryManager!.GetDeviceAsync(
-                deviceId,
-                cancellationToken);
-
-            if (device is null)
-            {
-                LogIotEdgeDeviceNotFound(
-                    ioTHubHostName!,
-                    deviceId);
-
-                return null;
-            }
-
-            LogRetrieveIotDeviceSucceeded(
-                ioTHubHostName!,
-                deviceId);
-
-            return device;
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
 
             return null;
         }
+
+        LogRetrieveIotDeviceSucceeded(
+            ioTHubHostName!,
+            deviceId);
+
+        return device;
     }
 
     public async Task<string?> GetDeviceConnectionString(
@@ -127,75 +116,58 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
 
-        try
+        LogRetrievingDeviceConnectionString(
+            ioTHubHostName!,
+            deviceId);
+
+        var device = await registryManager!.GetDeviceAsync(
+            deviceId,
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
+
+        if (device is null)
         {
-            LogRetrievingDeviceConnectionString(
+            LogIotEdgeDeviceNotFound(
                 ioTHubHostName!,
                 deviceId);
-
-            var device = await registryManager!.GetDeviceAsync(
-                deviceId,
-                cancellationToken);
-
-            if (device is null)
-            {
-                LogIotEdgeDeviceNotFound(
-                    ioTHubHostName!,
-                    deviceId);
-
-                return null;
-            }
-
-            LogRetrieveIotEdgeDeviceConnectionStringSucceeded(
-                ioTHubHostName!,
-                deviceId);
-
-            return $"HostName={ioTHubHostName!};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}";
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
 
             return null;
         }
+
+        LogRetrieveIotEdgeDeviceConnectionStringSucceeded(
+            ioTHubHostName!,
+            deviceId);
+
+        return $"HostName={ioTHubHostName!};DeviceId={deviceId};SharedAccessKey={device.Authentication.SymmetricKey.PrimaryKey}";
     }
 
-    public async Task<IReadOnlyCollection<Twin>> GetDeviceTwins(bool onlyIncludeEdgeDevices)
+    public async Task<IReadOnlyCollection<Twin>> GetDeviceTwins(
+        bool onlyIncludeEdgeDevices,
+        CancellationToken cancellationToken = default)
     {
+        LogRetrievingIotDeviceTwins(ioTHubHostName!);
+
+        var queryString = onlyIncludeEdgeDevices
+            ? $"{QueryPrefix} WHERE capabilities.iotEdge = true"
+            : QueryPrefix;
+
+        var query = registryManager!.CreateQuery(
+            queryString,
+            MaxPageSize);
+
         var result = new List<Twin>();
-
-        try
+        while (query.HasMoreResults)
         {
-            LogRetrievingIotDeviceTwins(ioTHubHostName!);
+            // The SDK's query takes no cancellation token, so the token is checked between pages.
+            cancellationToken.ThrowIfCancellationRequested();
 
-            var queryString = onlyIncludeEdgeDevices
-                ? $"{QueryPrefix} WHERE capabilities.iotEdge = true"
-                : QueryPrefix;
-
-            var query = registryManager!.CreateQuery(
-                queryString,
-                MaxPageSize);
-
-            while (query.HasMoreResults)
-            {
-                var page = await query.GetNextAsTwinAsync();
-                result.AddRange(page);
-            }
-
-            LogRetrieveIotDeviceTwinsSucceeded(
-                ioTHubHostName!,
-                result.Count);
+            var page = await query.GetNextAsTwinAsync();
+            result.AddRange(page);
         }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
-        }
+
+        LogRetrieveIotDeviceTwinsSucceeded(
+            ioTHubHostName!,
+            result.Count);
 
         return result.AsReadOnly();
     }
@@ -206,40 +178,32 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
 
-        try
+        LogRetrievingDeviceTwin(
+            ioTHubHostName!,
+            deviceId);
+
+        var deviceTwin = await registryManager!.GetTwinAsync(
+            deviceId,
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
+
+        if (deviceTwin is null)
         {
-            LogRetrievingDeviceTwin(
+            LogIotDeviceTwinNotFound(
                 ioTHubHostName!,
                 deviceId);
-
-            var deviceTwin = await registryManager!.GetTwinAsync(deviceId, cancellationToken);
-            if (deviceTwin is null)
-            {
-                LogIotDeviceTwinNotFound(
-                    ioTHubHostName!,
-                    deviceId);
-
-                return null;
-            }
-
-            LogRetrieveIotDeviceTwinSucceeded(
-                ioTHubHostName!,
-                deviceId);
-
-            return deviceTwin;
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
 
             return null;
         }
+
+        LogRetrieveIotDeviceTwinSucceeded(
+            ioTHubHostName!,
+            deviceId);
+
+        return deviceTwin;
     }
 
-    public async Task<(bool Succeeded, Twin? UpdatedTwin)> UpdateDeviceTwin(
+    public async Task<Twin> UpdateDeviceTwin(
         string deviceId,
         Twin twin,
         CancellationToken cancellationToken = default)
@@ -247,89 +211,57 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
         ArgumentNullException.ThrowIfNull(twin);
 
-        try
-        {
-            LogUpdatingDeviceTwin(
-                ioTHubHostName!,
-                deviceId);
+        LogUpdatingDeviceTwin(
+            ioTHubHostName!,
+            deviceId);
 
-            var updatedTwin = await registryManager!.UpdateTwinAsync(
-                deviceId,
-                twin,
-                twin.ETag,
-                cancellationToken);
+        var updatedTwin = await registryManager!.UpdateTwinAsync(
+            deviceId,
+            twin,
+            twin.ETag,
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
 
-            if (updatedTwin is null)
-            {
-                LogIotDeviceTwinNotUpdated(
-                    ioTHubHostName!,
-                    deviceId);
+        LogUpdateIotDeviceTwinSucceeded(
+            ioTHubHostName!,
+            deviceId);
 
-                return (false, null);
-            }
-
-            LogUpdateIotDeviceTwinSucceeded(
-                ioTHubHostName!,
-                deviceId);
-
-            return (true, updatedTwin);
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
-
-            return (false, null);
-        }
+        return updatedTwin;
     }
 
-    public async Task<IEnumerable<Microsoft.Azure.Devices.Module>> GetModulesOnIotEdgeDevice(
+    public async Task<IReadOnlyCollection<Microsoft.Azure.Devices.Module>> GetModulesOnIotEdgeDevice(
         string deviceId,
         CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
 
-        try
+        LogRetrievingIotEdgeDeviceModules(
+            ioTHubHostName!,
+            deviceId);
+
+        var modulesOnDevice = await registryManager!.GetModulesOnDeviceAsync(
+            deviceId,
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
+
+        var modules = modulesOnDevice?.ToList() ?? [];
+        if (modules.Count == 0)
         {
-            LogRetrievingIotEdgeDeviceModules(
+            LogIotEdgeDeviceModulesNotFound(
                 ioTHubHostName!,
                 deviceId);
 
-            var modulesOnDevice = await registryManager!.GetModulesOnDeviceAsync(
-                deviceId,
-                cancellationToken);
-
-            if (modulesOnDevice is null ||
-                (modulesOnDevice.TryGetNonEnumeratedCount(out var modulesOnDeviceCount) &&
-                 modulesOnDeviceCount == 0))
-            {
-                LogIotEdgeDeviceModulesNotFound(
-                    ioTHubHostName!,
-                    deviceId);
-
-                return [];
-            }
-
-            LogRetrieveIotEdgeDeviceModulesSucceeded(
-                ioTHubHostName!,
-                deviceId);
-
-            return modulesOnDevice;
+            return modules;
         }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
 
-            return [];
-        }
+        LogRetrieveIotEdgeDeviceModulesSucceeded(
+            ioTHubHostName!,
+            deviceId);
+
+        return modules;
     }
 
-    public async Task<Twin?> UpdateDesiredProperties(
+    public async Task<Twin> UpdateDesiredProperties(
         string deviceId,
         string moduleId,
         TwinCollection twinCollection,
@@ -337,69 +269,37 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
         ArgumentException.ThrowIfNullOrEmpty(moduleId);
+        ArgumentNullException.ThrowIfNull(twinCollection);
 
-        try
+        LogUpdatingDeviceTwinDesiredProperties(
+            ioTHubHostName!,
+            deviceId,
+            moduleId);
+
+        // A twin update is a merge (PATCH): only the given desired properties change, and a property set to null is removed.
+        // The wildcard ETag applies the patch whatever the twin's current version is.
+        var patch = new Twin
         {
-            LogRetrievingIotEdgeDeviceTwinModule(
-                ioTHubHostName!,
-                deviceId,
-                moduleId);
-
-            var moduleTwin = await registryManager!.GetTwinAsync(
-                deviceId,
-                moduleId,
-                cancellationToken);
-
-            if (moduleTwin is null)
+            Properties = new TwinProperties
             {
-                LogIotEdgeDeviceTwinModuleNotFound(
-                    ioTHubHostName!,
-                    deviceId,
-                    moduleId);
+                Desired = twinCollection,
+            },
+        };
 
-                return null;
-            }
+        var updatedTwin = await registryManager!.UpdateTwinAsync(
+            deviceId,
+            moduleId,
+            patch,
+            "*",
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
 
-            moduleTwin.Properties.Desired = twinCollection;
+        LogUpdateModuleTwinDesiredPropertiesSucceeded(
+            ioTHubHostName!,
+            deviceId,
+            moduleId);
 
-            LogUpdatingDeviceTwinDesiredProperties(
-                ioTHubHostName!,
-                deviceId,
-                moduleId);
-
-            var updatedTwin = await registryManager.UpdateTwinAsync(
-                deviceId,
-                moduleId,
-                moduleTwin,
-                moduleTwin.ETag,
-                cancellationToken);
-
-            if (updatedTwin is null)
-            {
-                LogModuleTwinDesiredPropertiesNotUpdated(
-                    ioTHubHostName!,
-                    deviceId,
-                    moduleId);
-
-                return null;
-            }
-
-            LogUpdateModuleTwinDesiredPropertiesSucceeded(
-                ioTHubHostName!,
-                deviceId,
-                moduleId);
-
-            return updatedTwin;
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
-
-            return null;
-        }
+        return updatedTwin;
     }
 
     public async Task<Twin?> GetModuleTwin(
@@ -410,47 +310,36 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
         ArgumentException.ThrowIfNullOrEmpty(moduleId);
 
-        try
+        LogRetrievingIotEdgeDeviceTwinModule(
+            ioTHubHostName!,
+            deviceId,
+            moduleId);
+
+        var moduleTwin = await registryManager!.GetTwinAsync(
+            deviceId,
+            moduleId,
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
+
+        if (moduleTwin is null)
         {
-            LogRetrievingIotEdgeDeviceTwinModule(
+            LogIotEdgeDeviceTwinModuleNotFound(
                 ioTHubHostName!,
                 deviceId,
                 moduleId);
-
-            var moduleTwin = await registryManager!.GetTwinAsync(
-                deviceId,
-                moduleId,
-                cancellationToken);
-
-            if (moduleTwin is null)
-            {
-                LogIotEdgeDeviceTwinModuleNotFound(
-                    ioTHubHostName!,
-                    deviceId,
-                    moduleId);
-
-                return null;
-            }
-
-            LogRetrieveIotEdgeDeviceTwinModuleSucceeded(
-                ioTHubHostName!,
-                deviceId,
-                moduleId);
-
-            return moduleTwin;
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
 
             return null;
         }
+
+        LogRetrieveIotEdgeDeviceTwinModuleSucceeded(
+            ioTHubHostName!,
+            deviceId,
+            moduleId);
+
+        return moduleTwin;
     }
 
-    public async Task<(bool Succeeded, Microsoft.Azure.Devices.Module? Module)> AddModuleToDevice(
+    public Task<Microsoft.Azure.Devices.Module> AddModuleToDevice(
         string deviceId,
         string moduleId,
         CancellationToken cancellationToken = default)
@@ -458,48 +347,22 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
         ArgumentException.ThrowIfNullOrEmpty(moduleId);
 
-        try
-        {
-            var module = await registryManager!.AddModuleAsync(
-                new Microsoft.Azure.Devices.Module(deviceId, moduleId),
-                cancellationToken);
-
-            return (true, module);
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
-
-            return (false, null);
-        }
+        return registryManager!.AddModuleAsync(
+            new Microsoft.Azure.Devices.Module(deviceId, moduleId),
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
     }
 
-    public async Task<(bool Succeeded, Microsoft.Azure.Devices.Module? Module)> UpdateModule(
+    public Task<Microsoft.Azure.Devices.Module> UpdateModule(
         Microsoft.Azure.Devices.Module moduleIdentity,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(moduleIdentity);
 
-        try
-        {
-            var updatedModule = await registryManager!.UpdateModuleAsync(
-                moduleIdentity,
-                cancellationToken);
-
-            return (true, updatedModule);
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
-
-            return (false, null);
-        }
+        return registryManager!.UpdateModuleAsync(
+            moduleIdentity,
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
     }
 
     public async Task<bool> RemoveModuleFromDevice(
@@ -515,24 +378,26 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
             await registryManager!.RemoveModuleAsync(
                 deviceId,
                 moduleId,
-                cancellationToken);
-
-            LogIotDeviceModuleRemoved(
+                cancellationToken)
+                .NormalizeCancellation(cancellationToken);
+        }
+        catch (Exception ex) when (ex is DeviceNotFoundException or ModuleNotFoundException)
+        {
+            // IoT Hub reports a module that doesn't exist as DeviceNotFoundException.
+            LogIotDeviceModuleNotFoundOnRemove(
                 ioTHubHostName!,
                 deviceId,
                 moduleId);
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
-
             return false;
         }
+
+        LogIotDeviceModuleRemoved(
+            ioTHubHostName!,
+            deviceId,
+            moduleId);
+
+        return true;
     }
 
     public async Task<(bool Succeeded, int StatusCode, string JsonPayload)> RestartModuleOnDevice(
@@ -596,69 +461,47 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
             requestOptions,
             cancellationToken);
 
-    public async Task<(bool Succeeded, string? ErrorMessage)> ApplyConfigurationContentOnDevice(
+    public async Task ApplyConfigurationContentOnDevice(
         string deviceId,
         ConfigurationContent manifestContent,
         CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
+        ArgumentNullException.ThrowIfNull(manifestContent);
 
-        try
-        {
-            await registryManager!.ApplyConfigurationContentOnDeviceAsync(
-                deviceId,
-                manifestContent,
-                cancellationToken);
+        await registryManager!.ApplyConfigurationContentOnDeviceAsync(
+            deviceId,
+            manifestContent,
+            cancellationToken)
+            .NormalizeCancellation(cancellationToken);
 
-            LogAppliedConfigurationContent(
-                ioTHubHostName!,
-                deviceId);
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
-
-            return (false, ex.GetLastInnerMessage());
-        }
-
-        return (true, null);
+        LogAppliedConfigurationContent(
+            ioTHubHostName!,
+            deviceId);
     }
 
-    public async Task<(bool Succeeded, string? ErrorMessage)> AddNewModules(
+    public async Task AddNewModules(
         string deviceId,
         ConfigurationContent manifestContent,
         CancellationToken cancellationToken = default)
     {
-        try
+        ArgumentException.ThrowIfNullOrEmpty(deviceId);
+        ArgumentNullException.ThrowIfNull(manifestContent);
+
+        foreach (var module in manifestContent.ModulesContent.Keys)
         {
-            foreach (var module in manifestContent.ModulesContent.Keys)
+            if (!module.StartsWith('$'))
             {
-                if (!module.StartsWith('$'))
-                {
-                    await registryManager!.AddModuleAsync(
-                        new Microsoft.Azure.Devices.Module(deviceId, module),
-                        cancellationToken);
-                }
+                await registryManager!.AddModuleAsync(
+                    new Microsoft.Azure.Devices.Module(deviceId, module),
+                    cancellationToken)
+                    .NormalizeCancellation(cancellationToken);
             }
-
-            LogAddedModulesToIotEdgeDevice(
-                ioTHubHostName!,
-                deviceId);
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
-
-            return (false, ex.GetLastInnerMessage());
         }
 
-        return (true, null);
+        LogAddedModulesToIotEdgeDevice(
+            ioTHubHostName!,
+            deviceId);
     }
 
     public async Task<bool> DeleteDevice(
@@ -671,23 +514,23 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         {
             await registryManager!.RemoveDeviceAsync(
                 deviceId,
-                cancellationToken);
-
-            LogIotDeviceDeleted(
+                cancellationToken)
+                .NormalizeCancellation(cancellationToken);
+        }
+        catch (DeviceNotFoundException)
+        {
+            LogIotDeviceNotFoundOnDelete(
                 ioTHubHostName!,
                 deviceId);
 
-            return true;
-        }
-        catch (Exception ex)
-        {
-            LogFailure(
-                ioTHubHostName!,
-                ex.GetType().ToString(),
-                ex.GetLastInnerMessage());
-
             return false;
         }
+
+        LogIotDeviceDeleted(
+            ioTHubHostName!,
+            deviceId);
+
+        return true;
     }
 
     protected override void Assign(string connectionString)
@@ -712,6 +555,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
         };
 
         MethodResultModel result;
+
         try
         {
             result = await iotHubModuleService.CallMethod(

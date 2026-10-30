@@ -36,13 +36,14 @@ public sealed class IotHubDeviceModuleRemoveCommand : AsyncCommand<IotHubModuleC
 
         var sw = Stopwatch.StartNew();
 
-        var succeeded = await iotHubService.RemoveModuleFromDevice(
+        var removed = await iotHubService.RemoveModuleFromDevice(
             deviceId,
             moduleId,
             cancellationToken);
 
-        if (!succeeded)
+        if (!removed)
         {
+            logger.LogError($"Module '{moduleId}' does not exist on device '{deviceId}'.");
             return ConsoleExitStatusCodes.Failure;
         }
 
