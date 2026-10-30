@@ -20,6 +20,22 @@ public sealed partial class IoTHubModuleService : ServiceBase, IIoTHubModuleServ
         ValidateAndAssign(options.ConnectionString, Assign);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IoTHubModuleService"/> class with a given service client, for tests.
+    /// </summary>
+    /// <param name="serviceClient">The service client to use.</param>
+    /// <param name="loggerFactory">The logger factory, or <see langword="null"/> for no logging.</param>
+    internal IoTHubModuleService(
+        ServiceClient serviceClient,
+        ILoggerFactory? loggerFactory = null)
+    {
+        logger = loggerFactory is not null
+            ? loggerFactory.CreateLogger<IoTHubModuleService>()
+            : NullLogger<IoTHubModuleService>.Instance;
+
+        this.serviceClient = serviceClient;
+    }
+
     public async Task<MethodResultModel> CallMethod(
         string deviceId,
         string moduleId,
@@ -54,9 +70,9 @@ public sealed partial class IoTHubModuleService : ServiceBase, IIoTHubModuleServ
         methodInfo.SetPayloadJson(parameters.JsonPayload);
 
         var result = await pipeline.ExecuteAsync(
-            async ct => await (string.IsNullOrEmpty(moduleId)
-                ? serviceClient!.InvokeDeviceMethodAsync(deviceId, methodInfo, ct)
-                : serviceClient!.InvokeDeviceMethodAsync(deviceId, moduleId, methodInfo, ct)),
+            async ct => await serviceClient!
+                .InvokeDeviceMethodAsync(deviceId, moduleId, methodInfo, ct)
+                .NormalizeCancellation(ct),
             cancellationToken);
 
         return new MethodResultModel(

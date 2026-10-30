@@ -8,17 +8,6 @@ public sealed partial class IoTHubModuleService
     private readonly ILogger<IoTHubModuleService> logger;
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubModuleService.MethodCallFailed,
-        Level = LogLevel.Error,
-        Message = "Failed to call method '{MethodName}' on device with ID {DeviceId}, with payload '{JsonPayload}'")]
-    private partial void LogMethodCallFailed(
-        IotHubException exception,
-        string deviceId,
-        string methodName,
-        [StringSyntax(StringSyntaxAttribute.Json)]
-        string jsonPayload);
-
-    [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubModuleService.MethodCallTransientError,
         Level = LogLevel.Warning,
         Message = "Transient error {ErrorCode} occurred while calling method '{MethodName}' on device with ID {DeviceId}. " +
