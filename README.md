@@ -1,6 +1,6 @@
 # Introduction
 
-IoT library, which contains common services for Azure IotHub, DeviceProvisioningService (DPS), Iot edge devices, modules, and device twins, including an Iot edge module emulator and examples for setting up Microsoft OPC publisher module and related projects.
+IoT library, which contains common services for Azure IotHub, DeviceProvisioningService (DPS), Iot edge devices, modules, and device twins, and examples for setting up Microsoft OPC publisher module and related projects.
 
 # Table of Content
 
@@ -51,9 +51,6 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
     - [TestMocks](#testmocks)
   - [Usage Examples](#usage-examples)
     - [Setup for Different Execution Modes](#setup-for-different-execution-modes)
-- [Atc.Azure.IoTEdge.DeviceEmulator](#atcazureiotedgedeviceemulator)
-  - [Local Debugging](#local-debugging)
-  - [Local Development / Testing](#local-development--testing)
 - [Sample Project](#sample-project)
   - [Atc.Azure.Iot.Sample.Modules.Contracts](#atcazureiotsamplemodulescontracts)
   - [IoT Edge Modules](#iot-edge-modules)
@@ -419,14 +416,14 @@ The `Atc.Azure.IoTEdge` package is specifically designed to enhance Azure IoT Ed
 ## Features
 
 ### Extensions
-- **HostBuilderContextExtensions**: Determines the execution mode of the IoT Edge module, facilitating different behaviors and configurations based on the deployment environment (Standalone, Emulator, or Regular).
+- **HostBuilderContextExtensions**: Determines the execution mode of the IoT Edge module, facilitating different behaviors and configurations based on the deployment environment (Standalone or Regular).
 
 - **ServiceCollectionExtensions**: Assists in integrating IoT Edge module functionalities by registering dependencies like `ModuleClientWrapper` which abstracts and simplifies interactions with Azure IoT Hub.
 
 ### Factories
 - **IMethodResponseFactory/MethodResponseFactory**: Supports creating method responses for device modules, allowing customization of serialization settings to fit different data handling requirements.
 
-- **TransportSettingsFactory**: Provides AMQP and MQTT transport settings, essential for connecting IoT modules to Azure IoT Hub, especially in simulated or emulated environments.
+- **TransportSettingsFactory**: Provides AMQP and MQTT transport settings, essential for connecting IoT modules to Azure IoT Hub.
 
 ### Wrappers
 - **IModuleClientWrapper/ModuleClientWrapper**: Wraps the Azure IoT `ModuleClient`, providing a managed way to interact with IoT Hub. It handles operations like sending device-to-cloud messages, responding to direct method calls, and updating device twins.
@@ -440,7 +437,7 @@ The `Atc.Azure.IoTEdge` package is specifically designed to enhance Azure IoT Ed
 ## Usage Examples
 
 ### Setup for Different Execution Modes
-Here is how you can use `Atc.Azure.IoTEdge` in an IoT Edge module, considering different execution modes such as standalone or emulator:
+Here is how you can use `Atc.Azure.IoTEdge` in an IoT Edge module, considering the standalone and regular execution modes:
 
 ```csharp
 using var host = Host.CreateDefaultBuilder(args)
@@ -455,12 +452,6 @@ using var host = Host.CreateDefaultBuilder(args)
         if (hostContext.IsStandaloneMode())
         {
             services.AddSingleton<IModuleClientWrapper, MockModuleClientWrapper>();
-        }
-        else if (hostContext.IsEmulatorMode())
-        {
-            // Setup for emulator mode
-            services.AddModuleClientWrapper(TransportSettingsFactory.BuildAmqpTransportSettings());
-            // Additional setup for emulator
         }
         else
         {
@@ -482,122 +473,6 @@ using var host = Host.CreateDefaultBuilder(args)
 await host.RunAsync();
 ```
 
-# Atc.Azure.IoTEdge.DeviceEmulator
-
-[![NuGet Version](https://img.shields.io/nuget/v/atc.azure.iotedge.deviceemulator.svg?logo=nuget&style=for-the-badge)](https://www.nuget.org/packages/atc.azure.iotedge.deviceemulator)
-
-> **No longer published.** Version 1.0.182 is the last release of this package. Its Docker-based emulator will be replaced by an Aspire hosting integration.
-
-The `Atc.Azure.IoTEdge.DeviceEmulator` package is specifically designed for adding to IoTEdge module projects, when developing and testing IoTEdge modules locally. This package does so, by providing an emulator.
-
-## Local Debugging
-
-An example of setting up the emulator in an iotedge module can be found in the sample module [opcpublishernodemanagermodule](sample/src/IoTEdgeModules/modules/opcpublishernodemanagermodule/Program.cs)
-
-## Local Development / Testing
-
-If e.g. we want to locally debug the `OpcPublisherNodeManagerModule`, the following pre-requisites should be met.
-
-1. Ensure the file [launchsettings.json](/sample/src/IoTEdgeModules/modules/opcpublishernodemanagermodule/Properties/launchSettings.json) is created with the following content
-
-> ```json
-> {
->   "profiles": {
->     "OpcPublisherNodeManagerModule": {
->       "commandName": "Project",
->       "environmentVariables": {
->         "DOTNET_ENVIRONMENT": "Emulator" | "Standalone"
->       }
->     },
->     "Docker": {
->       "commandName": "Docker"
->     }
->   }
-> }
-> ```
-
-The `DOTNET_ENVIRONMENT` variable can be configured with two possible values: `Emulator` or `Standalone`. When set to `Standalone`, the system initializes only the module, verifying its startup and the correct configuration of its dependencies. Conversely, setting `DOTNET_ENVIRONMENT` to `Emulator` launches the emulator, allowing for debugging of the specified module.
-
-2. Ensure a copy of `appsettings.example.json` is created with the name `appsettings.emulator.json` with the following content inside of the module in question
-    >```json
-    >{
-    >  "EmulatorOptions": {
-    >    "TemplateFilePath": ".[INSERT_LOCAL_PATH]\\sample\\src\\IoTEdgeModules\\deployment.template.emulation.manifest.json",
-    >    "IotHubConnectionString": "[INSERT_IOTHUB_SAS_POLICY_CONNECTION_STRING]"
-    >  }
-    >}
-    >```
-
-Once the previous pre-requisites are in place, the module can be locally debugged/tested, by the following flow:
-
-```mermaid
-sequenceDiagram
-    actor D as Developer
-    participant V AS Visual Studio
-    participant E AS Emulator
-    participant F AS File System
-    participant A AS Azure IoT Hub
-    participant DD AS Docker Desktop
-    participant DE AS Docker Hub
-    participant S AS System Environment
-    D->>V: Set the IoTEdge module as the Startup-Project from within Visual Studio, <br />and hit F5 to begin debugging
-    V->>E: Start the emulator
-    E->>+F: Load device emulation template
-    F-->>-E: Return Emulation template
-    E->>E: Transform template to manifest (sleep images)
-    E->>E: Transform manifest to ConfigurationContent
-    E->>A: Ensure temporary device is registered
-    A->>A: Remove old modules
-    A->>A: Add new modules
-    A->>A: Apply ConfigurationContent on device
-    A->>E: Return device ConnectionString
-    E->>DD: Start IoT Edge Development Container
-    DD->>+DE: Pull docker image https://hub.docker.com/r/toolboc/azure-iot-edge-device-container/dockerfile
-    DE->>-DD: Store image in Docker Desktop
-    DD->>DD: Stop and remove existing containers
-    DD->>DD: Create new container
-    DD->>DD: Start new container
-    DD->>E: EmulationStarted (true/false)
-    loop Retry Up to 15 Times
-        E->>DD: Check if the IoTEdge module to emulate has started
-        DD->>+S: Get Command File Path
-        S->>-DD: Return Command File Path
-        alt Module Started Successfully
-            DD->>E: Module Started
-        else Module Not Started
-            E->>DD: Check again
-        end
-    end
-    E->>DD: Get IOTEDGE_ specific variables from running container
-    DD->>+S: Get Command File Path
-    S->>-DD: Return Command File Path
-    DD->>E: Return IOTEDGE_ variables
-    E->>E: Replace variables IOTEDGE_WORKLOADURI and IOTEDGE_GATEWAYHOSTNAME to point to local development environment
-    E->>S: Set environment variables
-    S->>E: Variables set as ENVIRONMENT_VARIABLES
-    E->>V: Emulation fully started
-    V->>D: Module started and ready to accept e.g. a Direct Method Call from Azure,<br/> which will hit any break-point in the code locally
-```
-
-When debugging concludes, the emulator is then stopped according to this sequence:
-
-```mermaid
-sequenceDiagram
-    actor D as Developer
-    participant V AS Visual Studio
-    participant E AS Emulator
-    participant DD AS Docker Desktop
-    participant A AS Azure IoT Hub
-    D->>V: Hit CTRL-C, which sends a SIGTERM to end the console application
-    V->>E: Stop the emulator
-    E->>+DD: Tear down IoT Edge development container and clean up
-    DD->>-E: Container stopped
-    E->>+A: Remove IoT Edge Device
-    A->>-E: Device removed
-    E->>V: Emulation stopped
-    V->>D: Module execution stops
-```
-
 # Sample Project
 
 ## Atc.Azure.Iot.Sample.Modules.Contracts
@@ -610,11 +485,11 @@ In the [sample modules](/sample/src/IoTEdgeModules/modules/) folder, a few IoT E
 
 ### SimulationModule
 
-The module is not configured to use an emulator. Instead, it relies on Quartz.Net for scheduling tasks. The module features a [`PulsJob`](/sample/src/IoTEdgeModules/modules/simulationmodule/Jobs/PulsJob.cs), which is responsible for emitting temperature telemetry at 5-second intervals. This telemetry simulates temperature readings by following a sinusoidal curve.
+The module relies on Quartz.Net for scheduling tasks. The module features a [`PulsJob`](/sample/src/IoTEdgeModules/modules/simulationmodule/Jobs/PulsJob.cs), which is responsible for emitting temperature telemetry at 5-second intervals. This telemetry simulates temperature readings by following a sinusoidal curve.
 
 ### OpcPublisherNodeManager
 
-This module is configured to use the emulator due to its extensive use of Direct Method calls. It is designed to manage the configuration file for the Microsoft OpcPublisher module, providing methods to manipulate it.
+This module is designed to manage the configuration file for the Microsoft OpcPublisher module, providing methods to manipulate it.
 
 Direct Methods supported:
 
