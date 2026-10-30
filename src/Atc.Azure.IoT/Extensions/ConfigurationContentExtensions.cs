@@ -206,7 +206,7 @@ public static class ConfigurationContentExtensions
                 // Try to parse; use JToken so the serializer keeps it as JSON
                 settings[PropertyNames.Manifest.CreateOptions] = Newtonsoft.Json.Linq.JToken.Parse(edgeModuleSpecification.CreateOptions);
             }
-            catch
+            catch (Newtonsoft.Json.JsonReaderException)
             {
                 // not valid JSON → keep the raw string
                 settings[PropertyNames.Manifest.CreateOptions] = edgeModuleSpecification.CreateOptions;
