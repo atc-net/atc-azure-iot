@@ -16,7 +16,7 @@ public static class ServiceCollectionExtensions
     /// Use <c>_ => null</c> to explicitly disable logging.
     /// </param>
     /// <returns>The same service collection so that multiple calls can be chained.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when <see cref="IotHubOptions"/> service is not registered or the connection string is missing.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when <paramref name="iotHubOptions"/> or its connection string is missing.</exception>
     public static IServiceCollection ConfigureIotHubServices(
         this IServiceCollection services,
         IotHubOptions iotHubOptions,
@@ -25,10 +25,11 @@ public static class ServiceCollectionExtensions
         if (iotHubOptions is null ||
             string.IsNullOrEmpty(iotHubOptions.ConnectionString))
         {
-            throw new InvalidOperationException($"Required service '{nameof(IotHubOptions)}' is not registered");
+            throw new InvalidOperationException($"{nameof(IotHubOptions)}.{nameof(IotHubOptions.ConnectionString)} is missing.");
         }
 
         services.TryAddSingleton<IDeviceTwinModuleExtractor, DeviceTwinModuleExtractor>();
+        services.TryAddSingleton<IConfigurationContentProvider, ConfigurationContentProvider>();
 
         services.AddSingleton<IIoTHubModuleService, IoTHubModuleService>(sp =>
             new IoTHubModuleService(
@@ -54,7 +55,7 @@ public static class ServiceCollectionExtensions
     /// Use <c>_ => null</c> to explicitly disable logging.
     /// </param>
     /// <returns>The same service collection so that multiple calls can be chained.</returns>
-    /// <exception cref="InvalidOperationException">Thrown when <see cref="DeviceProvisioningServiceOptions"/> service is not registered or the connection string is missing.</exception>
+    /// <exception cref="InvalidOperationException">Thrown when <paramref name="deviceProvisioningServiceOptions"/> or its connection string is missing.</exception>
     public static IServiceCollection ConfigureDeviceProvisioningServices(
         this IServiceCollection services,
         DeviceProvisioningServiceOptions deviceProvisioningServiceOptions,
@@ -63,7 +64,7 @@ public static class ServiceCollectionExtensions
         if (deviceProvisioningServiceOptions is null ||
             string.IsNullOrEmpty(deviceProvisioningServiceOptions.ConnectionString))
         {
-            throw new InvalidOperationException($"Required service '{nameof(DeviceProvisioningServiceOptions)}' is not registered");
+            throw new InvalidOperationException($"{nameof(DeviceProvisioningServiceOptions)}.{nameof(DeviceProvisioningServiceOptions.ConnectionString)} is missing.");
         }
 
         services.TryAddSingleton<IConfigurationContentProvider, ConfigurationContentProvider>();
