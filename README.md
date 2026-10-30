@@ -55,6 +55,8 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
     - [TestMocks](#testmocks)
   - [Usage Examples](#usage-examples)
     - [Setup for Different Execution Modes](#setup-for-different-execution-modes)
+  - [Server Certificate Validation](#server-certificate-validation)
+    - [Moving existing modules to Validate](#moving-existing-modules-to-validate)
 - [Sample Project](#sample-project)
   - [Atc.Azure.Iot.Sample.Modules.Contracts](#atcazureiotsamplemodulescontracts)
   - [IoT Edge Modules](#iot-edge-modules)
@@ -456,12 +458,12 @@ The `Atc.Azure.IoTEdge` package is specifically designed to enhance Azure IoT Ed
 ### Extensions
 - **HostBuilderContextExtensions**: Determines the execution mode of the IoT Edge module, facilitating different behaviors and configurations based on the deployment environment (Standalone or Regular).
 
-- **ServiceCollectionExtensions**: Assists in integrating IoT Edge module functionalities by registering dependencies like `ModuleClientWrapper` which abstracts and simplifies interactions with Azure IoT Hub.
+- **ServiceCollectionExtensions**: Assists in integrating IoT Edge module functionalities by registering dependencies like `ModuleClientWrapper` which abstracts and simplifies interactions with Azure IoT Hub. `AddModuleClientWrapper` takes the transport settings, or a function that creates them from the service provider when the module client is created (for example to get a logger).
 
 ### Factories
 - **IMethodResponseFactory/MethodResponseFactory**: Supports creating method responses for device modules, allowing customization of serialization settings to fit different data handling requirements.
 
-- **TransportSettingsFactory**: Provides the MQTT and AMQP transport settings a module connects to edgeHub with: `BuildMqttTransportSettings()` (TCP, port 8883), `BuildMqttWebSocketTransportSettings()` (WebSockets, port 443), `BuildAmqpTransportSettings()` (TCP, port 5671) and `BuildAmqpWebSocketTransportSettings()` (WebSockets, port 443). Use a WebSocket method where only port 443 is open.
+- **TransportSettingsFactory**: Provides the MQTT and AMQP transport settings a module connects to edgeHub with: `BuildMqttTransportSettings` (TCP, port 8883), `BuildMqttWebSocketTransportSettings` (WebSockets, port 443), `BuildAmqpTransportSettings` (TCP, port 5671) and `BuildAmqpWebSocketTransportSettings` (WebSockets, port 443). Use a WebSocket method where only port 443 is open. Each method takes a `ServerCertificateValidation`; see [Server Certificate Validation](#server-certificate-validation).
 
 ### Wrappers
 - **IModuleClientWrapper/ModuleClientWrapper**: Wraps the Azure IoT `ModuleClient`, providing a managed way to interact with IoT Hub. It handles operations like sending device-to-cloud messages, responding to direct method calls, and updating device twins.
@@ -494,7 +496,7 @@ using var host = Host.CreateDefaultBuilder(args)
         else
         {
             // Regular operational mode
-            services.AddModuleClientWrapper(TransportSettingsFactory.BuildMqttTransportSettings());
+            services.AddModuleClientWrapper(TransportSettingsFactory.BuildMqttTransportSettings(ServerCertificateValidation.Validate));
         }
 
         services.AddSingleton<IMethodResponseFactory, MethodResponseFactory>();
@@ -510,6 +512,43 @@ using var host = Host.CreateDefaultBuilder(args)
 
 await host.RunAsync();
 ```
+
+## Server Certificate Validation
+
+When a module connects to edgeHub (or directly to IoT Hub), the server shows a TLS certificate. `ServerCertificateValidation` says how the module checks it:
+
+| Setting | Checks | If the certificate is wrong | Use it when |
+|---|---|---|---|
+| `AcceptAny` | nothing | it connects anyway | you can't validate yet; the first step of an upgrade |
+| `Audit` | the host name and the chain to a trusted root | it still connects, and logs a warning saying what would have failed | trying out validation in production without risk |
+| `Validate` | the host name and the chain to a trusted root | the connection is refused | the goal |
+
+`Validate` is the device SDK's own validation. For edgeHub on an IoT Edge device, the trusted root is the device's edge CA, which the SDK gets from IoT Edge. Revocation isn't checked, unless you turn on `CertificateRevocationCheck` in the transport settings, so it doesn't need internet access.
+
+`Audit` needs a logger for its warnings. Create the transport settings from the service provider to get one:
+
+```csharp
+services.AddModuleClientWrapper(serviceProvider =>
+    TransportSettingsFactory.BuildMqttTransportSettings(
+        ServerCertificateValidation.Audit,
+        serviceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("ModuleClient")));
+```
+
+### Moving existing modules to `Validate`
+
+1. Choose `AcceptAny` explicitly. Nothing changes.
+2. Switch one device to `Audit`, and let it run through normal operation, including reconnects, for a few days.
+3. Read the logs for "Server certificate validation would have failed".
+4. No warnings: switch to `Validate`, first on that device, then everywhere. Warnings: fix the cause (see below) and repeat step 3.
+
+Before switching to `Validate`, check that the device clock is right, that the device host name hasn't changed since IoT Edge was set up (edgeHub's certificate must contain `IOTEDGE_GATEWAYHOSTNAME`), that the edge CA hasn't expired, and that no firewall inspects the TLS traffic.
+
+| Warning | Meaning | Fix |
+|---|---|---|
+| `RemoteCertificateNameMismatch` | the module connected by a name that isn't on the certificate | check the host name / `GatewayHostName` |
+| `UntrustedRoot` | signed by a CA the module doesn't trust | a TLS-inspecting firewall, or the edge CA is missing |
+| `PartialChain` | an intermediate certificate is missing and couldn't be downloaded | allow the download, or install the intermediate |
+| `NotTimeValid` | the certificate isn't valid yet, or has expired | fix the clock, or renew the certificate |
 
 # Sample Project
 
