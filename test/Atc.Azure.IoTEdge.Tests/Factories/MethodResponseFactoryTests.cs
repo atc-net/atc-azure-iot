@@ -26,10 +26,10 @@ public sealed class MethodResponseFactoryTests
     }
 
     [Fact]
-    public void Create_ObjectData_WritesIndentedJson()
+    public void Create_ObjectData_WritesCompactJsonToSaveResponseSpace()
         => new MethodResponseFactory()
             .Create(HttpStatusCode.OK, new SampleResult("endpoint-1", 3))
-            .ResultAsJson.Should().Contain(Environment.NewLine);
+            .ResultAsJson.Should().Be("""{"endpointId":"endpoint-1","nodeCount":3}""");
 
     [Fact]
     public void Create_SerializerOptionsGiven_UsesThem()
