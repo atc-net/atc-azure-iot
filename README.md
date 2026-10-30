@@ -461,7 +461,7 @@ The `Atc.Azure.IoTEdge` package is specifically designed to enhance Azure IoT Ed
 ### Factories
 - **IMethodResponseFactory/MethodResponseFactory**: Supports creating method responses for device modules, allowing customization of serialization settings to fit different data handling requirements.
 
-- **TransportSettingsFactory**: Provides AMQP and MQTT transport settings, essential for connecting IoT modules to Azure IoT Hub.
+- **TransportSettingsFactory**: Provides the MQTT and AMQP transport settings a module connects to edgeHub with: `BuildMqttTransportSettings()` (TCP, port 8883), `BuildMqttWebSocketTransportSettings()` (WebSockets, port 443), `BuildAmqpTransportSettings()` (TCP, port 5671) and `BuildAmqpWebSocketTransportSettings()` (WebSockets, port 443). Use a WebSocket method where only port 443 is open.
 
 ### Wrappers
 - **IModuleClientWrapper/ModuleClientWrapper**: Wraps the Azure IoT `ModuleClient`, providing a managed way to interact with IoT Hub. It handles operations like sending device-to-cloud messages, responding to direct method calls, and updating device twins.
