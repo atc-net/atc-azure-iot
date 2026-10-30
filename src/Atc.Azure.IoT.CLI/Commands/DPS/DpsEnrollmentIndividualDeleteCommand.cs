@@ -33,12 +33,13 @@ public sealed class DpsEnrollmentIndividualDeleteCommand : AsyncCommand<DpsComma
 
         var sw = Stopwatch.StartNew();
 
-        var succeeded = await dpsService.DeleteIndividualEnrollment(
+        var deleted = await dpsService.DeleteIndividualEnrollment(
             settings.RegistrationId!,
             cancellationToken);
 
-        if (!succeeded)
+        if (!deleted)
         {
+            logger.LogError($"Individual enrollment with registration id '{settings.RegistrationId}' does not exist.");
             return ConsoleExitStatusCodes.Failure;
         }
 

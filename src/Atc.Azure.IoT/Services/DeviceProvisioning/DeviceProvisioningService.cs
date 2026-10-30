@@ -9,15 +9,12 @@ namespace Atc.Azure.IoT.Services.DeviceProvisioning;
 /// </summary>
 public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProvisioningService, IDisposable
 {
-    private readonly JsonSerializerOptions jsonSerializerOptions;
-
-    private ProvisioningServiceClient? client;
+    private IProvisioningServiceClientAdapter? client;
 
     public DeviceProvisioningService(
         DeviceProvisioningServiceOptions options,
         ILoggerFactory? loggerFactory = null)
     {
-        jsonSerializerOptions = JsonSerializerOptionsFactory.Create();
         ValidateAndAssign(options.ConnectionString, Assign);
         logger = loggerFactory is not null
             ? loggerFactory.CreateLogger<DeviceProvisioningService>()
@@ -25,12 +22,21 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
     }
 
     /// <summary>
-    /// Retrieves a specific individual enrollment from Azure DPS using the provided registration ID.
-    /// This method returns null if the enrollment does not exist.
+    /// Initializes a new instance of the <see cref="DeviceProvisioningService"/> class with a given DPS client, for tests.
     /// </summary>
-    /// <param name="registrationId">The registration ID of the individual enrollment to retrieve.</param>
-    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
-    /// <returns>The IndividualEnrollment instance if found, or null if not found.</returns>
+    /// <param name="client">The DPS client to use.</param>
+    /// <param name="loggerFactory">The logger factory, or <see langword="null"/> for no logging.</param>
+    internal DeviceProvisioningService(
+        IProvisioningServiceClientAdapter client,
+        ILoggerFactory? loggerFactory = null)
+    {
+        this.client = client;
+        logger = loggerFactory is not null
+            ? loggerFactory.CreateLogger<DeviceProvisioningService>()
+            : NullLogger<DeviceProvisioningService>.Instance;
+    }
+
+    /// <inheritdoc />
     public async Task<IndividualEnrollment?> GetIndividualEnrollment(
         string registrationId,
         CancellationToken cancellationToken = default)
@@ -39,79 +45,27 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
 
         try
         {
-            var enrollment = await client!.GetIndividualEnrollmentAsync(
-                registrationId,
-                cancellationToken);
-
-            return enrollment;
+            return await client!.GetIndividualEnrollment(
+                    registrationId,
+                    cancellationToken)
+                .NormalizeCancellation(cancellationToken);
         }
-        catch (ProvisioningServiceClientHttpException ex) when (ex.ErrorMessage.Equals("Not Found", StringComparison.OrdinalIgnoreCase) &&
-                                                                ex.Message.Contains('{', StringComparison.Ordinal))
+        catch (ProvisioningServiceClientHttpException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
         {
-            var json = ex.Message[ex.Message.IndexOf('{', StringComparison.Ordinal)..];
-            var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(json, jsonSerializerOptions);
-
-            LogIndividualEnrollmentNotFound(
-                registrationId,
-                errorResponse?.ErrorCode ?? null,
-                errorResponse?.Message ?? ex.GetLastInnerMessage());
-
-            return null;
-        }
-        catch (Exception ex)
-        {
-            LogIndividualEnrollmentNotFound(
-                registrationId,
-                errorCode: null,
-                ex.GetLastInnerMessage());
+            LogIndividualEnrollmentNotFound(registrationId);
 
             return null;
         }
     }
 
-    // TODO: Extend with optional parameter to e.g. limit to specific type of individual enrollment
+    /// <inheritdoc />
+    public Task<IReadOnlyCollection<IndividualEnrollment>> GetIndividualEnrollments(
+        CancellationToken cancellationToken = default)
+        => client!.GetIndividualEnrollments(cancellationToken)
+            .NormalizeCancellation(cancellationToken);
 
-    /// <summary>
-    /// Retrieves all individual enrollments registered in Azure DPS.
-    /// </summary>
-    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
-    /// <returns>A collection of all IndividualEnrollments.</returns>
-    public async Task<IEnumerable<IndividualEnrollment>> GetIndividualEnrollments(CancellationToken cancellationToken = default)
-    {
-        var enrollments = new List<IndividualEnrollment>();
-        var querySpecification = new QuerySpecification("SELECT * FROM enrollments");
-
-        using var query = client!.CreateIndividualEnrollmentQuery(
-            querySpecification,
-            cancellationToken);
-
-        while (query.HasNext())
-        {
-            var page = await query.NextAsync();
-            foreach (var item in page.Items)
-            {
-                if (item is IndividualEnrollment individualEnrollment)
-                {
-                    enrollments.Add(individualEnrollment);
-                }
-            }
-        }
-
-        return enrollments;
-    }
-
-    /// <summary>
-    /// Creates or updates an individual TPM enrollment in Azure DPS with the provided parameters.
-    /// Returns the enrollment result along with any error messages if the operation fails.
-    /// </summary>
-    /// <param name="endorsementKey">The TPM endorsement key.</param>
-    /// <param name="registrationId">The registration ID for the enrollment.</param>
-    /// <param name="deviceId">The id of the device.</param>
-    /// <param name="tags">Optional. The tags to be applied to the device twin.</param>
-    /// <param name="desiredProperties">Optional. The desired properties to be applied to the device twin.</param>
-    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
-    /// <returns>Tuple containing the IndividualEnrollment instance and an error message if applicable.</returns>
-    public async Task<(IndividualEnrollment? Enrollment, string? ErrorMessage)> CreateIndividualTpmEnrollment(
+    /// <inheritdoc />
+    public Task<IndividualEnrollment> CreateIndividualTpmEnrollment(
         string endorsementKey,
         string registrationId,
         string deviceId,
@@ -123,63 +77,20 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
         ArgumentException.ThrowIfNullOrEmpty(registrationId);
         ArgumentException.ThrowIfNullOrEmpty(deviceId);
 
-        try
-        {
-            var individualEnrollment = BuildIndividualEnrollment(
-                endorsementKey,
-                registrationId,
-                deviceId,
-                tags,
-                desiredProperties);
+        var individualEnrollment = BuildIndividualEnrollment(
+            endorsementKey,
+            registrationId,
+            deviceId,
+            tags,
+            desiredProperties);
 
-            var individualEnrollmentResponse = await client!.CreateOrUpdateIndividualEnrollmentAsync(
+        return client!.CreateOrUpdateIndividualEnrollment(
                 individualEnrollment,
-                cancellationToken);
-
-            return (individualEnrollmentResponse, null);
-        }
-        catch (ProvisioningServiceClientHttpException ex) when (ex.ErrorMessage.Equals("Bad Request", StringComparison.OrdinalIgnoreCase) &&
-                                                                ex.Message.Contains('{', StringComparison.Ordinal))
-        {
-            var json = ex.Message[ex.Message.IndexOf('{', StringComparison.Ordinal)..];
-            var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(json, jsonSerializerOptions);
-
-            LogIndividualTpmEnrollmentBadRequest(
-                registrationId,
-                errorResponse?.ErrorCode ?? null,
-                errorResponse?.Message ?? ex.GetLastInnerMessage());
-
-            return (null, errorResponse?.Message ?? ex.GetLastInnerMessage());
-        }
-        catch (ProvisioningServiceClientHttpException ex) when (ex.ErrorMessage.Equals("Conflict", StringComparison.OrdinalIgnoreCase) &&
-                                                                ex.Message.Contains('{', StringComparison.Ordinal))
-        {
-            var json = ex.Message[ex.Message.IndexOf('{', StringComparison.Ordinal)..];
-            var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(json, jsonSerializerOptions);
-
-            LogIndividualTpmEnrollmentConflict(
-                registrationId,
-                errorResponse?.ErrorCode ?? null,
-                errorResponse?.Message ?? ex.GetLastInnerMessage());
-
-            return (null, errorResponse?.Message ?? ex.GetLastInnerMessage());
-        }
-        catch (Exception ex)
-        {
-            LogIndividualTpmEnrollmentFailed(
-                registrationId,
-                ex.GetLastInnerMessage());
-
-            return (null, ex.GetLastInnerMessage());
-        }
+                cancellationToken)
+            .NormalizeCancellation(cancellationToken);
     }
 
-    /// <summary>
-    /// Deletes an individual enrollment from Azure DPS using the provided registration ID.
-    /// </summary>
-    /// <param name="registrationId">The registration ID of the individual enrollment to delete.</param>
-    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
-    /// <returns>Indicates whether the operation succeeded.</returns>
+    /// <inheritdoc />
     public async Task<bool> DeleteIndividualEnrollment(
         string registrationId,
         CancellationToken cancellationToken = default)
@@ -188,34 +99,19 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
 
         try
         {
-            await client!.DeleteIndividualEnrollmentAsync(
-                registrationId,
-                cancellationToken);
-
-            return true;
+            await client!.DeleteIndividualEnrollment(
+                    registrationId,
+                    cancellationToken)
+                .NormalizeCancellation(cancellationToken);
         }
-        catch (ProvisioningServiceClientHttpException ex) when (ex.ErrorMessage.Equals("Not Found", StringComparison.OrdinalIgnoreCase) &&
-                                                                ex.Message.Contains('{', StringComparison.Ordinal))
+        catch (ProvisioningServiceClientHttpException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
         {
-            var json = ex.Message[ex.Message.IndexOf('{', StringComparison.Ordinal)..];
-            var errorResponse = JsonSerializer.Deserialize<ErrorResponse>(json, jsonSerializerOptions);
-
-            LogDeleteIndividualEnrollmentNotFound(
-                registrationId,
-                errorResponse?.ErrorCode ?? null,
-                errorResponse?.Message ?? ex.GetLastInnerMessage());
+            LogIndividualEnrollmentNotFoundOnDelete(registrationId);
 
             return false;
         }
-        catch (Exception ex)
-        {
-            LogDeleteIndividualEnrollmentNotFound(
-                registrationId,
-                errorCode: null,
-                ex.GetLastInnerMessage());
 
-            return false;
-        }
+        return true;
     }
 
     private static IndividualEnrollment BuildIndividualEnrollment(
@@ -253,7 +149,7 @@ public sealed partial class DeviceProvisioningService : ServiceBase, IDeviceProv
     protected override void Assign(
         string connectionString)
     {
-        client = ProvisioningServiceClient.CreateFromConnectionString(connectionString);
+        client = new ProvisioningServiceClientAdapter(connectionString);
     }
 
     public void Dispose()
