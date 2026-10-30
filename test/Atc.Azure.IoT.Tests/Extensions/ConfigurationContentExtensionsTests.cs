@@ -227,6 +227,24 @@ public sealed class ConfigurationContentExtensionsTests
         actual.ModulesContent["simulation"]["properties.desired"].Should().BeSameAs(desiredProperties);
     }
 
+    [Fact]
+    public void SetEdgeAgentAndSetEdgeHub_ResultCanBeReadBackAsADeploymentManifest()
+    {
+        // Arrange
+        var configurationContent = new ConfigurationContent()
+            .SetEdgeAgent(CreateEdgeAgent(modules: [new EdgeModuleSpecification("simulation", "simulation:1.0", StartupOrder: 1, [])]))
+            .SetEdgeHub(new EdgeHubDesiredProperties([new Route("upstream", "FROM /messages/* INTO $upstream", Priority: null, TimeToLiveSecs: null)]));
+
+        // Act
+        var json = Newtonsoft.Json.JsonConvert.SerializeObject(configurationContent);
+        var actual = JsonSerializer.Deserialize<DeploymentManifest>(json);
+
+        // Assert
+        actual.Should().NotBeNull();
+        actual!.ModulesContent.EdgeAgent.PropertiesDesired.Modules.Should().ContainKey("simulation");
+        actual.ModulesContent.EdgeHub.PropertiesDesired.Routes.Should().ContainKey("upstream");
+    }
+
     private static EdgeAgentDesiredProperties CreateEdgeAgent(
         List<RegistryCredential>? registryCredentials = null,
         List<EdgeModuleSpecification>? systemModules = null,
