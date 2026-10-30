@@ -2,9 +2,11 @@ namespace Atc.Azure.IoTEdge.Tests.Extensions;
 
 public sealed class HostBuilderContextExtensionsTests
 {
-    [Fact]
-    public void IsStandaloneMode_EnvironmentIsStandalone_ReturnsTrue()
-        => CreateContext("Standalone").IsStandaloneMode().Should().BeTrue();
+    [Theory]
+    [InlineData("Standalone")]
+    [InlineData("standalone")]
+    public void IsStandaloneMode_EnvironmentIsStandaloneInAnyCase_ReturnsTrue(string environmentName)
+        => CreateContext(environmentName).IsStandaloneMode().Should().BeTrue();
 
     [Theory]
     [InlineData("Production")]
