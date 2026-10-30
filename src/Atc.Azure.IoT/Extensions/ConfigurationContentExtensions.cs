@@ -12,6 +12,10 @@ public static class ConfigurationContentExtensions
     /// <param name="configurationContent">The configuration being built.</param>
     /// <param name="edgeAgentDesiredProperties">The desired properties for the edgeAgent.</param>
     /// <returns>The same <see cref="ConfigurationContent"/> instance.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// A module's <see cref="EdgeModuleSpecification.Status"/> or <see cref="EdgeModuleSpecification.RestartPolicy"/> is
+    /// <c>Unknown</c>, which IoT Edge can't apply.
+    /// </exception>
     public static ConfigurationContent SetEdgeAgent(
         this ConfigurationContent configurationContent,
         EdgeAgentDesiredProperties edgeAgentDesiredProperties)
@@ -159,8 +163,8 @@ public static class ConfigurationContentExtensions
                 [PropertyNames.Manifest.EdgeHub] = new Dictionary<string, object>(StringComparer.Ordinal)
                 {
                     [PropertyNames.Manifest.Type] = PropertyNames.Manifest.Docker,
-                    [PropertyNames.Manifest.Status] = ModuleStatus.Running.ToStringLowerCase(),
-                    [PropertyNames.Manifest.RestartPolicy] = RestartPolicy.Always.ToStringLowerCase(),
+                    [PropertyNames.Manifest.Status] = ModuleStatus.Running.ToManifestValue(),
+                    [PropertyNames.Manifest.RestartPolicy] = RestartPolicy.Always.ToManifestValue(),
                     [PropertyNames.ModuleSettings] = new Dictionary<string, object>(StringComparer.Ordinal)
                     {
                         [PropertyNames.Manifest.Image] = $"mcr.microsoft.com/azureiotedge-hub:{edgeAgentDesiredProperties.SystemModuleVersion}",
@@ -190,8 +194,8 @@ public static class ConfigurationContentExtensions
                 module.Add(PropertyNames.Manifest.Version, edgeModuleSpecification.Version);
             }
 
-            module.Add(PropertyNames.Manifest.Status, edgeModuleSpecification.Status.ToString().ToLowerInvariant());
-            module.Add(PropertyNames.Manifest.RestartPolicy, edgeModuleSpecification.RestartPolicy.ToString().ToLowerInvariant());
+            module.Add(PropertyNames.Manifest.Status, edgeModuleSpecification.Status.ToManifestValue());
+            module.Add(PropertyNames.Manifest.RestartPolicy, edgeModuleSpecification.RestartPolicy.ToManifestValue());
         }
 
         var settings = new Dictionary<string, object>(StringComparer.Ordinal)
