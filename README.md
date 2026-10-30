@@ -1,6 +1,6 @@
 # Introduction
 
-IoT library, which contains common services for Azure IotHub, DeviceProvisioningService (DPS), Iot edge devices, modules, and device twins, and examples for setting up Microsoft OPC publisher module and related projects.
+IoT library, which contains common services for Azure IotHub, DeviceProvisioningService (DPS), Iot edge devices, modules, and device twins, a CLI tool, and samples for running IoT Edge modules locally with Aspire and for setting up the Microsoft OPC Publisher module.
 
 > Upgrading from 2.x? See [Upgrading to 3.0](#upgrading-to-30).
 
@@ -45,6 +45,8 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
       - [Configuration Content Retrieval from File](#configuration-content-retrieval-from-file)
       - [Configuration Content Retrieval from Stream](#configuration-content-retrieval-from-stream)
     - [Usage Example](#usage-example-4)
+- [CLI](#cli)
+  - [Installation](#installation)
   - [Update](#update)
   - [Usage](#usage)
     - [Option --help](#option---help)
@@ -60,6 +62,11 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
     - [Testing a Module](#testing-a-module)
   - [Server Certificate Validation](#server-certificate-validation)
     - [Moving existing modules to Validate](#moving-existing-modules-to-validate)
+- [Running IoT Edge modules locally](#running-iot-edge-modules-locally)
+  - [Choosing an IoT Hub](#choosing-an-iot-hub)
+  - [IoT Hub quota](#iot-hub-quota)
+  - [Ports](#ports)
+  - [Running the sample](#running-the-sample)
 - [Sample Project](#sample-project)
   - [Atc.Azure.Iot.Sample.Modules.Contracts](#atcazureiotsamplemodulescontracts)
   - [IoT Edge Modules](#iot-edge-modules)
@@ -472,7 +479,7 @@ The `Atc.Azure.IoTEdge` package is specifically designed to enhance Azure IoT Ed
 ## Features
 
 ### Extensions
-- **HostBuilderContextExtensions**: Determines the execution mode of the IoT Edge module, facilitating different behaviors and configurations based on the deployment environment (Standalone or Regular).
+- **HostBuilderContextExtensions**: Determines the execution mode of the IoT Edge module, facilitating different behaviors and configurations based on the deployment environment (Standalone or Regular). In `Standalone` mode a module can run without IoT Hub, on the `MockModuleClientWrapper`.
 
 - **ServiceCollectionExtensions**: Assists in integrating IoT Edge module functionalities by registering dependencies like `ModuleClientWrapper` which abstracts and simplifies interactions with Azure IoT Hub. `AddModuleClientWrapper` takes the transport settings, or a function that creates them from the service provider when the module client is created (for example to get a logger).
 
@@ -511,7 +518,7 @@ using var host = Host.CreateDefaultBuilder(args)
         }
         else
         {
-            // Regular operational mode
+            // On an IoT Edge device, or emulated by Atc.Aspire.Hosting.Azure.IoTEdge
             services.AddModuleClientWrapper(TransportSettingsFactory.BuildMqttTransportSettings(ServerCertificateValidation.Validate));
         }
 
@@ -583,6 +590,77 @@ Before switching to `Validate`, check that the device clock is right, that the d
 | `PartialChain` | an intermediate certificate is missing and couldn't be downloaded | allow the download, or install the intermediate |
 | `NotTimeValid` | the certificate isn't valid yet, or has expired | fix the clock, or renew the certificate |
 
+# Running IoT Edge modules locally
+
+IoT Edge modules built on `Atc.Azure.IoTEdge` can run on a developer machine against a real Azure IoT Hub, without an IoT Edge device. This uses the [Aspire](https://aspire.dev) hosting integration [Atc.Aspire.Hosting.Azure.IoTEdge](https://www.nuget.org/packages/Atc.Aspire.Hosting.Azure.IoTEdge) from [atc-aspire](https://github.com/atc-net/atc-aspire).
+
+- The AppHost creates an edge-enabled device and the module identities in the IoT Hub, or reuses them if they exist.
+- A local edgeHub container applies the routes from the deployment manifest, as on a real device.
+- The modules run as .NET projects or containers, and connect to the local edgeHub with `ModuleClient.CreateFromEnvironmentAsync`, so module code needs no changes.
+- A module whose launch profile sets the environment to `Standalone` (see `IsStandaloneMode` above) runs in `Development` instead, so it connects instead of using the `MockModuleClientWrapper`.
+
+```csharp
+var iotHub = builder.AddParameter("iothub-connection-string", secret: true);
+
+var device = builder
+    .AddIoTEdgeDevice("edge-device", iotHub)
+    .WithDeploymentManifest("../IoTEdgeModules/deployment.template.json")
+    .WithEdgeHub(hub => hub.WithDataVolume());
+
+builder
+    .AddProject<Projects.SimulationModule>("simulationmodule")
+    .AsIoTEdgeModule(device);
+```
+
+See the [package README](https://github.com/atc-net/atc-aspire/blob/main/src/Atc.Aspire.Hosting.Azure.IoTEdge/README.md) for the API and how it works.
+
+## Choosing an IoT Hub
+
+- Use your own IoT Hub on the **Free (F1)** or **Standard (S1)** tier. The **Basic** tiers don't support device twins, direct methods or IoT Edge, so they can't be used.
+- Don't use an IoT Hub that deployed services also use. Their cloud services react to devices, so your local device and its events would reach them.
+- The device id defaults to `<name>-<machine name>`, so developers who share an IoT Hub each get their own device.
+- Never use the device id of a real IoT Edge device. The AppHost applies a single-device deployment with only the system modules at each start, and a real IoT Edge runtime would remove its modules to follow it; its edgeHub would also compete with the real device for the connection. The device fails to start instead when the `$edgeAgent` twin shows that a real runtime uses the device.
+
+## IoT Hub quota
+
+- F1 allows 8,000 messages a day, metered in 0.5 KB chunks, so roughly 4 MB a day in total. Telemetry, twin updates and direct methods all count.
+- S1 allows 400,000 messages a day, metered in 4 KB chunks. Use F1 for quick checks and S1 for longer test runs.
+- The daily quota resets at 00:00 UTC.
+- To save quota, the sample's data sources (`opc-plc` and `simulationmodule`) use `WithExplicitStart()`, so they don't start automatically with the AppHost. Start them from the dashboard when you need data, and stop them, or the whole AppHost, when you're not testing.
+- Don't stop the edgeHub container to save quota. It stores messages and sends them to IoT Hub when it starts again. With `WithDataVolume()`, as in the sample, the stored messages also survive an AppHost restart.
+
+## Ports
+
+The edgeHub container publishes host ports 8883 (MQTT), 5671 (AMQP) and 443 (MQTT and AMQP over WebSockets), because the IoT device SDK always connects on these ports. Modules running on the host connect through `localhost`, so these ports must be free. Port 443 is only needed by modules that connect over WebSockets.
+
+The sample's modules connect over MQTT on TCP, so the sample passes `httpsPort: null` and leaves port 443 free:
+
+```csharp
+.WithEdgeHub(hub => hub.WithDataVolume(), httpsPort: null);
+```
+
+## Running the sample
+
+The [sample AppHost](sample/src/Atc.Azure.Iot.Sample.AppHost/Program.cs) runs an OPC PLC simulator, Microsoft OPC Publisher, the simulation module and the OPC Publisher node manager module on one emulated device with a local edgeHub.
+
+- [OPC PLC](https://github.com/Azure-Samples/iot-edge-opc-plc) is an OPC UA server with simulated nodes. Its README lists the command-line options the sample passes.
+- [OPC Publisher](https://github.com/Azure/Industrial-IoT/tree/main/docs/opc-publisher) reads the nodes listed in `pn.json` from OPC UA servers and sends their values as telemetry. Its documentation lists the command-line options.
+
+1. Install Docker, the [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) and the [Aspire CLI](https://aspire.dev). The AppHost uses the dashboard and orchestrator bundled with the CLI.
+2. Set an IoT Hub connection string with registry read/write and service connect permissions (e.g. the `iothubowner` policy):
+   ```powershell
+   cd sample/src/Atc.Azure.Iot.Sample.AppHost
+   dotnet user-secrets set "Parameters:iothub-connection-string" "HostName=<hub>.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=<key>"
+   ```
+3. Run the AppHost and open the dashboard link it prints:
+   ```powershell
+   dotnet run --project sample/src/Atc.Azure.Iot.Sample.AppHost
+   ```
+4. The device `edge-device-<machine name>` appears in the IoT Hub with its modules.
+5. Start `opc-plc` and `simulationmodule` from the dashboard; with `WithExplicitStart()` they don't start on their own. OPC Publisher waits for `opc-plc`. The routes in the [deployment template](sample/src/IoTEdgeModules/deployment.template.json) send their telemetry to `$upstream`. Watch it with e.g. `az iot hub monitor-events -n <hub> -d edge-device-<machine name>`.
+6. Use the module commands in the dashboard to call direct methods, e.g. `GetEndpoints` with payload `{ "pageIndex": 0 }` on `opcpublishernodemanagermodule`, or to change desired properties.
+7. Stop the data sources, or the AppHost, when you're done.
+
 # Sample Project
 
 ## Atc.Azure.Iot.Sample.Modules.Contracts
@@ -599,7 +677,7 @@ The module relies on Quartz.Net for scheduling tasks. The module features a [`Pu
 
 ### OpcPublisherNodeManager
 
-This module is designed to manage the configuration file for the Microsoft OpcPublisher module, providing methods to manipulate it.
+This module manages the published nodes file (`pn.json`) of the Microsoft OpcPublisher module through direct methods. The file is read from `opc/opcpublisher` under the working directory, or from the directory in the `OpcPublisherNodeConfigurationDirectory` environment variable.
 
 Direct Methods supported:
 
@@ -744,6 +822,7 @@ Then move to TCP and to `Validate` one device at a time.
 # Requirements
 
 * [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+* Docker and the [Aspire CLI](https://aspire.dev), for the Aspire sample
 
 # How to contribute
 

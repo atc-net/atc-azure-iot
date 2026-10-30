@@ -1,0 +1,20 @@
+[
+  {
+    "EndpointUrl": "opc.tcp://opc-plc:50000",
+    "UseSecurity": false,
+    "OpcNodes": [
+      {
+        "Id": "ns=3;s=StepUp",
+        "DisplayName": "StepUp",
+        "OpcSamplingInterval": 1000,
+        "OpcPublishingInterval": 5000
+      },
+      {
+        "Id": "ns=3;s=SlowUInt1",
+        "DisplayName": "SlowUInt1",
+        "OpcSamplingInterval": 1000,
+        "OpcPublishingInterval": 5000
+      }
+    ]
+  }
+]
