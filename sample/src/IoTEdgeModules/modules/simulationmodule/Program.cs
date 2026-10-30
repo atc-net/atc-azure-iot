@@ -19,7 +19,7 @@ public static class Program
                 }
                 else
                 {
-                    services.AddModuleClientWrapper(TransportSettingsFactory.BuildMqttTransportSettings());
+                    services.AddModuleClientWrapper(TransportSettingsFactory.BuildMqttWebSocketTransportSettings());
                 }
 
                 services.AddSingleton(_ =>
