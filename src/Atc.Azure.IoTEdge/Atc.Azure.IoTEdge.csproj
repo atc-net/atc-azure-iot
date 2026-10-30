@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Atc.Azure.IoTEdge.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Atc" Version="4.0.0" />
     <PackageReference Include="Microsoft.Azure.Devices.Client" Version="1.42.4" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.13" />

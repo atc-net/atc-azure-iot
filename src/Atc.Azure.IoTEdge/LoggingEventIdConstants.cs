@@ -27,4 +27,7 @@ public static class LoggingEventIdConstants
     public const int GetDesiredPropertiesFailed = 15_100;
     public const int GetReportedPropertiesFailed = 15_110;
     public const int ReportedPropertiesUpdated = 15_120;
+
+    public const int ServerCertificateValidationWouldFail = 16_000;
+    public const int EdgeCaCertificateNotReadable = 16_010;
 }

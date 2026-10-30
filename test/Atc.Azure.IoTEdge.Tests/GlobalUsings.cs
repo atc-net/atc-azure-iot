@@ -1,10 +1,17 @@
 global using System.Net;
+global using System.Net.Security;
+global using System.Security.Cryptography;
+global using System.Security.Cryptography.X509Certificates;
 global using System.Text;
 global using System.Text.Json;
 global using Atc.Azure.IoTEdge.Extensions;
 global using Atc.Azure.IoTEdge.Factories;
 global using Atc.Azure.IoTEdge.TestMocks;
+global using Atc.Azure.IoTEdge.Wrappers;
 global using Microsoft.Azure.Devices.Client;
 global using Microsoft.Azure.Devices.Shared;
+global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Logging.Abstractions;
+global using Microsoft.Extensions.Logging.Testing;
