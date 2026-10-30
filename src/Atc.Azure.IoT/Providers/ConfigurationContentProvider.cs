@@ -2,55 +2,28 @@ namespace Atc.Azure.IoT.Providers;
 
 public sealed class ConfigurationContentProvider : IConfigurationContentProvider
 {
-    public async Task<(ConfigurationContent? ConfigurationContent, string? ErrorMessage)> GetConfigurationContent(
+    /// <inheritdoc />
+    public async Task<ConfigurationContent> GetConfigurationContent(
         FileInfo deploymentManifestFileInfo,
         CancellationToken cancellationToken)
     {
-        if (!deploymentManifestFileInfo.Exists)
-        {
-            return (null, "Deployment Manifest file does not exist.");
-        }
+        ArgumentNullException.ThrowIfNull(deploymentManifestFileInfo);
 
-        try
-        {
-            await using var fileStream = deploymentManifestFileInfo.OpenRead();
-            return await GetConfigurationContent(fileStream, cancellationToken);
-        }
-        catch (Exception ex)
-        {
-            return (null, $"Error reading Deployment Manifest file: {ex.Message}");
-        }
+        await using var fileStream = deploymentManifestFileInfo.OpenRead();
+        return await GetConfigurationContent(fileStream, cancellationToken);
     }
 
-    public async Task<(ConfigurationContent? ConfigurationContent, string? ErrorMessage)> GetConfigurationContent(
+    /// <inheritdoc />
+    public async Task<ConfigurationContent> GetConfigurationContent(
         Stream deploymentManifestFileStream,
         CancellationToken cancellationToken)
     {
-        var templateContent = await GetTemplateContent(deploymentManifestFileStream, cancellationToken);
-        if (templateContent is null)
-        {
-            return (null, "Deployment Manifest was not in proper format.");
-        }
+        ArgumentNullException.ThrowIfNull(deploymentManifestFileStream);
 
-        var configurationContent = GetConfigurationContentFromManifest(templateContent);
-        if (configurationContent is null)
-        {
-            return (null, "Could not get ConfigurationContent from Deployment Manifest.");
-        }
+        using var reader = new StreamReader(deploymentManifestFileStream, leaveOpen: true);
+        var deploymentManifest = await reader.ReadToEndAsync(cancellationToken);
 
-        return (configurationContent, null);
-    }
-
-    private static async Task<string?> GetTemplateContent(
-        Stream deploymentManifestFileStream,
-        CancellationToken cancellationToken)
-    {
-        using var reader = new StreamReader(deploymentManifestFileStream);
-        var content = await reader.ReadToEndAsync(cancellationToken);
-
-        return content.IsFormatJson()
-            ? content
-            : null;
+        return GetConfigurationContentFromManifest(deploymentManifest);
     }
 
     /// <summary>
@@ -64,8 +37,21 @@ public sealed class ConfigurationContentProvider : IConfigurationContentProvider
     /// ValueKind = Object : " instead of {
     /// and " instead of } (for the end).
     /// </remarks>
-    private static ConfigurationContent? GetConfigurationContentFromManifest(
+    private static ConfigurationContent GetConfigurationContentFromManifest(
         string deploymentManifest)
-        => Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigurationContent>(
-            deploymentManifest);
+    {
+        ConfigurationContent? configurationContent;
+
+        try
+        {
+            configurationContent = Newtonsoft.Json.JsonConvert.DeserializeObject<ConfigurationContent>(deploymentManifest);
+        }
+        catch (Newtonsoft.Json.JsonException ex)
+        {
+            throw new InvalidDataException($"The deployment manifest is not a valid JSON object: {ex.Message}", ex);
+        }
+
+        return configurationContent
+               ?? throw new InvalidDataException("The deployment manifest is empty.");
+    }
 }

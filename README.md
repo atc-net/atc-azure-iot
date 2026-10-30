@@ -361,11 +361,11 @@ The `IConfigurationContentProvider` is designed to assist in retrieving configur
 
 #### Configuration Content Retrieval from File
 
-- `GetConfigurationContent(FileInfo deploymentManifestFileInfo, CancellationToken cancellationToken)`: Retrieves configuration content from a deployment manifest file.
+- `GetConfigurationContent(FileInfo deploymentManifestFileInfo, CancellationToken cancellationToken)`: Retrieves configuration content from a deployment manifest file. Throws `FileNotFoundException` if the file doesn't exist, and `InvalidDataException` if it is empty or isn't a valid JSON object.
 
 #### Configuration Content Retrieval from Stream
 
-- `GetConfigurationContent(Stream deploymentManifestFileStream, CancellationToken cancellationToken)`: Retrieves configuration content from a deployment manifest stream.
+- `GetConfigurationContent(Stream deploymentManifestFileStream, CancellationToken cancellationToken)`: Retrieves configuration content from a deployment manifest stream, and leaves the stream open. Throws `InvalidDataException` if it is empty or isn't a valid JSON object.
 
 ### Usage Example
 
@@ -374,18 +374,17 @@ Below is an example demonstrating how to use the `ConfigurationContentProvider` 
 ```csharp
 var configurationContentProvider = serviceProvider.GetRequiredService<IConfigurationContentProvider>();
 var deploymentManifestFile = new FileInfo("path/to/deploymentManifest.json");
-var cancellationToken = new CancellationToken();
 
-var (configurationContent, errorMessage) = await configurationContentProvider.GetConfigurationContent(deploymentManifestFile, cancellationToken);
-
-if (configurationContent != null)
+try
 {
-    Console.WriteLine("Configuration content retrieved successfully.");
+    var configurationContent = await configurationContentProvider.GetConfigurationContent(deploymentManifestFile, cancellationToken);
+    Console.WriteLine($"Read {configurationContent.ModulesContent.Count} modules from the deployment manifest.");
 }
-else
+catch (Exception ex) when (ex is FileNotFoundException or InvalidDataException)
 {
-    Console.WriteLine($"Failed to retrieve configuration content: {errorMessage}");
+    Console.WriteLine($"Failed to read the deployment manifest: {ex.Message}");
 }
+```
 
 # CLI
 
