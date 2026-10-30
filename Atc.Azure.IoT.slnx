@@ -22,5 +22,6 @@
   </Folder>
   <Folder Name="/test/">
     <Project Path="test/Atc.Azure.IoT.Tests/Atc.Azure.IoT.Tests.csproj" />
+    <Project Path="test/Atc.Azure.IoTEdge.Tests/Atc.Azure.IoTEdge.Tests.csproj" />
   </Folder>
 </Solution>
