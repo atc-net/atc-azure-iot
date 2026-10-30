@@ -4,5 +4,4 @@ public enum IotEdgeExecutionMode
 {
     Regular,
     Standalone,
-    Emulator,
 }

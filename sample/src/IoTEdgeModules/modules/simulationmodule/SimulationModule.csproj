@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\src\Atc.Azure.IoTEdge.DeviceEmulator\Atc.Azure.IoTEdge.DeviceEmulator.csproj" />
     <ProjectReference Include="..\..\..\..\..\src\Atc.Azure.IoTEdge\Atc.Azure.IoTEdge.csproj" />
     <ProjectReference Include="..\..\..\Atc.Azure.Iot.Sample.Modules.Contracts\Atc.Azure.Iot.Sample.Modules.Contracts.csproj" />
   </ItemGroup>

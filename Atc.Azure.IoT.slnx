@@ -9,7 +9,6 @@
   </Folder>
   <Folder Name="/sample/src/IoTEdgeModules/">
     <File Path="sample/src/IoTEdgeModules/deployment.debug.template.json" />
-    <File Path="sample/src/IoTEdgeModules/deployment.template.emulation.manifest.json" />
     <File Path="sample/src/IoTEdgeModules/deployment.template.json" />
   </Folder>
   <Folder Name="/sample/src/IoTEdgeModules/modules/">
@@ -19,7 +18,6 @@
   <Folder Name="/src/">
     <Project Path="src/Atc.Azure.IoT.CLI/Atc.Azure.IoT.CLI.csproj" />
     <Project Path="src/Atc.Azure.IoT/Atc.Azure.IoT.csproj" />
-    <Project Path="src/Atc.Azure.IoTEdge.DeviceEmulator/Atc.Azure.IoTEdge.DeviceEmulator.csproj" />
     <Project Path="src/Atc.Azure.IoTEdge/Atc.Azure.IoTEdge.csproj" />
   </Folder>
   <Folder Name="/test/">
