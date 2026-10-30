@@ -2,6 +2,8 @@
 
 IoT library, which contains common services for Azure IotHub, DeviceProvisioningService (DPS), Iot edge devices, modules, and device twins, and examples for setting up Microsoft OPC publisher module and related projects.
 
+> Upgrading from 2.x? See [Upgrading to 3.0](#upgrading-to-30).
+
 # Table of Content
 
 - [Introduction](#introduction)
@@ -65,6 +67,9 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
     - [OpcPublisher](#opcpublisher)
       - [Certificate](#certificate)
       - [Deployment](#deployment)
+- [Upgrading to 3.0](#upgrading-to-30)
+  - [Changes that need code changes](#changes-that-need-code-changes)
+  - [Changes in behaviour](#changes-in-behaviour)
 - [Requirements](#requirements)
 - [How to contribute](#how-to-contribute)
 
@@ -630,6 +635,81 @@ Once you are ready to deploy the OpcPublisher module, there are several requirem
    > aziotks on "/opc/pki/own/private/opcpublisher.pfx"
    > aziotcs on "/opc/pki/trusted/certs/opcpublisher.der"
  > ```
+
+# Upgrading to 3.0
+
+3.0 changes how failures and cancellation are reported, how IoT Edge modules connect, and removes the Docker device emulator. Go through this list when you upgrade from 2.x.
+
+## Changes that need code changes
+
+**Results instead of tuples.** These methods return the result and throw on failure:
+
+| Method | 2.x | 3.0 |
+|---|---|---|
+| `IIoTHubService.CreateDevice` | `(bool Succeeded, Device? Device)` | `Device` |
+| `IIoTHubService.UpdateDeviceTwin` | `(bool Succeeded, Twin? UpdatedTwin)` | `Twin` |
+| `IIoTHubService.AddModuleToDevice`, `UpdateModule` | `(bool Succeeded, Module? Module)` | `Module` |
+| `IIoTHubService.UpdateDesiredProperties` | `Twin?` | `Twin` |
+| `IIoTHubService.GetDeviceRegistryStatistics` | `RegistryStatistics?` | `RegistryStatistics` |
+| `IIoTHubService.ApplyConfigurationContentOnDevice`, `AddNewModules` | `(bool Succeeded, string? ErrorMessage)` | `Task` |
+| `IIoTHubService.GetModulesOnIotEdgeDevice` | `IEnumerable<Module>` | `IReadOnlyCollection<Module>` |
+| `IDeviceProvisioningService.CreateIndividualTpmEnrollment` | `(IndividualEnrollment? Enrollment, string? ErrorMessage)` | `IndividualEnrollment` |
+| `IDeviceProvisioningService.GetIndividualEnrollments` | `IEnumerable<IndividualEnrollment>` | `IReadOnlyCollection<IndividualEnrollment>` |
+| `IConfigurationContentProvider.GetConfigurationContent` | `(ConfigurationContent? ConfigurationContent, string? ErrorMessage)` | `ConfigurationContent` |
+
+```csharp
+// 2.x
+var (succeeded, errorMessage) = await iotHubService.ApplyConfigurationContentOnDevice(deviceId, content, cancellationToken);
+if (!succeeded)
+{
+    logger.LogError(errorMessage);
+}
+
+// 3.0
+try
+{
+    await iotHubService.ApplyConfigurationContentOnDevice(deviceId, content, cancellationToken);
+}
+catch (IotHubException ex)
+{
+    logger.LogError(ex, "Could not apply the deployment");
+}
+```
+
+`ErrorResponse`, which held a parsed DPS error, is removed; the DPS exception's `StatusCode` and `Body` hold DPS's answer.
+
+**Transport settings.** Every `TransportSettingsFactory` method takes a `ServerCertificateValidation` (see [Server Certificate Validation](#server-certificate-validation)), and `BuildMqttTransportSettings` connects over TCP (port 8883) instead of WebSockets (port 443). To keep the 2.x behaviour exactly:
+
+```csharp
+// 2.x
+services.AddModuleClientWrapper(TransportSettingsFactory.BuildMqttTransportSettings());
+
+// 3.0, the same behaviour
+services.AddModuleClientWrapper(
+    TransportSettingsFactory.BuildMqttWebSocketTransportSettings(ServerCertificateValidation.AcceptAny));
+```
+
+Then move to TCP and to `Validate` one device at a time.
+
+**The Docker device emulator is removed:** the `Atc.Azure.IoTEdge.DeviceEmulator` package, `IotEdgeExecutionMode.Emulator` and `IsEmulatorMode()`. Use the Standalone environment with `MockModuleClientWrapper` to run a module without IoT Hub.
+
+## Changes in behaviour
+
+**Failures throw.** In 2.x, `IoTHubService`, `DeviceProvisioningService` and `ConfigurationContentProvider` logged a failure and returned `null`, `false` or an empty list, so a wrong key or a throttled hub looked like a missing device. In 3.0, `null` (or `false` for `DeleteDevice`, `RemoveModuleFromDevice` and `DeleteIndividualEnrollment`) only means that it doesn't exist, and every other failure throws the SDK's exception. The code compiles unchanged, so check code that treats `null` or `false` as "failed": a delete that returns `false` now means "already gone". `GetDeviceTwins` no longer returns a partial list when a page fails.
+
+**Cancellation throws `OperationCanceledException`.** Both SDKs report a cancelled request as their own exception (`IotHubException`, `ProvisioningServiceClientException`). In 3.0 a cancelled token throws `OperationCanceledException`, with the SDK's exception as `InnerException`.
+
+**Unchanged on purpose:** `UploadModuleLogs`, `UploadSupportBundle` and `GetTaskStatus` still return an IoT Hub error, such as an offline device, as the response's status code. A cancelled token throws.
+
+**Other changes you may notice:**
+
+- `UpdateDesiredProperties` sends one patch with only the desired properties (any twin version), instead of reading and resending the whole twin.
+- `EdgeAgentDesiredProperties.SystemModuleVersion` defaults to 1.6. It is only used when no system modules are given.
+- Building a deployment throws for a module whose `RestartPolicy` or `Status` is `Unknown`, instead of writing `"unknown"`. `RestartPolicy` gains `OnFailure` and `OnUnhealthy`; use `RestartPolicyExtensions.FromManifestValue("on-failure")` to read them.
+- `IsStandaloneMode()` ignores the case of the environment name, as `IsEnvironment` does.
+- `GetConfigurationContent(Stream)` leaves the stream open.
+- `ConfigureIotHubServices` also registers `IConfigurationContentProvider`.
+- The IoT Hub log event `Failure` (10000) and the DPS failure events are removed, because the caller gets the exception; the connection string events moved to 10110/10111.
 
 # Requirements
 
