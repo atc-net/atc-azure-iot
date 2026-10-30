@@ -48,8 +48,6 @@ internal static class LoggingEventIdConstants
 
     internal static class IoTHubModuleService
     {
-        public const int MethodCallFailedDeviceNotFound = 11_000;
-        public const int MethodCallFailed = 11_001;
         public const int MethodCallTransientError = 11_002;
     }
 

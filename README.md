@@ -22,6 +22,7 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
     - [Features](#features-1)
     - [Method](#method)
       - [Direct Method Invocation](#direct-method-invocation)
+      - [Errors and retries](#errors-and-retries)
     - [Usage Example](#usage-example-1)
   - [IDeviceProvisioningService](#ideviceprovisioningservice)
     - [Features](#features-2)
@@ -187,7 +188,15 @@ The `IIoTHubModuleService` is tailored for direct interactions with IoT devices 
 
 #### Direct Method Invocation
 
-- `CallMethod(string deviceId, string moduleId, MethodParameterModel parameters, CancellationToken cancellationToken)`: This method sends a direct command to a specified module on a device. The `MethodParameterModel` allows for detailed specification of the command, and the operation returns a `MethodResultModel` that includes the status of the call and any resultant data in JSON format.
+- `CallMethod(string deviceId, string moduleId, MethodParameterModel parameters, IoTHubRequestOptions? requestOptions, CancellationToken cancellationToken)`: This method sends a direct command to a specified module on a device. The `MethodParameterModel` holds the method name and its JSON payload, and the operation returns a `MethodResultModel` with the module's status code and its JSON answer.
+
+#### Errors and retries
+
+The module's answer is returned whatever its status code, also when the module reports an error, for example 501 for a method it has no handler for.
+
+A transient IoT Hub error, such as throttling, is retried as `IoTHubRequestOptions` says (by default 3 retries, 2 seconds apart). Any other IoT Hub error, or a transient one that remains after the retries, is thrown, for example `DeviceNotFoundException` with the error code `DeviceNotOnline` when the device is offline. `IoTHubRequestOptions.Timeout` sets how long to wait for the module's answer; `TimeSpan.Zero` uses IoT Hub's default of 30 seconds.
+
+A cancelled token throws `OperationCanceledException` and is not retried. The IoT Hub SDK reports a cancelled request as an `IotHubException`, which becomes the `InnerException`.
 
 ### Usage Example
 
@@ -195,20 +204,25 @@ Below is an example demonstrating how to invoke a direct method on an IoT module
 
 ```csharp
 var iotHubModuleService = serviceProvider.GetRequiredService<IIoTHubModuleService>();
-var parameters = new MethodParameterModel
-{
-    MethodName = "Restart",
-    Payload = "{}" // Additional parameters for the method could be specified here.
-};
+var parameters = new MethodParameterModel(
+    Name: "Restart",
+    JsonPayload: "{}"); // Additional parameters for the method could be specified here.
 
-var result = await iotHubModuleService.CallMethod("device123", "module456", parameters, CancellationToken.None);
-if (result.Status == 200)
+try
 {
-    Console.WriteLine("Method executed successfully. Response: " + result.JsonPayload);
+    var result = await iotHubModuleService.CallMethod("device123", "module456", parameters, cancellationToken: cancellationToken);
+    if (result.Status == 200)
+    {
+        Console.WriteLine("Method executed successfully. Response: " + result.JsonPayload);
+    }
+    else
+    {
+        Console.WriteLine("The module answered with status " + result.Status + ": " + result.JsonPayload);
+    }
 }
-else
+catch (DeviceNotFoundException ex) when (ex.Code == ErrorCode.DeviceNotOnline)
 {
-    Console.WriteLine("Method execution failed. Status: " + result.Status);
+    Console.WriteLine("The device is offline.");
 }
 ```
 
