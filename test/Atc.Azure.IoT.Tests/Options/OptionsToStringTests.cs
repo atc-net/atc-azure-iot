@@ -19,7 +19,7 @@ public sealed class OptionsToStringTests
     [Theory]
     [InlineData("")]
     [InlineData("not a connection string")]
-    public void IotHubOptions_ToString_WithoutSecrets_KeepsValue(string connectionString)
+    public void IotHubOptions_ToString_ConnectionStringWithoutSecrets_ShowsItUnchanged(string connectionString)
         => new IotHubOptions { ConnectionString = connectionString }
             .ToString()
             .Should().Be($"ConnectionString: {connectionString}");

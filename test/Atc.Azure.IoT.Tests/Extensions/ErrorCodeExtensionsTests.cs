@@ -30,7 +30,7 @@ public sealed class ErrorCodeExtensionsTests
     [InlineData(ErrorCode.ServerError, 500)]
     [InlineData(ErrorCode.ServiceUnavailable, 503)]
     [InlineData(ErrorCode.InvalidErrorCode, 500)]
-    public void ShouldReturnFirstThreeDigitsOfErrorCode(ErrorCode errorCode, int expected)
+    public void ToHttpStatusCode_ReturnsTheHttpStatusCodeInTheFirstThreeDigitsOfTheErrorCode(ErrorCode errorCode, int expected)
     {
         // Act
         var actual = errorCode.ToHttpStatusCode();

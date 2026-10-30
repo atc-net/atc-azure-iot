@@ -1,7 +1,9 @@
 global using System.Net;
 global using System.Text;
 global using System.Text.Json;
+global using Atc.Azure.IoT.Exceptions;
 global using Atc.Azure.IoT.Extensions;
+global using Atc.Azure.IoT.Extractors;
 global using Atc.Azure.IoT.Models;
 global using Atc.Azure.IoT.Options;
 global using Atc.Azure.IoT.Providers;
@@ -12,4 +14,6 @@ global using Atc.Serialization;
 global using Microsoft.Azure.Devices.Common.Exceptions;
 global using Microsoft.Azure.Devices.Provisioning.Service;
 global using Microsoft.Azure.Devices.Shared;
+global using Microsoft.Extensions.DependencyInjection;
 global using NSubstitute.ExceptionExtensions;
+global using Polly;

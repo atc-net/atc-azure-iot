@@ -16,7 +16,7 @@ public sealed class JsonModulesConverterTests
     }
 
     [Fact]
-    public void ShouldDeserialize_WhenStartupOrder_IsNumber()
+    public void Read_StartupOrderIsANumber_ReadsIt()
     {
         // Arrange
         const string json = """
@@ -46,7 +46,7 @@ public sealed class JsonModulesConverterTests
     }
 
     [Fact]
-    public void ShouldDeserialize_WhenStartupOrder_IsString()
+    public void Read_StartupOrderIsText_ReadsItAsANumber()
     {
         // Arrange
         const string json = """
@@ -76,7 +76,7 @@ public sealed class JsonModulesConverterTests
     }
 
     [Fact]
-    public void ShouldDeserialize_WhenStartupOrder_IsMissing()
+    public void Read_NoStartupOrder_LeavesItEmpty()
     {
         // Arrange
         const string json = """
@@ -105,7 +105,7 @@ public sealed class JsonModulesConverterTests
     }
 
     [Fact]
-    public void ShouldDeserialize_WhenStartupOrder_IsMaxUInt()
+    public void Read_StartupOrderIsTheLargestNumberAllowed_ReadsIt()
     {
         // Arrange
         const string json = """
