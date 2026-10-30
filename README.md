@@ -57,6 +57,7 @@ IoT library, which contains common services for Azure IotHub, DeviceProvisioning
     - [TestMocks](#testmocks)
   - [Usage Examples](#usage-examples)
     - [Setup for Different Execution Modes](#setup-for-different-execution-modes)
+    - [Testing a Module](#testing-a-module)
   - [Server Certificate Validation](#server-certificate-validation)
     - [Moving existing modules to Validate](#moving-existing-modules-to-validate)
 - [Sample Project](#sample-project)
@@ -474,10 +475,10 @@ The `Atc.Azure.IoTEdge` package is specifically designed to enhance Azure IoT Ed
 - **IModuleClientWrapper/ModuleClientWrapper**: Wraps the Azure IoT `ModuleClient`, providing a managed way to interact with IoT Hub. It handles operations like sending device-to-cloud messages, responding to direct method calls, and updating device twins.
 
 ### Mocks
-- **IMockModuleClientWrapper/MockModuleClientWrapper**: Offers a mock implementation of `IModuleClientWrapper`, useful for module testing without requiring an actual IoT Hub connection. This enables comprehensive unit and integration testing by simulating various IoT operations.
+- **MockModuleClientWrapper**: An `IModuleClientWrapper` that doesn't connect to anything, for running a module in the Standalone environment and for tests. Each mock has its own twin. Tests can read what the module did (`GetSentMessages`, `RetryPolicy`, the twin) and act as IoT Hub towards it (`SimulateMethodCallAsync`, `SimulateInputMessageAsync`, `SimulateDesiredPropertiesUpdateAsync`, `SimulateConnectionStatusChange`); `SetMethodResponse` sets what `InvokeMethodAsync` returns. Twin updates are merged as IoT Hub does: a property set to `null` is removed.
 
 ### TestMocks
-- **MockTwinProperties**: Allows testing modules with predefined desired and reported properties, simplifying state management and behavior testing without interacting with a live IoT Hub.
+- **MockTwinProperties**: The desired and reported properties a new `MockModuleClientWrapper` starts with, for example to run a module in the Standalone environment with some desired properties.
 
 ## Usage Examples
 
@@ -516,6 +517,23 @@ using var host = Host.CreateDefaultBuilder(args)
     .Build();
 
 await host.RunAsync();
+```
+
+### Testing a Module
+
+`MockModuleClientWrapper` lets a test act as IoT Hub towards a module:
+
+```csharp
+var moduleClient = new MockModuleClientWrapper(NullLogger<MockModuleClientWrapper>.Instance);
+var service = new MyEdgeModuleService(moduleClient, new MethodResponseFactory());
+await service.StartAsync(cancellationToken);
+
+// IoT Hub calls a direct method on the module.
+var response = await moduleClient.SimulateMethodCallAsync("SetInterval", """{"seconds":5}""");
+response.Status.Should().Be(200);
+
+// The module sent telemetry to its "telemetry" output.
+moduleClient.GetSentMessages("telemetry").Should().NotBeEmpty();
 ```
 
 ## Server Certificate Validation
@@ -709,6 +727,7 @@ Then move to TCP and to `Validate` one device at a time.
 - `IsStandaloneMode()` ignores the case of the environment name, as `IsEnvironment` does.
 - `GetConfigurationContent(Stream)` leaves the stream open.
 - `MethodResponseFactory` writes compact JSON (no indentation) by default, because a direct method response is limited to 128 KB. Pass your own `JsonSerializerOptions` to change it.
+- `MockModuleClientWrapper`: each mock has its own twin, which starts with `MockTwinProperties` (changing `MockTwinProperties` later doesn't change an existing mock); `UpdateReportedPropertiesAsync` merges the patch instead of replacing the reported properties, and no longer calls the desired property callback.
 - `ConfigureIotHubServices` also registers `IConfigurationContentProvider`.
 - The IoT Hub log event `Failure` (10000) and the DPS failure events are removed, because the caller gets the exception; the connection string events moved to 10110/10111.
 
