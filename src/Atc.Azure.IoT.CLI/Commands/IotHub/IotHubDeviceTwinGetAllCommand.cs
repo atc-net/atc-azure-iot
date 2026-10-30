@@ -18,10 +18,12 @@ public sealed class IotHubDeviceTwinGetAllCommand : AsyncCommand<IotHubDeviceTwi
     {
         ArgumentNullException.ThrowIfNull(settings);
 
-        return ExecuteInternalAsync(settings);
+        return ExecuteInternalAsync(settings, cancellationToken);
     }
 
-    private async Task<int> ExecuteInternalAsync(IotHubDeviceTwinGetAllCommandSettings settings)
+    private async Task<int> ExecuteInternalAsync(
+        IotHubDeviceTwinGetAllCommandSettings settings,
+        CancellationToken cancellationToken)
     {
         ConsoleHelper.WriteHeader();
 
@@ -31,7 +33,10 @@ public sealed class IotHubDeviceTwinGetAllCommand : AsyncCommand<IotHubDeviceTwi
 
         var sw = Stopwatch.StartNew();
 
-        var deviceTwins = await iotHubService.GetDeviceTwins(settings.OnlyIncludeEdgeDevices);
+        var deviceTwins = await iotHubService.GetDeviceTwins(
+            settings.OnlyIncludeEdgeDevices,
+            cancellationToken);
+
         foreach (var deviceTwin in deviceTwins)
         {
             logger.LogInformation("DeviceTwin:\n" +

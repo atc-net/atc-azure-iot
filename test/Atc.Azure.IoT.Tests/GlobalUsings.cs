@@ -3,5 +3,8 @@ global using Atc.Azure.IoT.Extensions;
 global using Atc.Azure.IoT.Models;
 global using Atc.Azure.IoT.Options;
 global using Atc.Azure.IoT.Serialization.JsonConverters;
+global using Atc.Azure.IoT.Services.IoTHub;
 global using Atc.Serialization;
 global using Microsoft.Azure.Devices.Common.Exceptions;
+global using Microsoft.Azure.Devices.Shared;
+global using NSubstitute.ExceptionExtensions;

@@ -34,10 +34,6 @@ public sealed class IotHubStatisticsCommand : AsyncCommand<ConnectionBaseCommand
         var sw = Stopwatch.StartNew();
 
         var deviceRegistryStatistics = await iotHubService.GetDeviceRegistryStatistics(cancellationToken);
-        if (deviceRegistryStatistics is null)
-        {
-            return ConsoleExitStatusCodes.Failure;
-        }
 
         logger.LogInformation("RegistryStatistics:\n" +
                               $"\t\tTotalDeviceCount: {deviceRegistryStatistics.TotalDeviceCount}\n" +

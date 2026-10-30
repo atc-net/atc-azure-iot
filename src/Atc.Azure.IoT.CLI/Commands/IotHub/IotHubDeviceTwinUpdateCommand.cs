@@ -44,16 +44,10 @@ public sealed class IotHubDeviceTwinUpdateCommand : AsyncCommand<IotHubDeviceTwi
 
         deviceTwin.Tags = settings.Tags.ParseToDictionary().ToTwinCollection();
 
-        var (succeeded, updatedTwin) = await iotHubService.UpdateDeviceTwin(
+        var updatedTwin = await iotHubService.UpdateDeviceTwin(
             settings.DeviceId!,
             deviceTwin,
             cancellationToken);
-
-        if (!succeeded ||
-            updatedTwin is null)
-        {
-            return ConsoleExitStatusCodes.Failure;
-        }
 
         logger.LogInformation("DeviceTwin updated:\n" +
                               $"\t\tDeviceId: {updatedTwin.DeviceId}\n" +

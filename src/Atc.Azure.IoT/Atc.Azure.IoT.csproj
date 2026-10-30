@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Atc.Azure.IoT.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Atc" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.13" />
     <PackageReference Include="Microsoft.Azure.Devices" Version="1.41.1" />

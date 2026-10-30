@@ -8,17 +8,6 @@ public sealed partial class IoTHubService
     private readonly ILogger<IoTHubService> logger;
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubService.Failure,
-        Level = LogLevel.Error,
-        Message = "{CallerMethodName}({CallerLineNumber}) - An unexpected exception of type '{exceptionType}' occurred when executing call against iot hub '{IotHubHostName}': {errorMessage}")]
-    private partial void LogFailure(
-        string iotHubHostName,
-        string exceptionType,
-        string? errorMessage,
-        [CallerMemberName] string callerMethodName = "",
-        [CallerLineNumber] int callerLineNumber = 0);
-
-    [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubService.RetrievingRegistryStatistics,
         Level = LogLevel.Trace,
         Message = "{CallerMethodName}({CallerLineNumber}) - Retrieving registry statistics on iot hub '{IotHubHostName}'")]
@@ -137,16 +126,6 @@ public sealed partial class IoTHubService
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubService.IotDeviceTwinNotUpdated,
-        Level = LogLevel.Warning,
-        Message = "{CallerMethodName}({CallerLineNumber}) - Could not update iot device twin by deviceId '{DeviceId}' on iot hub '{IotHubHostName}'")]
-    private partial void LogIotDeviceTwinNotUpdated(
-        string iotHubHostName,
-        string deviceId,
-        [CallerMemberName] string callerMethodName = "",
-        [CallerLineNumber] int callerLineNumber = 0);
-
-    [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubService.UpdateIotDeviceTwinSucceeded,
         Level = LogLevel.Information,
         Message = "{CallerMethodName}({CallerLineNumber}) - Updated iot device twin for deviceId '{DeviceId}' on iot hub '{IotHubHostName}'")]
@@ -172,17 +151,6 @@ public sealed partial class IoTHubService
         Level = LogLevel.Trace,
         Message = "{CallerMethodName}({CallerLineNumber}) - Updated module twin desired properties for deviceId '{DeviceId}' and moduleId '{ModuleId}' on iot hub '{IotHubHostName}'")]
     private partial void LogUpdateModuleTwinDesiredPropertiesSucceeded(
-        string iotHubHostName,
-        string deviceId,
-        string moduleId,
-        [CallerMemberName] string callerMethodName = "",
-        [CallerLineNumber] int callerLineNumber = 0);
-
-    [LoggerMessage(
-        EventId = LoggingEventIdConstants.IoTHubService.ModuleTwinDesiredPropertiesNotUpdated,
-        Level = LogLevel.Trace,
-        Message = "{CallerMethodName}({CallerLineNumber}) - Could not update module twin desired properties for deviceId '{DeviceId}' and moduleId '{ModuleId}' on iot hub '{IotHubHostName}'")]
-    private partial void LogModuleTwinDesiredPropertiesNotUpdated(
         string iotHubHostName,
         string deviceId,
         string moduleId,
@@ -264,6 +232,17 @@ public sealed partial class IoTHubService
         [CallerLineNumber] int callerLineNumber = 0);
 
     [LoggerMessage(
+        EventId = LoggingEventIdConstants.IoTHubService.IotDeviceModuleNotFoundOnRemove,
+        Level = LogLevel.Information,
+        Message = "{CallerMethodName}({CallerLineNumber}) - Module '{ModuleId}' was not removed from iot device '{DeviceId}' on iot hub '{IotHubHostName}', because it doesn't exist")]
+    private partial void LogIotDeviceModuleNotFoundOnRemove(
+        string iotHubHostName,
+        string deviceId,
+        string moduleId,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
+
+    [LoggerMessage(
         EventId = LoggingEventIdConstants.IoTHubService.AddedModulesToIotEdgeDevice,
         Level = LogLevel.Information,
         Message = "{CallerMethodName}({CallerLineNumber}) - Successfully added new modules to deviceId '{DeviceId}' on iot hub '{IotHubHostName}'")]
@@ -288,6 +267,16 @@ public sealed partial class IoTHubService
         Level = LogLevel.Information,
         Message = "{CallerMethodName}({CallerLineNumber}) - Successfully deleted iot device '{DeviceId}' from iot hub '{IotHubHostName}'")]
     private partial void LogIotDeviceDeleted(
+        string iotHubHostName,
+        string deviceId,
+        [CallerMemberName] string callerMethodName = "",
+        [CallerLineNumber] int callerLineNumber = 0);
+
+    [LoggerMessage(
+        EventId = LoggingEventIdConstants.IoTHubService.IotDeviceNotFoundOnDelete,
+        Level = LogLevel.Information,
+        Message = "{CallerMethodName}({CallerLineNumber}) - Iot device '{DeviceId}' was not deleted from iot hub '{IotHubHostName}', because it doesn't exist")]
+    private partial void LogIotDeviceNotFoundOnDelete(
         string iotHubHostName,
         string deviceId,
         [CallerMemberName] string callerMethodName = "",
