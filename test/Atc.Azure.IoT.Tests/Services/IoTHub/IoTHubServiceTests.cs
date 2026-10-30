@@ -176,6 +176,21 @@ public sealed class IoTHubServiceTests : IDisposable
     }
 
     [Fact]
+    public Task GetDeviceConnectionString_DeviceUsesCertificatesInsteadOfAKey_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        registryManager
+            .GetDeviceAsync(DeviceId, Arg.Any<CancellationToken>())
+            .Returns(new Device(DeviceId) { Authentication = new AuthenticationMechanism { Type = AuthenticationType.SelfSigned } });
+
+        // Act
+        var act = () => sut.GetDeviceConnectionString(DeviceId, TestContext.Current.CancellationToken);
+
+        // Assert
+        return act.Should().ThrowAsync<InvalidOperationException>().WithMessage($"Device '{DeviceId}' has no symmetric key*");
+    }
+
+    [Fact]
     public async Task GetDeviceConnectionString_DeviceDoesNotExist_ReturnsNull()
     {
         // Arrange
@@ -188,6 +203,83 @@ public sealed class IoTHubServiceTests : IDisposable
 
         // Assert
         actual.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetModuleConnectionString_ModuleExists_ReturnsConnectionStringToIoTHubWithThePrimaryKey()
+    {
+        // Arrange
+        var primaryKey = Convert.ToBase64String(new byte[32]);
+        registryManager
+            .GetModuleAsync(DeviceId, ModuleId, Arg.Any<CancellationToken>())
+            .Returns(CreateModuleWithPrimaryKey(primaryKey));
+
+        // Act
+        var actual = await sut.GetModuleConnectionString(DeviceId, ModuleId, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        actual.Should().Be($"HostName={IotHubHostName};DeviceId={DeviceId};ModuleId={ModuleId};SharedAccessKey={primaryKey}");
+    }
+
+    [Fact]
+    public async Task GetModuleConnectionString_GatewayHostNameGiven_ReturnsConnectionStringThroughThatEdgeHub()
+    {
+        // Arrange
+        var primaryKey = Convert.ToBase64String(new byte[32]);
+        registryManager
+            .GetModuleAsync(DeviceId, ModuleId, Arg.Any<CancellationToken>())
+            .Returns(CreateModuleWithPrimaryKey(primaryKey));
+
+        // Act
+        var actual = await sut.GetModuleConnectionString(DeviceId, ModuleId, "localhost", TestContext.Current.CancellationToken);
+
+        // Assert
+        actual.Should().Be($"HostName={IotHubHostName};GatewayHostName=localhost;DeviceId={DeviceId};ModuleId={ModuleId};SharedAccessKey={primaryKey}");
+    }
+
+    [Fact]
+    public async Task GetModuleConnectionString_ModuleDoesNotExist_ReturnsNull()
+    {
+        // Arrange
+        registryManager
+            .GetModuleAsync(DeviceId, ModuleId, Arg.Any<CancellationToken>())
+            .Returns((Microsoft.Azure.Devices.Module?)null);
+
+        // Act
+        var actual = await sut.GetModuleConnectionString(DeviceId, ModuleId, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        actual.Should().BeNull();
+    }
+
+    [Fact]
+    public Task GetModuleConnectionString_ModuleUsesCertificatesInsteadOfAKey_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        registryManager
+            .GetModuleAsync(DeviceId, ModuleId, Arg.Any<CancellationToken>())
+            .Returns(new Microsoft.Azure.Devices.Module(DeviceId, ModuleId) { Authentication = new AuthenticationMechanism { Type = AuthenticationType.SelfSigned } });
+
+        // Act
+        var act = () => sut.GetModuleConnectionString(DeviceId, ModuleId, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        return act.Should().ThrowAsync<InvalidOperationException>().WithMessage($"Module '{ModuleId}' on device '{DeviceId}' has no symmetric key*");
+    }
+
+    [Fact]
+    public Task GetModuleConnectionString_IoTHubRejectsTheKey_ThrowsTheIoTHubError()
+    {
+        // Arrange
+        registryManager
+            .GetModuleAsync(DeviceId, ModuleId, Arg.Any<CancellationToken>())
+            .ThrowsAsync(new UnauthorizedException("The SAS token has an invalid signature"));
+
+        // Act
+        var act = () => sut.GetModuleConnectionString(DeviceId, ModuleId, cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        return act.Should().ThrowAsync<UnauthorizedException>();
     }
 
     [Theory]
@@ -981,6 +1073,19 @@ public sealed class IoTHubServiceTests : IDisposable
 
     private static Device CreateDeviceWithPrimaryKey(string primaryKey)
         => new(DeviceId)
+        {
+            Authentication = new AuthenticationMechanism
+            {
+                SymmetricKey = new SymmetricKey
+                {
+                    PrimaryKey = primaryKey,
+                    SecondaryKey = primaryKey,
+                },
+            },
+        };
+
+    private static Microsoft.Azure.Devices.Module CreateModuleWithPrimaryKey(string primaryKey)
+        => new(DeviceId, ModuleId)
         {
             Authentication = new AuthenticationMechanism
             {

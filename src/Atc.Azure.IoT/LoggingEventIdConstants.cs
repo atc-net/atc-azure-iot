@@ -32,6 +32,10 @@ internal static class LoggingEventIdConstants
         public const int IotEdgeDeviceTwinModuleNotFound = 10_601;
         public const int RetrieveIotEdgeDeviceTwinModuleSucceeded = 10_602;
 
+        public const int RetrievingModuleConnectionString = 10_610;
+        public const int IotEdgeDeviceModuleNotFound = 10_611;
+        public const int RetrieveModuleConnectionStringSucceeded = 10_612;
+
         public const int IotDeviceModuleRemoved = 10_700;
         public const int IotDeviceModuleNotFoundOnRemove = 10_701;
 

@@ -102,6 +102,7 @@ The `IIoTHubService` is designed to facilitate communication with Azure IoT Hub,
 #### Module Management
 
 - `GetModulesOnIotEdgeDevice(string deviceId, CancellationToken cancellationToken)`: Retrieve the module identities on an IoT Edge device, including their keys.
+- `GetModuleConnectionString(string deviceId, string moduleId, string? gatewayHostName, CancellationToken cancellationToken)`: Get the connection string for a module, or `null` if it doesn't exist. With `gatewayHostName`, the connection string connects through that edgeHub, as an IoT Edge module does.
 - `GetModuleTwin(string deviceId, string moduleId, CancellationToken cancellationToken)`: Retrieve a specific module twin, or `null` if the module doesn't exist.
 - `AddModuleToDevice(string deviceId, string moduleId, CancellationToken cancellationToken)`: Add a module identity to a device, and return it with the keys IoT Hub generated.
 - `UpdateModule(Module moduleIdentity, CancellationToken cancellationToken)`: Update a module identity, e.g. its authentication, and return the updated module.
