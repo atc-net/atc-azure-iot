@@ -1,0 +1,16 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.6.4">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <UserSecretsId>c88f3907-e473-462b-8674-84683f06eebf</UserSecretsId>
+    <AspireUseCliBundle>true</AspireUseCliBundle>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Atc.Aspire.Hosting.Azure.IoTEdge\Atc.Aspire.Hosting.Azure.IoTEdge.csproj" IsAspireProjectResource="false" />
+    <ProjectReference Include="..\IoTEdgeModules\modules\simulationmodule\SimulationModule.csproj" />
+    <ProjectReference Include="..\IoTEdgeModules\modules\opcpublishernodemanagermodule\OpcPublisherNodeManagerModule.csproj" />
+  </ItemGroup>
+
+</Project>

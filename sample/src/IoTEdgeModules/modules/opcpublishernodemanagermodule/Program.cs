@@ -19,7 +19,13 @@ public static class Program
                 }
                 else
                 {
-                    services.AddModuleClientWrapper(TransportSettingsFactory.BuildMqttWebSocketTransportSettings(ServerCertificateValidation.AcceptAny));
+                    // The IoT Edge runtime, or the Aspire AppHost, gives the module the CA of edgeHub's certificate.
+                    // The AppHost can't on macOS, so a module running there accepts the test certificate instead.
+                    var certificateValidation = OperatingSystem.IsMacOS()
+                        ? ServerCertificateValidation.AcceptAny
+                        : ServerCertificateValidation.Validate;
+
+                    services.AddModuleClientWrapper(TransportSettingsFactory.BuildMqttTransportSettings(certificateValidation));
                 }
 
                 services.AddSingleton<IMethodResponseFactory, MethodResponseFactory>();

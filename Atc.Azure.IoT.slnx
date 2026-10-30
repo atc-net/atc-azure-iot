@@ -5,6 +5,7 @@
   <Folder Name="/sample/" />
   <Folder Name="/sample/src/">
     <Project Path="sample/src/Atc.Azure.Iot.Certificate.Sample/Atc.Azure.Iot.Certificate.Sample.csproj" />
+    <Project Path="sample/src/Atc.Azure.Iot.Sample.AppHost/Atc.Azure.Iot.Sample.AppHost.csproj" />
     <Project Path="sample/src/Atc.Azure.Iot.Sample.Modules.Contracts/Atc.Azure.Iot.Sample.Modules.Contracts.csproj" />
   </Folder>
   <Folder Name="/sample/src/IoTEdgeModules/">

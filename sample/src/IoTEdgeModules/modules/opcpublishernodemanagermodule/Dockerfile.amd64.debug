@@ -1,27 +1,24 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0-bookworm-slim AS base
+# Build from the repository root: docker build -f sample/src/IoTEdgeModules/modules/opcpublishernodemanagermodule/Dockerfile.amd64.debug .
+FROM mcr.microsoft.com/dotnet/runtime:10.0 AS base
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends unzip procps && \
+    apt-get install -y --no-install-recommends unzip procps curl && \
     rm -rf /var/lib/apt/lists/*
 
-RUN useradd -ms /bin/bash moduleuser
-USER moduleuser
+USER app
 RUN curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/vsdbg
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0-bookworm-slim AS build-env
-WORKDIR /app
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
+WORKDIR /repo
 
-RUN mkdir src
+COPY global.json Directory.Build.props .editorconfig ./
+COPY src/Directory.Build.props ./src/
+COPY src/Atc.Azure.IoTEdge/ ./src/Atc.Azure.IoTEdge/
+COPY sample/src/Atc.Azure.Iot.Sample.Modules.Contracts/ ./sample/src/Atc.Azure.Iot.Sample.Modules.Contracts/
+COPY sample/src/IoTEdgeModules/.editorconfig ./sample/src/IoTEdgeModules/
+COPY sample/src/IoTEdgeModules/modules/opcpublishernodemanagermodule/ ./sample/src/IoTEdgeModules/modules/opcpublishernodemanagermodule/
 
-COPY src/IoTEdgeModules/modules/opcpublishernodemanagermodule/*.csproj ./src/
-COPY src/Atc.Azure.Iot.Sample.Modules.Contracts/*.csproj ./src/
-COPY Directory.Build.props .
-COPY .editorconfig .
-
-RUN dotnet restore "./src/OpcPublisherNodeManagerModule.csproj"
-
-COPY src/ ./src/
-RUN dotnet publish "src/IoTEdgeModules/modules/opcpublishernodemanagermodule/OpcPublisherNodeManagerModule.csproj" -c Release -o out
+RUN dotnet publish "sample/src/IoTEdgeModules/modules/opcpublishernodemanagermodule/OpcPublisherNodeManagerModule.csproj" -c Debug -o /app/out
 
 FROM base
 WORKDIR /app
