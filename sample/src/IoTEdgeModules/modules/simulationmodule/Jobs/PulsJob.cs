@@ -32,7 +32,7 @@ public sealed partial class PulsJob : IJob
             }
 
             var temperature = numberGenerator.GetNextValue();
-            var json = $$"""{"temperature":{{temperature}}}""";
+            var json = $$"""{"temperature":{{temperature.ToString(CultureInfo.InvariantCulture)}}}""";
 
             using var message = new Message(Encoding.UTF8.GetBytes(json));
             message.ContentEncoding = Encoding.UTF8.WebName;
