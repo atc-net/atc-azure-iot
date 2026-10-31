@@ -135,6 +135,16 @@ A cancelled token throws `OperationCanceledException`. The IoT Hub SDK itself re
 
 The IoT Edge log methods are the exception: they return an IoT Hub error, such as an offline device, as the response's status code. A cancelled token still throws `OperationCanceledException`.
 
+The SDK puts IoT Hub's error in the exception message as JSON inside JSON. `GetErrorMessage()` returns just IoT Hub's message and error code:
+
+```csharp
+catch (IotHubException ex)
+{
+    // e.g. "The specified SAS token has an invalid signature. (401002)"
+    logger.LogError(ex, "Could not read the device: {Error}", ex.GetErrorMessage());
+}
+```
+
 ### Usage Example
 
 Below is a sample usage of `IIoTHubService` to create a new device, unless it already exists:

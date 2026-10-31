@@ -871,6 +871,26 @@ public sealed class IoTHubServiceTests : IDisposable
     }
 
     [Fact]
+    public async Task GetTaskStatus_IoTHubRejectsTheKey_ReturnsIoTHubsMessageWithoutTheSdkJson()
+    {
+        // Arrange
+        const string sdkMessage =
+            """
+            {"Message":"{\"errorCode\":401002,\"message\":\"The specified SAS token has an invalid signature.\"}","ExceptionMessage":""}
+            """;
+
+        iotHubModuleService
+            .CallMethod(DeviceId, "$edgeAgent", Arg.Any<MethodParameterModel>(), Arg.Any<IoTHubRequestOptions?>(), Arg.Any<CancellationToken>())
+            .ThrowsAsync(new UnauthorizedException(sdkMessage));
+
+        // Act
+        var actual = await sut.GetTaskStatus(DeviceId, new GetTaskStatusRequest("abc"), cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert
+        actual.Payload.Message.Should().Be("The specified SAS token has an invalid signature. (401002)");
+    }
+
+    [Fact]
     public async Task UploadSupportBundle_SendsTheRequestToEdgeAgent()
     {
         // Arrange
