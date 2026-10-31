@@ -621,7 +621,7 @@ public sealed partial class IoTHubService : ServiceBase, IIoTHubService, IDispos
                 ex.Code.ToHttpStatusCode(),
                 new LogResponse(
                     BackgroundTaskRunStatus.Unknown,
-                    ex.Message,
+                    ex.GetErrorMessage(),
                     ex.TrackingId,
                     ex.Code.ToString()));
         }
