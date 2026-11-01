@@ -614,6 +614,22 @@ builder
 
 See the [package README](https://github.com/atc-net/atc-aspire/blob/main/src/Atc.Aspire.Hosting.Azure.IoTEdge/README.md) for the API and how it works.
 
+## IoT Hub events locally
+
+Code that reads the IoT Hub's events, e.g. an Azure Function that reacts to device lifecycle or twin change events, can run locally too. The hosting integration [Atc.Aspire.Hosting.Azure.IoTHub](https://www.nuget.org/packages/Atc.Aspire.Hosting.Azure.IoTHub) forwards the IoT Hub's events of your devices to Event Hubs in the Event Hubs emulator:
+
+```csharp
+var eventHubs = builder.AddAzureEventHubs("eventhubs").RunAsEmulator();
+
+builder
+    .AddIoTHubEventBridge("iothub-events", iotHub)
+    .ForwardDeviceLifecycleEvents(eventHubs.AddHub("device-lifecycle-events"))
+    .ForwardTwinChangeEvents(eventHubs.AddHub("twin-change-events"))
+    .ForDevices(device.Resource.DeviceId);
+```
+
+The IoT Hub needs routes for these events and a consumer group for the bridge; its **Set up IoT Hub** command adds them, on a hub that no deployed service reads. See the [package README](https://github.com/atc-net/atc-aspire/blob/main/src/Atc.Aspire.Hosting.Azure.IoTHub/README.md).
+
 ## Choosing an IoT Hub
 
 - Use your own IoT Hub on the **Free (F1)** or **Standard (S1)** tier. The **Basic** tiers don't support device twins, direct methods or IoT Edge, so they can't be used.
@@ -646,6 +662,12 @@ The [sample AppHost](sample/src/Atc.Azure.Iot.Sample.AppHost/Program.cs) runs an
 - [OPC PLC](https://github.com/Azure-Samples/iot-edge-opc-plc) is an OPC UA server with simulated nodes. Its README lists the command-line options the sample passes.
 - [OPC Publisher](https://github.com/Azure/Industrial-IoT/tree/main/docs/opc-publisher) reads the nodes listed in `pn.json` from OPC UA servers and sends their values as telemetry. Its documentation lists the command-line options.
 
+The AppHost also forwards the IoT Hub's events of the device to local Event Hubs, so you can see what a consumer of those events receives:
+
+- The [Atc.Aspire.Hosting.Azure.IoTHub](https://www.nuget.org/packages/Atc.Aspire.Hosting.Azure.IoTHub) event bridge (`iothub-events`) forwards the device's lifecycle events, twin change events and telemetry to three Event Hubs in the Event Hubs emulator.
+- The [event viewer](sample/src/Atc.Azure.Iot.Sample.EventViewer/README.md) (`event-viewer`) shows them in a terminal in the dashboard, with their properties and body.
+- The [Event Hub Live Explorer](https://github.com/lupusbytes/event-hub-live-explorer) (`event-hubs-explorer`) shows them in the browser, where you can also search them.
+
 1. Install Docker, the [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) and the [Aspire CLI](https://aspire.dev). The AppHost uses the dashboard and orchestrator bundled with the CLI.
 2. Set an IoT Hub connection string with registry read/write and service connect permissions (e.g. the `iothubowner` policy):
    ```powershell
@@ -657,7 +679,8 @@ The [sample AppHost](sample/src/Atc.Azure.Iot.Sample.AppHost/Program.cs) runs an
    dotnet run --project sample/src/Atc.Azure.Iot.Sample.AppHost
    ```
 4. The device `edge-device-<machine name>` appears in the IoT Hub with its modules.
-5. Start `opc-plc` and `simulationmodule` from the dashboard; with `WithExplicitStart()` they don't start on their own. OPC Publisher waits for `opc-plc`. The routes in the [deployment template](sample/src/IoTEdgeModules/deployment.template.json) send their telemetry to `$upstream`. Watch it with e.g. `az iot hub monitor-events -n <hub> -d edge-device-<machine name>`.
+   If the IoT Hub lacks the routes or the consumer group the event bridge needs, `iothub-events` shows **Waiting for IoT Hub setup**; run its **Set up IoT Hub** command, or see the [package README](https://github.com/atc-net/atc-aspire/blob/main/src/Atc.Aspire.Hosting.Azure.IoTHub/README.md).
+5. Start `opc-plc` and `simulationmodule` from the dashboard; with `WithExplicitStart()` they don't start on their own. OPC Publisher waits for `opc-plc`. The routes in the [deployment template](sample/src/IoTEdgeModules/deployment.template.json) send their telemetry to `$upstream`. Watch it in `event-viewer`, or with e.g. `az iot hub monitor-events -n <hub> -d edge-device-<machine name>`.
 6. Use the module commands in the dashboard to call direct methods, e.g. `GetEndpoints` with payload `{ "pageIndex": 0 }` on `opcpublishernodemanagermodule`, or to change desired properties.
 7. Stop the data sources, or the AppHost, when you're done.
 

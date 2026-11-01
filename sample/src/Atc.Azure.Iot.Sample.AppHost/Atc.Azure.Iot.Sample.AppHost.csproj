@@ -5,10 +5,14 @@
     <IsPackable>false</IsPackable>
     <UserSecretsId>c88f3907-e473-462b-8674-84683f06eebf</UserSecretsId>
     <AspireUseCliBundle>true</AspireUseCliBundle>
+    <!-- WithTerminal is experimental. -->
+    <NoWarn>$(NoWarn);ASPIRETERMINAL001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Atc.Aspire.Hosting.Azure.IoTEdge" Version="1.1.0" />
+    <PackageReference Include="Atc.Aspire.Hosting.Azure.IoTHub" Version="1.1.0" />
+    <PackageReference Include="LupusBytes.Aspire.Hosting.Azure.EventHubs.LiveExplorer" Version="2.1.9" />
   </ItemGroup>
 
   <ItemGroup>
@@ -17,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Atc.Azure.Iot.Sample.EventViewer\Atc.Azure.Iot.Sample.EventViewer.csproj" />
     <ProjectReference Include="..\IoTEdgeModules\modules\simulationmodule\SimulationModule.csproj" />
     <ProjectReference Include="..\IoTEdgeModules\modules\opcpublishernodemanagermodule\OpcPublisherNodeManagerModule.csproj" />
   </ItemGroup>

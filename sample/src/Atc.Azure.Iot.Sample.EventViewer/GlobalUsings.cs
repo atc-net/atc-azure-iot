@@ -1,0 +1,10 @@
+global using System.Globalization;
+global using System.Text;
+global using System.Text.Json;
+global using Azure.Messaging.EventHubs;
+global using Azure.Messaging.EventHubs.Consumer;
+global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Hosting;
+global using Microsoft.Extensions.Logging;
+global using Spectre.Console;
+global using Spectre.Console.Rendering;

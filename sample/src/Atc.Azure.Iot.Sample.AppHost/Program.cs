@@ -54,6 +54,35 @@ builder
     .AsIoTEdgeModule(device)
     .WithEnvironment("OpcPublisherNodeConfigurationDirectory", publishedNodesDirectory);
 
+// Local Event Hubs that receive the IoT Hub's events, so local consumers can read them like in Azure.
+var eventHubs = builder.AddAzureEventHubs("eventhubs").RunAsEmulator();
+var deviceLifecycleEvents = eventHubs.AddHub("device-lifecycle-events");
+var twinChangeEvents = eventHubs.AddHub("twin-change-events");
+var telemetry = eventHubs.AddHub("telemetry");
+
+// Forwards the IoT Hub's events of the edge device to the local Event Hubs.
+// The IoT Hub needs routes for the lifecycle and twin change events: the bridge checks them and offers to add them.
+builder
+    .AddIoTHubEventBridge("iothub-events", iotHubConnectionString)
+    .ForwardDeviceLifecycleEvents(deviceLifecycleEvents)
+    .ForwardTwinChangeEvents(twinChangeEvents)
+    .ForwardTelemetry(telemetry)
+    .ForDevices(device.Resource.DeviceId);
+
+// Shows the forwarded events live in the dashboard's terminal: the body and the properties a consumer reads.
+builder
+    .AddProject<Projects.Atc_Azure_Iot_Sample_EventViewer>("event-viewer")
+    .WithReference(deviceLifecycleEvents.AddConsumerGroup("device-lifecycle-events-viewer", "event-viewer"))
+    .WithReference(twinChangeEvents.AddConsumerGroup("twin-change-events-viewer", "event-viewer"))
+    .WithReference(telemetry.AddConsumerGroup("telemetry-viewer", "event-viewer"))
+    .WaitFor(eventHubs)
+    .WithTerminal();
+
+// Browses, searches and sends events in the browser. Called after all Event Hubs are added, as it references them all.
+builder
+    .AddAzureEventHubsLiveExplorer("event-hubs-explorer")
+    .WithAutoReferences(consumerGroupName: "explorer");
+
 await builder.Build().RunAsync();
 
 static string PreparePublishedNodesDirectory(string appHostDirectory)
